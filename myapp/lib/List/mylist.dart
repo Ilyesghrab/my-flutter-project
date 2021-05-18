@@ -28,9 +28,43 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
+  bool isOpened = false;
+  AnimationController _animationController;
+  Animation<Color> _buttonColor;
+  Animation<double> _animationIcon;
+  Animation<double> _translateButton;
+  Curve _curve = Curves.easeOut;
+  double _fabHeight = 56.0;
+
   List<Produit> items = List.of(Data.produits);
   String query = '';
+
+  @override
+  void initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _animationController.value = _animationController.value;
+    _animationIcon =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _buttonColor = ColorTween(begin: Color(0xFF21BFBD), end: Colors.red)
+        .animate(CurvedAnimation(
+            parent: _animationController,
+            curve: Interval(0.00, 1.00, curve: Curves.linear)));
+    _translateButton = Tween<double>(begin: _fabHeight, end: -14.0).animate(
+        CurvedAnimation(
+            parent: _animationController,
+            curve: Interval(0.0, 0.75, curve: _curve)));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,20 +148,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                     return SlidableWidget(
                                         child: buildListTile(item));
-                                    /*child: ListView(children: [
-                                _buildFoodItem('assets/images/amortisseur.jpg',
-                                    'Amortisseur', '\$24.00'),
-                                _buildFoodItem('assets/images/pneu.jpg',
-                                    'pneu Michelin', '\$22.00'),
-                                _buildFoodItem('assets/images/jante.jpg',
-                                    'Jante Alu 18"', '\$26.00'),
-                                _buildFoodItem('assets/images/radio.jpg',
-                                    'Radio CD/USB', '\$24.00'),
-                                _buildFoodItem('assets/images/feua.jpg',
-                                    'Feux Arriéres', '\$24.00'),
-                                _buildFoodItem('assets/images/feuav.jpg',
-                                    'Feux Avants', '\$24.00'),
-                              ])*/
                                   }),
                             )
                           ],
@@ -135,6 +155,26 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 ]),
           )
+        ],
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) => Transform(
+                    transform: Matrix4.translationValues(
+                        0.0, _translateButton.value * 2.0, 0.0),
+                    child: buttonAdd(),
+                  )),
+          AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) => Transform(
+                    transform: Matrix4.translationValues(
+                        0.0, _translateButton.value, 0.0),
+                    child: buttonScan(),
+                  )),
+          buttonToggle()
         ],
       ),
       bottomNavigationBar: CurvedNavigationBar(
@@ -327,5 +367,47 @@ class _MyHomePageState extends State<MyHomePage> {
       this.query = query;
       this.items = items;
     });
+  }
+
+  Widget buttonAdd() {
+    return Container(
+        child: FloatingActionButton(
+      onPressed: () {},
+      tooltip: "Add",
+      child: Icon(Icons.add),
+    ));
+  }
+
+  Widget buttonScan() {
+    return Container(
+        child: FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ScanPage()),
+        );
+      },
+      tooltip: "Scan",
+      child: Icon(Icons.qr_code),
+    ));
+  }
+
+  Widget buttonToggle() {
+    return Container(
+        child: FloatingActionButton(
+      backgroundColor: _buttonColor.value,
+      onPressed: animate,
+      tooltip: "Toggle",
+      child: AnimatedIcon(
+          icon: AnimatedIcons.menu_close, progress: _animationIcon),
+    ));
+  }
+
+  animate() {
+    if (!isOpened)
+      _animationController.forward();
+    else
+      _animationController.reverse();
+    isOpened = !isOpened;
   }
 }
