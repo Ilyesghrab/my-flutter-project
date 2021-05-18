@@ -7,7 +7,6 @@ import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/pages/Login.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'Outils/rounded_button.dart';
 
 class HomePage extends StatefulWidget with NavigationStates {
   @override

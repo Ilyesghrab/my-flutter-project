@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Outils/rounded_button.dart';
 import 'package:myapp/Scanner/scan.dart';
-import 'Outils/rounded_button.dart';
 
 class Login extends StatelessWidget {
   Widget textfield({@required String hintText}) {
