@@ -272,7 +272,7 @@ class CategoriesPageState extends State<CategoriesPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'Products',
+                    'Product',
                     style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
