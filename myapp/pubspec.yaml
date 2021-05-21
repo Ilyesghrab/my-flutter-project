@@ -96,6 +96,7 @@ flutter:
     - assets/SVG/insight_tracking_blue.svg
     - assets/images/logo.png
     - assets/images/sideImg.png
+    - assets/images/Capture1.PNG
     
 
   # To add assets to your application, add an assets section, like this:

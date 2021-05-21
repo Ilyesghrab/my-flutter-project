@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myapp/model/user.dart';
+import 'package:myapp/pages/myaccountpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
@@ -9,7 +10,7 @@ class ConnexionWs {
   String config;
   String nomtable;
   ConnexionWs(this.config, this.nomtable);
-  Future<List<User>> getUsers(BuildContext context) async {
+  Future<List<User>> signIn(BuildContext context) async {
     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     String ip = sharedPrefs.getString('AdresseIp');
     //String port = sharedPrefs.getString('Port');
@@ -61,8 +62,10 @@ class ConnexionWs {
         return null;
       } //
       else {
-        Navigator.pushReplacementNamed(context, "/CategoriesPage",
-            arguments: {"no": no});
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyAccountsPage()),
+        );
       }
     } catch (ex) {
       Fluttertoast.showToast(

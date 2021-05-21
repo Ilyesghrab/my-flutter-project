@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Outils/rounded_button.dart';
-import 'package:myapp/Scanner/scan.dart';
 import 'package:myapp/WS/ConnexionWs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
@@ -18,6 +17,7 @@ class _LoginState extends State<Login> {
   final statuscontroller = TextEditingController();
   final GlobalKey<FormState> fkey = GlobalKey<FormState>();
   bool ci = true;
+
   @override
   void initState() {
     super.initState();
@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
             color: Colors.black54,
             fontWeight: FontWeight.bold,
           ),
-          fillColor: Colors.white,
+          fillColor: Colors.grey[50],
           filled: true,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
@@ -98,12 +98,12 @@ class _LoginState extends State<Login> {
             color: Colors.black54,
             fontWeight: FontWeight.bold,
           ),
-          fillColor: Colors.white,
+          fillColor: Colors.grey[50],
           filled: true,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
               borderSide: BorderSide.none)),
-      maxLength: 16,
+      maxLength: 1,
       validator: (String value) {
         if (value.isEmpty) {
           return 'login is Required';
@@ -133,7 +133,7 @@ class _LoginState extends State<Login> {
             onTap: visibility,
             child: Icon(ci ? Icons.visibility_off : Icons.visibility),
           ),
-          fillColor: Colors.white,
+          fillColor: Colors.grey[50],
           filled: true,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
@@ -193,7 +193,7 @@ class _LoginState extends State<Login> {
                       color: Colors.white,
                       image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: AssetImage("assets/images/jante.jpg")),
+                          image: AssetImage("assets/images/Capture1.PNG")),
                     ),
                   ),
                 ],
@@ -208,17 +208,20 @@ class _LoginState extends State<Login> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        /* textfield(
+                        textfield(
                           hintText: 'Username:  Ilyes',
-                        ),*/
-                        Padding(
+                        ),
+                        textfield(
+                          hintText: 'E-mail:  Ilyes.ghrab@esprit.tn',
+                        ),
+                        /*Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: _buildStatus(),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: _buildName(),
-                        ),
+                        ),*/
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: _buildPassword(),
@@ -229,97 +232,26 @@ class _LoginState extends State<Login> {
                             text: "LogIn",
                             fontSize: 20,
                             press: () async {
-                              try {
-                                if (!fkey.currentState.validate()) return;
-                                //Requete a la base
-                                fkey.currentState.save();
-                                String login =
-                                    logincontroller.value.text.trim();
-                                String pwd = passwordcontroller.value.text;
-                                String status =
-                                    statuscontroller.value.text.trim();
-                                var ws = ConnexionWs(
-                                    "<cab:login>" +
-                                        login +
-                                        "</cab:login><cab:pw>" +
-                                        pwd +
-                                        "</cab:pw><cab:statut>" +
-                                        status +
-                                        "</cab:statut>",
-                                    "Login");
-                                SharedPreferences sprefs =
-                                    await SharedPreferences.getInstance();
-                                sprefs.setString("no", login);
-                                ws.getUsers(context);
-                              } on SocketException catch (_) {
-                                return showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return Dialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0)),
-                                          child: Stack(
-                                            overflow: Overflow.visible,
-                                            alignment: Alignment.topCenter,
-                                            children: [
-                                              Container(
-                                                height: 200,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          10, 70, 10, 10),
-                                                  child: Column(
-                                                    children: [
-                                                      /* Text(
-                                                                    'Alert !!',
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        fontSize: 20),
-                                                                  ),*/
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        'Connexion echouée',
-                                                        style: TextStyle(
-                                                            fontSize: 20),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      RaisedButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: Text(
-                                                          'Fermer',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                  top: -20,
-                                                  child: CircleAvatar(
-                                                    radius: 35,
-                                                    child: Icon(
-                                                      Icons.signal_wifi_off,
-                                                      color: Colors.white,
-                                                      size: 35,
-                                                    ),
-                                                  )),
-                                            ],
-                                          ));
-                                    });
-                              }
+                              if (!fkey.currentState.validate()) return;
+                              //Requete a la base
+                              fkey.currentState.save();
+                              String login = logincontroller.value.text.trim();
+                              String pwd = passwordcontroller.value.text;
+                              String status =
+                                  statuscontroller.value.text.trim();
+                              var ws = ConnexionWs(
+                                  "<cab:login>" +
+                                      login +
+                                      "</cab:login><cab:pw>" +
+                                      pwd +
+                                      "</cab:pw><cab:statut>" +
+                                      status +
+                                      "</cab:statut>",
+                                  "Login");
+                              SharedPreferences sprefs =
+                                  await SharedPreferences.getInstance();
+                              sprefs.setString("no", login);
+                              ws.signIn(context);
                             },
                           ),
                         ),
