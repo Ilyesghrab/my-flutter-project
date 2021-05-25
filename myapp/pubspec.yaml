@@ -46,6 +46,7 @@ dependencies:
   shared_preferences: ^2.0.5
   xml: ^5.1.0
   fluttertoast: ^8.0.7
+  ntlm: ^2.0.1
  
 
 dev_dependencies:

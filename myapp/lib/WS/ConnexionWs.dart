@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myapp/model/user.dart';
 import 'package:myapp/pages/myaccountpage.dart';
+import 'package:ntlm/ntlm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
@@ -12,25 +13,20 @@ class ConnexionWs {
   ConnexionWs(this.config, this.nomtable);
   Future<List<User>> signIn(BuildContext context) async {
     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
-    String ip = sharedPrefs.getString('AdresseIp');
+    //String ip = sharedPrefs.getString('AdresseIp');
     //String port = sharedPrefs.getString('Port');
-    // String ws = sharedPrefs.getString('WS');
-    // String namespace = sharedPrefs.getString('NameSpace');
-    String no = sharedPrefs.getString('no');
+    //String ws = sharedPrefs.getString('WS');
+    //String namespace = sharedPrefs.getString('NameSpace');
+    //String no = sharedPrefs.getString('no');
     String port = "7047";
-    String ws = "CAB";
+    String ws = "BC140";
     String namespace = "urn:microsoft-dynamics-schemas/codeunit/CAB";
-
+    String ip = "192.168.1.8";
     var envelope =
-        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\">";
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\">";
 
     //"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"> <soap:Body> ";
-    envelope = envelope +
-        "<LogIn xmlns=\"" +
-        namespace +
-        "\"><login>" +
-        no +
-        "</login></LogIn>";
+    envelope = envelope + "<cab:LogIn" + config + "</cab:LogIn>";
     envelope = envelope + " </soap:Body> </soap:Envelope>";
 
     try {
@@ -38,7 +34,7 @@ class ConnexionWs {
       http.Response response = await http.post(url,
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
-            "SOAPAction": namespace + "/LogIn",
+            "SOAPAction": namespace + ":LogIn",
             "Host": ip + ":" + port,
           },
           body: envelope);

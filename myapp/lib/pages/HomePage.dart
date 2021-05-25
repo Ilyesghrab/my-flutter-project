@@ -114,6 +114,12 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           qrCodeResult = codeSanner;
                         });
+                        return {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Login()),
+                          )
+                        };
                       },
                     ),
                   ),

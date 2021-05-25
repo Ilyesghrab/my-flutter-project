@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Outils/rounded_button.dart';
 import 'package:myapp/WS/ConnexionWs.dart';
+import 'package:myapp/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
@@ -198,67 +199,79 @@ class _LoginState extends State<Login> {
                   ),
                 ],
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    height: 400,
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        textfield(
-                          hintText: 'Username:  Ilyes',
-                        ),
-                        textfield(
-                          hintText: 'E-mail:  Ilyes.ghrab@esprit.tn',
-                        ),
-                        /*Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: _buildStatus(),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: _buildName(),
-                        ),*/
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: _buildPassword(),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * .6,
-                          child: RoundedButton(
-                            text: "LogIn",
-                            fontSize: 20,
-                            press: () async {
-                              if (!fkey.currentState.validate()) return;
-                              //Requete a la base
-                              fkey.currentState.save();
-                              String login = logincontroller.value.text.trim();
-                              String pwd = passwordcontroller.value.text;
-                              String status =
-                                  statuscontroller.value.text.trim();
-                              var ws = ConnexionWs(
-                                  "<cab:login>" +
-                                      login +
-                                      "</cab:login><cab:pw>" +
-                                      pwd +
-                                      "</cab:pw><cab:statut>" +
-                                      status +
-                                      "</cab:statut>",
-                                  "Login");
-                              SharedPreferences sprefs =
-                                  await SharedPreferences.getInstance();
-                              sprefs.setString("no", login);
-                              ws.signIn(context);
-                            },
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      height: 400,
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          textfield(
+                            hintText: 'Username:  Ilyes',
                           ),
-                        ),
-                      ],
+                          textfield(
+                            hintText: 'E-mail:  Ilyes.ghrab@esprit.tn',
+                          ),
+                          /* Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: _buildStatus(),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: _buildName(),
+                          ),*/
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: _buildPassword(),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .6,
+                            child: RoundedButton(
+                              text: "LogIn",
+                              fontSize: 20,
+                              press: () async {
+                                String login =
+                                    logincontroller.value.text.trim();
+                                String pwd = passwordcontroller.value.text;
+                                String status =
+                                    statuscontroller.value.text.trim();
+                                String config = "<cab:LogIn>" +
+                                    login +
+                                    "</cab:login><cab:pw>" +
+                                    pwd +
+                                    "</cab:pw><cab:statut>" +
+                                    status +
+                                    "</cab:statut>" +
+                                    " </cab:LogIn>";
+                                var ws = ConnexionWs(config, " user");
+
+                                ws.signIn(context);
+                                // if (!fkey.currentState.validate()) return;
+                                //Requete a la base
+                                //fkey.currentState.save();
+
+                                /* var ws = ConnexionWs(
+                                    "<cab:login>" +
+                                        login +
+                                        "</cab:login><cab:pw>" +
+                                        pwd +
+                                        "</cab:pw><cab:statut>" +
+                                        status +
+                                        "</cab:statut>",
+                                    "Login");
+                                ws.signIn(context);*/
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
