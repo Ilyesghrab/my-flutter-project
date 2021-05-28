@@ -210,20 +210,20 @@ class _LoginState extends State<Login> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          textfield(
+                          /*textfield(
                             hintText: 'Username:  Ilyes',
                           ),
                           textfield(
                             hintText: 'E-mail:  Ilyes.ghrab@esprit.tn',
-                          ),
-                          /* Padding(
+                          ),*/
+                          Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: _buildStatus(),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: _buildName(),
-                          ),*/
+                          ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: _buildPassword(),
@@ -239,14 +239,13 @@ class _LoginState extends State<Login> {
                                 String pwd = passwordcontroller.value.text;
                                 String status =
                                     statuscontroller.value.text.trim();
-                                String config = "<cab:LogIn>" +
+                                String config = "<cab:login>" +
                                     login +
                                     "</cab:login><cab:pw>" +
                                     pwd +
                                     "</cab:pw><cab:statut>" +
                                     status +
-                                    "</cab:statut>" +
-                                    " </cab:LogIn>";
+                                    "</cab:statut>";
                                 var ws = ConnexionWs(config, " user");
 
                                 ws.signIn(context);

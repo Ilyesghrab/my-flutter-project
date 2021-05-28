@@ -12,7 +12,7 @@ class ConnexionWs {
   String nomtable;
   ConnexionWs(this.config, this.nomtable);
   Future<List<User>> signIn(BuildContext context) async {
-    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    //SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     //String ip = sharedPrefs.getString('AdresseIp');
     //String port = sharedPrefs.getString('Port');
     //String ws = sharedPrefs.getString('WS');
@@ -23,31 +23,25 @@ class ConnexionWs {
     String namespace = "urn:microsoft-dynamics-schemas/codeunit/CAB";
     String ip = "192.168.1.8";
     var envelope =
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\">";
+        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\">";
 
     //"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"> <soap:Body> ";
-    envelope = envelope + "<cab:LogIn" + config + "</cab:LogIn>";
-    envelope = envelope + " </soap:Body> </soap:Envelope>";
+    envelope = envelope + "<cab:LogIn>" + config + "</cab:LogIn>";
+    envelope = envelope + " </soapenv:Body> </soap:Envelope>";
 
     try {
       var url = Uri.parse('http://' + ip + ':' + port + '/' + ws);
       http.Response response = await http.post(url,
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
-            "SOAPAction": namespace + ":LogIn",
+            "SOAPAction": namespace + "/LogIn",
             "Host": ip + ":" + port,
           },
           body: envelope);
 
-      var raw = xml.parse(response.body);
-      // Partie conditionnelle //
-      // var elements = raw.findAllElements('MyTeam');
-
-      /*return elements.map((element) {
-      return User(element.findElements("SearchName").first.text,
-          element.findElements("No").first.text);
-    }).toList();*/
-      var elements = raw.findAllElements('SearchName');
+      var parse = xml.parse(response.body);
+      var raw = parse;
+      var elements = raw.findAllElements('userName');
       if (elements.isEmpty) {
         Fluttertoast.showToast(
             msg: "login ou mot de passe incorrecte !",
@@ -64,6 +58,7 @@ class ConnexionWs {
         );
       }
     } catch (ex) {
+      //print("ex: $ex");
       Fluttertoast.showToast(
           msg: "Problème de connection !",
           toastLength: Toast.LENGTH_SHORT,
