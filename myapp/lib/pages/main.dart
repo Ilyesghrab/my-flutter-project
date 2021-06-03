@@ -8,7 +8,7 @@ void main() {
     debugShowCheckedModeBanner: false,
   ));
 
-  NTLMClient client = new NTLMClient(
+  /*NTLMClient client = new NTLMClient(
     domain: "",
     workstation: "",
     username: "ilyes",
@@ -17,10 +17,10 @@ void main() {
 
   client
       .get(Uri.parse(
-          "http://192.168.1.8:7047/BC140/WS/CRONUS%20France%20S.A./Codeunit/CAB"))
+          "http://192.168.1.17:7047/BC140/WS/CRONUS%20France%20S.A./Codeunit/CAB"))
       .then((res) {
     print(res.body);
-  });
+  });*/
 }
 
 class MyApp extends StatefulWidget {

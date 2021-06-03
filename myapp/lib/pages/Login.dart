@@ -245,8 +245,9 @@ class _LoginState extends State<Login> {
                                     pwd +
                                     "</cab:pw><cab:statut>" +
                                     status +
-                                    "</cab:statut>";
-                                var ws = ConnexionWs(config, " user");
+                                    "</cab:statut>" +
+                                    "<cab:userName></cab:userName>";
+                                var ws = ConnexionWs(config, "user");
 
                                 ws.signIn(context);
                                 // if (!fkey.currentState.validate()) return;

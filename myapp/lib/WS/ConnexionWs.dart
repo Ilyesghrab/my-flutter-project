@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myapp/model/user.dart';
 import 'package:myapp/pages/myaccountpage.dart';
-import 'package:ntlm/ntlm.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
@@ -19,29 +17,31 @@ class ConnexionWs {
     //String namespace = sharedPrefs.getString('NameSpace');
     //String no = sharedPrefs.getString('no');
     String port = "7047";
-    String ws = "BC140";
+    String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
     String namespace = "urn:microsoft-dynamics-schemas/codeunit/CAB";
-    String ip = "192.168.1.8";
+    String ip = "desktop-44hhodu";
     var envelope =
-        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\">";
+        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+            "<soapenv:Body>";
 
-    //"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"> <soap:Body> ";
     envelope = envelope + "<cab:LogIn>" + config + "</cab:LogIn>";
-    envelope = envelope + " </soapenv:Body> </soap:Envelope>";
+    envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
 
     try {
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws);
+      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      print(url);
+      print(envelope);
       http.Response response = await http.post(url,
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
-            "SOAPAction": namespace + "/LogIn",
-            "Host": ip + ":" + port,
+            "SOAPAction": "urn:microsoft-dynamics-schemas/codeunit/CAB:LogIn",
+            //"Host": ip + ":" + port,
           },
           body: envelope);
 
       var parse = xml.parse(response.body);
       var raw = parse;
-      var elements = raw.findAllElements('userName');
+      var elements = raw.findAllElements('login');
       if (elements.isEmpty) {
         Fluttertoast.showToast(
             msg: "login ou mot de passe incorrecte !",
@@ -58,7 +58,7 @@ class ConnexionWs {
         );
       }
     } catch (ex) {
-      //print("ex: $ex");
+      print("ex: $ex");
       Fluttertoast.showToast(
           msg: "Problème de connection !",
           toastLength: Toast.LENGTH_SHORT,
