@@ -1,8 +1,8 @@
 class User {
-  int no;
+  int login;
   String password;
   String name;
   int status;
 
-  User(this.no, this.password, this.name, this.status);
+  User(this.login, this.password, this.name, this.status);
 }

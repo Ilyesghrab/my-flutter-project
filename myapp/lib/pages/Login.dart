@@ -204,7 +204,7 @@ class _LoginState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      height: 400,
+                      height: 370,
                       width: double.infinity,
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
