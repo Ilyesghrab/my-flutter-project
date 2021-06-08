@@ -1,9 +1,8 @@
+import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Outils/rounded_button.dart';
 import 'package:myapp/WS/ConnexionWs.dart';
-import 'package:myapp/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
 
 class Login extends StatefulWidget {
   @override
@@ -13,16 +12,64 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String user;
   String pass;
+  String codeSanner;
   final passwordcontroller = TextEditingController();
   final logincontroller = TextEditingController();
   final statuscontroller = TextEditingController();
   final GlobalKey<FormState> fkey = GlobalKey<FormState>();
   bool ci = true;
+  String login = "login";
+  String statut = "status";
+  String username = "username";
+
+  //Scan**************
+  Future<String> getlog() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _address = sp.getString("Login");
+
+    return _address;
+  }
+
+  Future<String> getstat() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _ns = sp.getString("Statut");
+    return _ns;
+  }
+
+  Future<String> getusername() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _ins = sp.getString("Username");
+    return _ins;
+  }
 
   @override
   void initState() {
     super.initState();
+    getlog().then(updateLog);
+    getstat().then(updateStat);
+    getusername().then(updatUser);
+    super.initState();
   }
+
+  void updateLog(String _add) {
+    setState(() {
+      this.login = _add;
+    });
+  }
+
+  void updateStat(String _add) {
+    setState(() {
+      this.statut = _add;
+    });
+  }
+
+  void updatUser(String _add) {
+    setState(() {
+      this.username = _add;
+    });
+  }
+
+  //scan******
 
   void visibility() {
     setState(() {
@@ -210,20 +257,23 @@ class _LoginState extends State<Login> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          /*textfield(
-                            hintText: 'Username:  Ilyes',
+                          textfield(
+                            hintText: login,
                           ),
                           textfield(
-                            hintText: 'E-mail:  Ilyes.ghrab@esprit.tn',
-                          ),*/
-                          Padding(
+                            hintText: username,
+                          ),
+                          textfield(
+                            hintText: statut,
+                          ),
+                          /*Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: _buildStatus(),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: _buildName(),
-                          ),
+                          ),*/
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: _buildPassword(),
@@ -250,20 +300,6 @@ class _LoginState extends State<Login> {
                                 var ws = ConnexionWs(config, "user");
 
                                 ws.signIn(context);
-                                // if (!fkey.currentState.validate()) return;
-                                //Requete a la base
-                                //fkey.currentState.save();
-
-                                /* var ws = ConnexionWs(
-                                    "<cab:login>" +
-                                        login +
-                                        "</cab:login><cab:pw>" +
-                                        pwd +
-                                        "</cab:pw><cab:statut>" +
-                                        status +
-                                        "</cab:statut>",
-                                    "Login");
-                                ws.signIn(context);*/
                               },
                             ),
                           ),
@@ -278,5 +314,29 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  Future<void> Qr_scan() async {
+    List<String> fh;
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String codeSanner = await BarcodeScanner.scan(); //barcode scnner
+    setState(() {
+      this.codeSanner = codeSanner == "-1" ? "login" : codeSanner;
+      fh = codeSanner.split("/");
+      login = fh[0];
+      statut = fh[1];
+      username = fh[2];
+      sp.setString("Login", login);
+      sp.setString("Statut", statut);
+      sp.setString("Username", username);
+      // qrCodeResult = codeSanner;
+      print(sp.toString());
+    });
+    return {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      )
+    };
   }
 }

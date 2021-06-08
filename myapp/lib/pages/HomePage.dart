@@ -6,6 +6,9 @@ import 'package:myapp/Outils/rounded_button.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/pages/Login.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
+import 'package:myapp/pages/Login.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget with NavigationStates {
@@ -15,6 +18,29 @@ class HomePage extends StatefulWidget with NavigationStates {
 
 class _HomePageState extends State<HomePage> {
   String qrCodeResult = "Not Yet Scanned";
+  String codeSanner;
+  String login = "login";
+  String statut = "status";
+  String username = "username";
+  Future<String> getlog() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _address = sp.getString("Login");
+
+    return _address;
+  }
+
+  Future<String> getstat() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _ns = sp.getString("Statut");
+    return _ns;
+  }
+
+  Future<String> getusername() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _ins = sp.getString("Username");
+    return _ins;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,22 +132,34 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * .6,
                     child: RoundedButton(
-                      text: "Open Scanner",
-                      fontSize: 20,
-                      press: () async {
-                        String codeSanner =
-                            await BarcodeScanner.scan(); //barcode scnner
-                        setState(() {
-                          qrCodeResult = codeSanner;
-                        });
-                        return {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Login()),
-                          )
-                        };
-                      },
-                    ),
+                        text: "Open Scanner",
+                        fontSize: 20,
+                        press: () async {
+                          List<String> fh;
+                          SharedPreferences sp =
+                              await SharedPreferences.getInstance();
+                          String codeSanner =
+                              await BarcodeScanner.scan(); //barcode scnner
+                          setState(() {
+                            this.codeSanner =
+                                codeSanner == "-1" ? "login" : codeSanner;
+                            fh = codeSanner.split("/");
+                            login = fh[0];
+                            statut = fh[1];
+                            username = fh[2];
+                            sp.setString("Login", login);
+                            sp.setString("Statut", statut);
+                            sp.setString("Username", username);
+                            // qrCodeResult = codeSanner;
+                            print(sp.toString());
+                          });
+                          return {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Login()),
+                            )
+                          };
+                        }),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * .6,
