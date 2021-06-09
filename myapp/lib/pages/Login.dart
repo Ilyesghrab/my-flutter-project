@@ -79,24 +79,28 @@ class _LoginState extends State<Login> {
 
   Widget textfield({@required String hintText}) {
     return Material(
-      elevation: 7,
+      elevation: 5,
       shadowColor: Colors.grey,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: TextField(
-        decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-              letterSpacing: 2,
-              color: Colors.black54,
-              fontWeight: FontWeight.bold,
-            ),
-            fillColor: Colors.white30,
-            filled: true,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide.none)),
+      child: Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              icon: Icon(Icons.person),
+              hintText: hintText,
+              hintStyle: TextStyle(
+                letterSpacing: 2,
+                color: Colors.black54,
+                fontWeight: FontWeight.w800,
+              ),
+              fillColor: Colors.grey[50],
+              filled: true,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide.none)),
+        ),
       ),
     );
   }
@@ -106,6 +110,7 @@ class _LoginState extends State<Login> {
       enableSuggestions: true,
       controller: logincontroller,
       decoration: InputDecoration(
+          hintText: login,
           labelText: 'Login',
           icon: Icon(Icons.person),
           hintStyle: TextStyle(
@@ -139,6 +144,7 @@ class _LoginState extends State<Login> {
       enableSuggestions: true,
       controller: statuscontroller,
       decoration: InputDecoration(
+          hintText: statut,
           labelText: 'status',
           icon: Icon(Icons.online_prediction),
           hintStyle: TextStyle(
@@ -258,15 +264,15 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           textfield(
-                            hintText: login,
+                            hintText: "Login : $login",
                           ),
-                          textfield(
+                          /*textfield(
                             hintText: username,
-                          ),
+                          ),*/
                           textfield(
-                            hintText: statut,
+                            hintText: "Statut : $statut",
                           ),
-                          /*Padding(
+                          /* Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: _buildStatus(),
                           ),
@@ -284,17 +290,17 @@ class _LoginState extends State<Login> {
                               text: "LogIn",
                               fontSize: 20,
                               press: () async {
-                                String login =
-                                    logincontroller.value.text.trim();
+                                //String login =
+                                // logincontroller.value.text.trim();
                                 String pwd = passwordcontroller.value.text;
-                                String status =
-                                    statuscontroller.value.text.trim();
+                                // String status =
+                                // statuscontroller.value.text.trim();
                                 String config = "<cab:login>" +
                                     login +
                                     "</cab:login><cab:pw>" +
                                     pwd +
                                     "</cab:pw><cab:statut>" +
-                                    status +
+                                    statut +
                                     "</cab:statut>" +
                                     "<cab:userName></cab:userName>";
                                 var ws = ConnexionWs(config, "user");
@@ -316,7 +322,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Future<void> Qr_scan() async {
+  /*Future<void> Qr_scan() async {
     List<String> fh;
     SharedPreferences sp = await SharedPreferences.getInstance();
     String codeSanner = await BarcodeScanner.scan(); //barcode scnner
@@ -338,5 +344,5 @@ class _LoginState extends State<Login> {
         MaterialPageRoute(builder: (context) => Login()),
       )
     };
-  }
+  }*/
 }

@@ -7,12 +7,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/Data/data.dart';
+import 'package:myapp/Data/inventories.dart';
+import 'package:myapp/Data/receptions.dart';
+import 'package:myapp/Data/scanners.dart';
+import 'package:myapp/Data/transferts.dart';
+import 'package:myapp/Data/categories.dart';
 import 'package:myapp/Scanner/scan.dart';
+import 'package:myapp/model/inventory.dart';
 import 'package:myapp/pages/HomePage.dart';
 import 'package:myapp/List/mylist.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
-import 'package:myapp/Data/categories.dart';
 import 'package:myapp/model/category.dart';
+import 'package:myapp/model/scanner.dart';
+import 'package:myapp/model/transfert.dart';
+import 'package:myapp/model/reception.dart';
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/myaccountpage.dart';
 
@@ -36,6 +44,10 @@ class CategoriesPageState extends State<CategoriesPage> {
 
   List<Produit> tems = List.of(Data.produits);
   List<Category> items = List.of(Categories.categoris);
+  List<Inventory> itemss = List.of(Inventories.inventoris);
+  List<Reception> ritems = List.of(Receptions.receptions);
+  List<Transfert> titems = List.of(Transferts.transferts);
+  List<Scanner> sitems = List.of(Scanners.scanners);
   String qrCodeResult = "Not Yet Scanned";
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -236,7 +248,7 @@ class CategoriesPageState extends State<CategoriesPage> {
                               shape: BoxShape.circle,
                               color: current == index
                                   ? Colors.teal[600]
-                                  : Colors.grey[400]),
+                                  : Colors.teal[600]),
                         );
                       },
                     ),
@@ -246,7 +258,10 @@ class CategoriesPageState extends State<CategoriesPage> {
           Container(
             height: 123,
             child: ListView.builder(
-              itemCount: items.length,
+              itemCount: (sitems.length) &
+                  (itemss.length) &
+                  (ritems.length) &
+                  (titems.length),
               padding: EdgeInsets.only(left: 16),
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
@@ -256,12 +271,42 @@ class CategoriesPageState extends State<CategoriesPage> {
                       current = index;
                     });
                   },
-                  child: OperationCat(
-                      operation: items[index].categoryName,
-                      selectedIcon: items[index].selectedIcon,
-                      unselectedIcon: items[index].unselectedIcon,
-                      isSelected: current == index,
-                      context: this),
+                  child: Row(
+                    children: [
+                      OperationCat(
+                          operation: sitems[index].scannerName,
+                          selectedIcon: sitems[index].selectedIcon,
+                          unselectedIcon: sitems[index].unselectedIcon,
+                          isSelected: current == index,
+                          context: this),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyList()),
+                          );
+                        },
+                        child: OperationCat(
+                            operation: itemss[index].inventoryName,
+                            selectedIcon: itemss[index].selectedIcon,
+                            unselectedIcon: itemss[index].unselectedIcon,
+                            isSelected: current == index,
+                            context: this),
+                      ),
+                      OperationCat(
+                          operation: ritems[index].receptionName,
+                          selectedIcon: ritems[index].selectedIcon,
+                          unselectedIcon: ritems[index].unselectedIcon,
+                          isSelected: current == index,
+                          context: this),
+                      OperationCat(
+                          operation: titems[index].transfertName,
+                          selectedIcon: titems[index].selectedIcon,
+                          unselectedIcon: titems[index].unselectedIcon,
+                          isSelected: current == index,
+                          context: this),
+                    ],
+                  ),
                 );
               },
             ),
@@ -308,47 +353,6 @@ class CategoriesPageState extends State<CategoriesPage> {
               avatarWidget("jante", "Jante"),
               avatarWidget("pneu", "Pneu"),
               avatarWidget("radio", "Radio CD"),
-              /*Container(
-                margin: EdgeInsets.only(right: 10),
-                height: 150,
-                width: 120,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.grey[200]),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.only(left: 16, right: 6),
-                  itemCount: tems.length,
-                  itemBuilder: (context, index) {
-                    final it = tems[index];
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              image: DecorationImage(
-                                  image: AssetImage(it.imgPath),
-                                  fit: BoxFit.contain),
-                              border: Border.all(
-                                  color: Colors.teal[600], width: 2)),
-                        ),
-                        Text(
-                          it.foodName,
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.teal[600],
-                              fontFamily: 'avenir',
-                              fontWeight: FontWeight.w700),
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),*/
             ]),
           ),
         ]),
@@ -556,13 +560,16 @@ class _OperationCatState extends State<OperationCat> {
             )
           ],
           borderRadius: BorderRadius.circular(15),
-          color: widget.isSelected ? Colors.teal[600] : Colors.grey[200]),
+          color: widget.isSelected
+              ? Colors.grey[200]
+              : Colors.teal[600]), //reverse
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SvgPicture.asset(
-              widget.isSelected ? widget.selectedIcon : widget.unselectedIcon),
+          SvgPicture.asset(widget.isSelected
+              ? widget.unselectedIcon
+              : widget.selectedIcon), //reverse
           SizedBox(
             height: 9,
           ),
@@ -572,7 +579,9 @@ class _OperationCatState extends State<OperationCat> {
             style: GoogleFonts.inter(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
-                color: widget.isSelected ? Colors.white : Colors.teal[600]),
+                color: widget.isSelected
+                    ? Colors.teal[600]
+                    : Colors.white), //reverse
           )
         ],
       ),
