@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/model/inventory_Header.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/Data/data.dart';
 import 'package:myapp/pages/HomePage.dart';
@@ -8,6 +9,7 @@ import 'package:myapp/Outils/search_widget.dart';
 import 'package:myapp/Outils/slidable_widget.dart';
 import 'package:myapp/Scanner/scan.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
+import 'package:myapp/WS/ConnexionWs.dart';
 
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/myaccountpage.dart';
@@ -37,9 +39,17 @@ class _MyHomePageState extends State<MyHomePage>
   Animation<double> _translateButton;
   Curve _curve = Curves.easeOut;
   double _fabHeight = 56.0;
-
+  Future<List<InventoryH>> getAll;
   List<Produit> items = List.of(Data.produits);
   String query = '';
+  String login;
+
+  Future<List<InventoryH>> getlist() async {
+    ConnexionWs ws = new ConnexionWs(
+        "<cab:login>${this.login}</cab:login>" + "<cab:vARJson></cab:vARJson>",
+        "inventory_H");
+    List<InventoryH> t = await ws.getAll();
+  }
 
   @override
   void initState() {
@@ -140,16 +150,21 @@ class _MyHomePageState extends State<MyHomePage>
                           children: <Widget>[
                             buildSearch(),
                             Expanded(
-                              child: ListView.builder(
-                                  itemCount: items.length,
-                                  //separatorBuilder: (context, index) => Divider(),
-                                  itemBuilder: (context, index) {
-                                    final item = items[index];
+                                child: FutureBuilder<List<InventoryH>>(
+                                    future: getAll,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<List<InventoryH>>
+                                            snapshot) {
+                                      return ListView.builder(
+                                          itemCount: items.length,
+                                          //separatorBuilder: (context, index) => Divider(),
+                                          itemBuilder: (context, index) {
+                                            final item = items[index];
 
-                                    return SlidableWidget(
-                                        child: buildListTile(item));
-                                  }),
-                            )
+                                            return SlidableWidget(
+                                                child: buildListTile(item));
+                                          });
+                                    }))
                           ],
                         )),
                   )
@@ -295,57 +310,6 @@ class _MyHomePageState extends State<MyHomePage>
               ],
             )));
   }
-
-/* Widget _buildFoodItem(String imgPath, String foodName, String price) {
-    return Padding(
-        padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-        child: InkWell(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailsPage(
-                      heroTag: imgPath, foodName: foodName, foodPrice: price)));
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                    child: Row(children: [
-                  Hero(
-                      tag: imgPath,
-                      child: Container(
-                        width: 75.0,
-                        height: 75.0,
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xFF21BFBD), width: 3),
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          image: DecorationImage(
-                              fit: BoxFit.cover, image: AssetImage(imgPath)),
-                        ),
-                      )),
-                  SizedBox(width: 10.0),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(foodName,
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.bold)),
-                        Text(price,
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 15.0,
-                                color: Colors.grey))
-                      ])
-                ])),
-                IconButton(
-                    icon: Icon(Icons.add),
-                    color: Colors.black,
-                    onPressed: () {})
-              ],
-            )));}*/
 
   Widget buildSearch() => SearchWidget(
         text: query,
