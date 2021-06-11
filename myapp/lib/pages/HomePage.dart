@@ -129,10 +129,10 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(color: Colors.grey),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * .6,
+                    width: MediaQuery.of(context).size.width * .4,
                     child: RoundedButton(
-                        text: "Open Scanner",
-                        fontSize: 20,
+                        text: "Log IN",
+                        fontSize: 18,
                         press: () async {
                           List<String> fh;
                           SharedPreferences sp =

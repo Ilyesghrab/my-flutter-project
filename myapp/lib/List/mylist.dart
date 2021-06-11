@@ -1,9 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/model/inventory_Header.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/Data/data.dart';
 import 'package:myapp/pages/HomePage.dart';
-import 'package:myapp/List/detailsPage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:myapp/Outils/search_widget.dart';
 import 'package:myapp/Outils/slidable_widget.dart';
@@ -14,24 +14,12 @@ import 'package:myapp/WS/ConnexionWs.dart';
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/myaccountpage.dart';
 
-class MyList extends StatelessWidget with NavigationStates {
-  // This widget is the root of your application.
+class MyList extends StatefulWidget with NavigationStates {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+  MyListState createState() => MyListState();
 }
 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
   bool isOpened = false;
   AnimationController _animationController;
   Animation<Color> _buttonColor;
@@ -43,16 +31,46 @@ class _MyHomePageState extends State<MyHomePage>
   List<Produit> items = List.of(Data.produits);
   String query = '';
   String login;
+  bool pb = false;
 
   Future<List<InventoryH>> getlist() async {
-    ConnexionWs ws = new ConnexionWs(
-        "<cab:login>${this.login}</cab:login>" + "<cab:vARJson></cab:vARJson>",
-        "inventory_H");
-    List<InventoryH> t = await ws.getAll();
+    try {
+      String config =
+          "<cab:login>C02</cab:login>" + "<cab:vARJson></cab:vARJson>";
+      var ws = new ConnexionWs(config, "inventory_Header");
+
+      List<InventoryH> t = await ws.getAll();
+      int n = t.length;
+      print(n.toString());
+      if (t == null) {
+        setState(() {
+          pb = true;
+        });
+        return [];
+      } else {
+        setState(() {
+          pb = false;
+        });
+        List<InventoryH> a = [];
+        setState(() {
+          for (int i = 0; i < n; i++) {
+            print("i=$i");
+            a.add(t[n - 1 - i]);
+          }
+        });
+        return a;
+      }
+    } catch (ex) {
+      print("ex: $ex");
+      setState(() {
+        pb = true;
+      });
+    }
   }
 
   @override
   void initState() {
+    getAll = getlist();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     _animationController.value = _animationController.value;
@@ -116,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage>
             padding: EdgeInsets.only(left: 40.0),
             child: Row(
               children: <Widget>[
-                Text('Product',
+                Text('Inventory',
                     style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -155,15 +173,80 @@ class _MyHomePageState extends State<MyHomePage>
                                     builder: (BuildContext context,
                                         AsyncSnapshot<List<InventoryH>>
                                             snapshot) {
-                                      return ListView.builder(
-                                          itemCount: items.length,
-                                          //separatorBuilder: (context, index) => Divider(),
-                                          itemBuilder: (context, index) {
-                                            final item = items[index];
-
-                                            return SlidableWidget(
-                                                child: buildListTile(item));
-                                          });
+                                      if (snapshot.data == null) {
+                                        return CupertinoActivityIndicator();
+                                      } else {
+                                        return ListView.builder(
+                                            itemCount: snapshot.data.length,
+                                            //separatorBuilder: (context, index) => Divider(),
+                                            itemBuilder: (context, index) {
+                                              return SlidableWidget(
+                                                  child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Container(
+                                                      child: Row(children: [
+                                                    Hero(
+                                                        tag: snapshot
+                                                            .data[index]
+                                                            .locationCd,
+                                                        child: Container(
+                                                          width: 75.0,
+                                                          height: 75.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                                color: Color(
+                                                                    0xFF21BFBD),
+                                                                width: 3),
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            color: Colors.white,
+                                                            /*image: DecorationImage(
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                image: AssetImage(
+                                                                    'assets/images/truck.png')),*/
+                                                          ),
+                                                        )),
+                                                    SizedBox(width: 10.0),
+                                                    Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              snapshot
+                                                                  .data[index]
+                                                                  .no,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize:
+                                                                      17.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                          /*Text(item.foodPrice,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 15.0,
+                                                                color: Colors
+                                                                    .grey))*/
+                                                        ])
+                                                  ])),
+                                                  IconButton(
+                                                      icon: Icon(
+                                                          Icons.arrow_back_ios),
+                                                      color: Colors.black,
+                                                      onPressed: () {})
+                                                ],
+                                              ));
+                                            });
+                                      }
                                     }))
                           ],
                         )),
@@ -256,7 +339,7 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
-  Widget buildListTile(Produit item) {
+  /*Widget buildListTile(AsyncSnapshot snapshot) {
     return Padding(
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
         child: InkWell(
@@ -309,7 +392,7 @@ class _MyHomePageState extends State<MyHomePage>
                     onPressed: () {})
               ],
             )));
-  }
+  }*/
 
   Widget buildSearch() => SearchWidget(
         text: query,

@@ -16,12 +16,12 @@ class ConnexionWs {
 //LOGIN*************************************************************************************
 
   Future<List<User>> signIn(BuildContext context) async {
-    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    //SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     //String ip = sharedPrefs.getString('AdresseIp');
     //String port = sharedPrefs.getString('Port');
     //String ws = sharedPrefs.getString('WS');
     //String namespace = sharedPrefs.getString('NameSpace');
-    String config = sharedPrefs.getString('config');
+    //String config = sharedPrefs.getString('config');
     String port = "7047";
     String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
     String ip = "192.168.1.8";
@@ -60,10 +60,6 @@ class ConnexionWs {
       var stat = raw.findAllElements('statut').first;
       print(stat.text);
 
-      //var raw = XmlDocument.parse(response.body);
-      //print(raw.toString());
-      //var raw = parse;
-      //var elements = raw.findElements('login');
       if ((stat == null) | (stat.toString() == '')) {
         Fluttertoast.showToast(
             msg: "login ou mot de passe incorrecte !",
@@ -93,7 +89,6 @@ class ConnexionWs {
   Future<List<InventoryH>> getAll() async {
     String port = "7047";
     String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-    //String namespace = "urn:microsoft-dynamics-schemas/codeunit/CAB";
     String ip = "192.168.1.8";
     var envelope =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
@@ -125,6 +120,43 @@ class ConnexionWs {
       print("response.statusCode ==> ${response.statusCode}");
       print("response.reasonPhrase ==> ${response.reasonPhrase}");
       print("response.statusCode ==> ${response.body}");
+      var storeDocument = xml.parse(response.body);
+      var StatusXML =
+          storeDocument.findAllElements('vARJson').first.children.toString();
+      String s = StatusXML;
+      s = s.substring(1, s.length - 1);
+
+      String ch = s;
+      double l = 0;
+      for (int i = 0; i < s.length; i++) {
+        if (s[i] == ",") l++;
+      }
+      l = l + 1;
+      l = (l / 2) as double;
+
+      for (int j = 0; j < l; j++) {
+        String Inventaire = ch.substring(0, ch.indexOf(",") + 1);
+        Inventaire = Inventaire.substring(
+            Inventaire.indexOf(":") + 1, Inventaire.length - 1);
+        Inventaire = Inventaire.substring(1, Inventaire.length - 1);
+        print("Inventaire=====>${Inventaire.toString()}");
+        ch = ch.substring(ch.indexOf(",") + 1);
+
+        String Magasin = "";
+        if (j < l - 1) {
+          Magasin = ch.substring(0, ch.indexOf(",") + 1);
+          Magasin =
+              Magasin.substring(Magasin.indexOf(":") + 1, Magasin.length - 1);
+          Magasin = Magasin.substring(1, Magasin.length - 1);
+          ch = ch.substring(ch.indexOf(",") + 1);
+        } else {
+          Magasin = ch.substring(0, ch.indexOf("}") + 1);
+          Magasin =
+              Magasin.substring(Magasin.indexOf(":") + 1, Magasin.length - 1);
+          Magasin = Magasin.substring(1, Magasin.length - 1);
+          print("Magasin=====>${Magasin.toString()}");
+        }
+      }
     } catch (ex) {
       print(ex);
       Fluttertoast.showToast(
