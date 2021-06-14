@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/List/detailsPage.dart';
+import 'package:myapp/List/mylist.dart';
 import 'package:myapp/model/inventory_Header.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/Data/data.dart';
@@ -15,12 +16,13 @@ import 'package:myapp/WS/ConnexionWs.dart';
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/myaccountpage.dart';
 
-class MyList extends StatefulWidget with NavigationStates {
+class ListCount extends StatefulWidget with NavigationStates {
   @override
-  MyListState createState() => MyListState();
+  ListCountState createState() => ListCountState();
 }
 
-class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
+class ListCountState extends State<ListCount>
+    with SingleTickerProviderStateMixin {
   bool isOpened = false;
   AnimationController _animationController;
   Animation<Color> _buttonColor;
@@ -28,19 +30,20 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
   Animation<double> _translateButton;
   Curve _curve = Curves.easeOut;
   double _fabHeight = 56.0;
-  Future<List<InventoryH>> getInv;
+  Future<List<InventoryH>> getC;
   List<Produit> items = List.of(Data.produits);
   String query = '';
   String login;
   bool pb = false;
 
-  Future<List<InventoryH>> getlist() async {
+  Future<List<InventoryH>> getlistC() async {
     try {
-      String config =
-          "<cab:login>C02</cab:login>" + "<cab:vARJson></cab:vARJson>";
+      String config = "<cab:login>C02</cab:login>" +
+          "<cab:noInv>INV2101</cab:noInv>" +
+          "<cab:vARJson></cab:vARJson>";
       ConnexionWs ws = new ConnexionWs(config, "inventory_Header");
 
-      List<InventoryH> t = await ws.getAll();
+      List<InventoryH> t = await ws.getCoun();
       int n = t.length;
       print(n.toString());
       if (t == null) {
@@ -71,7 +74,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    getInv = getlist();
+    getC = getlistC();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     _animationController.value = _animationController.value;
@@ -111,7 +114,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CategoriesPage()),
+                      MaterialPageRoute(builder: (context) => MyList()),
                     );
                   },
                 ),
@@ -135,7 +138,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
             padding: EdgeInsets.only(left: 40.0),
             child: Row(
               children: <Widget>[
-                Text('Inventory',
+                Text('Counting',
                     style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -170,7 +173,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                             buildSearch(),
                             Expanded(
                                 child: FutureBuilder<List<InventoryH>>(
-                                    future: getInv,
+                                    future: getC,
                                     builder: (BuildContext context,
                                         AsyncSnapshot<List<InventoryH>>
                                             snapshot) {
@@ -181,6 +184,8 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                             itemCount: snapshot.data.length,
                                             //separatorBuilder: (context, index) => Divider(),
                                             itemBuilder: (context, index) {
+                                              InventoryH t =
+                                                  snapshot.data[index];
                                               return SlidableWidget(
                                                   child: Row(
                                                 mainAxisAlignment:
@@ -190,9 +195,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                   Container(
                                                       child: Row(children: [
                                                     Hero(
-                                                        tag: snapshot
-                                                            .data[index]
-                                                            .locationCd,
+                                                        tag: "",
                                                         child: Container(
                                                           width: 75.0,
                                                           height: 75.0,
@@ -210,7 +213,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                                 fit: BoxFit
                                                                     .cover,
                                                                 image: AssetImage(
-                                                                    'assets/images/inventory.png')),
+                                                                    'assets/images/note.png')),
                                                           ),
                                                         )),
                                                     SizedBox(width: 10.0),
@@ -220,9 +223,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                                 .start,
                                                         children: [
                                                           Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .no,
+                                                              "Comptage ${t.noCount}",
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
@@ -232,9 +233,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                                       FontWeight
                                                                           .bold)),
                                                           Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .locationCd,
+                                                              "${t.no}: ${t.locationCd}",
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
@@ -402,7 +401,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
 
   Widget buildSearch() => SearchWidget(
         text: query,
-        hintText: 'Name Or Location',
+        hintText: 'Counting Name',
         onChanged: searchItem,
       );
 

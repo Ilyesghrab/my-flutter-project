@@ -105,7 +105,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _buildName() {
+  /*Widget _buildName() {
     return TextFormField(
       enableSuggestions: true,
       controller: logincontroller,
@@ -137,9 +137,9 @@ class _LoginState extends State<Login> {
         user = value;
       },
     );
-  }
+  }*/
 
-  Widget _buildStatus() {
+  /*Widget _buildStatus() {
     return TextFormField(
       enableSuggestions: true,
       controller: statuscontroller,
@@ -171,7 +171,7 @@ class _LoginState extends State<Login> {
         user = value;
       },
     );
-  }
+  }*/
 
   Widget _buildPassword() {
     return TextFormField(

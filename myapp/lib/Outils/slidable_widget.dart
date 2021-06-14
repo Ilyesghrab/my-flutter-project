@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:myapp/List/listCount.dart';
 
 enum SlidableAction { archive, share, more, delete }
 
@@ -24,10 +25,15 @@ class SlidableWidget<T> extends StatelessWidget {
         /// right side
         secondaryActions: <Widget>[
           IconSlideAction(
-            caption: 'More',
+            caption: 'Count',
             color: Colors.blue,
             icon: Icons.more_horiz,
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ListCount()),
+              );
+            },
           ),
           IconSlideAction(
             caption: 'Delete',
