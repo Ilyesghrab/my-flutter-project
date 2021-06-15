@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/List/detailsPage.dart';
+import 'package:myapp/WS/InventaireWs.dart';
 import 'package:myapp/model/inventory_Header.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/Data/data.dart';
@@ -10,10 +10,10 @@ import 'package:myapp/Outils/search_widget.dart';
 import 'package:myapp/Outils/slidable_widget.dart';
 import 'package:myapp/Scanner/scan.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
-import 'package:myapp/WS/ConnexionWs.dart';
-
 import 'package:myapp/model/produit.dart';
+import 'package:myapp/pages/addInv.dart';
 import 'package:myapp/pages/myaccountpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyList extends StatefulWidget with NavigationStates {
   @override
@@ -31,14 +31,17 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
   Future<List<InventoryH>> getInv;
   List<Produit> items = List.of(Data.produits);
   String query = '';
-  String login;
+  //String login;
   bool pb = false;
 
   Future<List<InventoryH>> getlist() async {
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    String login = sharedPrefs.getString('Login');
+
     try {
       String config =
-          "<cab:login>C02</cab:login>" + "<cab:vARJson></cab:vARJson>";
-      ConnexionWs ws = new ConnexionWs(config, "inventory_Header");
+          "<cab:login>$login</cab:login>" + "<cab:vARJson></cab:vARJson>";
+      InventaireWs ws = new InventaireWs(config, "inventory_Header");
 
       List<InventoryH> t = await ws.getAll();
       int n = t.length;
@@ -77,7 +80,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
     _animationController.value = _animationController.value;
     _animationIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-    _buttonColor = ColorTween(begin: Color(0xFF21BFBD), end: Colors.red)
+    _buttonColor = ColorTween(begin: Color(0xFF21BFBD), end: Color(0xFF21BFBD))
         .animate(CurvedAnimation(
             parent: _animationController,
             curve: Interval(0.00, 1.00, curve: Curves.linear)));
@@ -345,16 +348,16 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget buildListTile(AsyncSnapshot snapshot) {
+  /*Widget buildListTile(AsyncSnapshot snapshot) {
     return Padding(
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
         child: InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => DetailsPage(
-                        //heroTag: item.imgPath,
-                        foodName: snapshot.data.locationCd,
-                        foodPrice: snapshot.data.no,
+                      //heroTag: item.imgPath,
+                      // foodName: snapshot.data.locationCd,
+                      //foodPrice: snapshot.data.no,
                       )));
             },
             child: Row(
@@ -398,7 +401,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                     onPressed: () {})
               ],
             )));
-  }
+  }*/
 
   Widget buildSearch() => SearchWidget(
         text: query,
@@ -425,7 +428,12 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
   Widget buttonAdd() {
     return Container(
         child: FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddInv()),
+        );
+      },
       tooltip: "Add",
       child: Icon(Icons.add),
     ));

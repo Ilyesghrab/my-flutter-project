@@ -86,7 +86,8 @@ class _DetailsPageState extends State<DetailsPage> {
                             shape: BoxShape.circle,
                             color: Colors.white,
                             image: DecorationImage(
-                                image: AssetImage(widget.heroTag),
+                                image:
+                                    AssetImage("assets/images/inventory.png"),
                                 fit: BoxFit.cover)),
                         height: 200.0,
                         width: 200.0))),
@@ -97,7 +98,7 @@ class _DetailsPageState extends State<DetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(widget.foodName,
+                    Text(widget.foodPrice,
                         style: TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: 22.0,

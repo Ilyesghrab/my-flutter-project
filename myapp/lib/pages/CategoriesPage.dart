@@ -273,12 +273,20 @@ class CategoriesPageState extends State<CategoriesPage> {
                   },
                   child: Row(
                     children: [
-                      OperationCat(
-                          operation: sitems[index].scannerName,
-                          selectedIcon: sitems[index].selectedIcon,
-                          unselectedIcon: sitems[index].unselectedIcon,
-                          isSelected: current == index,
-                          context: this),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ScanPage()),
+                          );
+                        },
+                        child: OperationCat(
+                            operation: sitems[index].scannerName,
+                            selectedIcon: sitems[index].selectedIcon,
+                            unselectedIcon: sitems[index].unselectedIcon,
+                            isSelected: current == index,
+                            context: this),
+                      ),
                       InkWell(
                         onTap: () {
                           Navigator.push(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myapp/model/inventory_Entry.dart';
 import 'package:myapp/model/inventory_Header.dart';
 import 'package:myapp/model/user.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
@@ -7,10 +8,10 @@ import 'package:http/http.dart' as http;
 import 'package:ntlm/ntlm.dart';
 import 'package:xml/xml.dart' as xml;
 
-class ConnexionWs {
+class InventaireWs {
   String config;
   String nomtable;
-  ConnexionWs(this.config, this.nomtable);
+  InventaireWs(this.config, this.nomtable);
 
 //LOGIN*************************************************************************************
 
@@ -257,4 +258,108 @@ class ConnexionWs {
           timeInSecForIosWeb: 1);
     }
   }
+
+  //Insert Inventory*************************************************************************************
+
+  Future<bool> InsertInv() async {
+    String port = "7047";
+    String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
+    String ip = "192.168.1.9";
+    var envelope =
+        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+            "<soapenv:Body>";
+    envelope =
+        envelope + "<cab:InsertInventory>" + config + "</cab:InsertInventory>";
+    envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+    try {
+      NTLMClient client = NTLMClient(
+        domain: "",
+        workstation: "DESKTOP-44HHODU",
+        username: "ilyes",
+        password: "1234",
+      );
+      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      print(url);
+      print(envelope);
+      http.Response response = await client.post(url,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:InsertInventory",
+          },
+          body: envelope);
+      print(response.statusCode);
+      print("response.statusCode ==> ${response.statusCode}");
+      print("response.reasonPhrase ==> ${response.reasonPhrase}");
+      print("response.statusCode ==> ${response.body}");
+      var storeDocument = xml.parse(response.body);
+
+      var Data = storeDocument.findAllElements('InsertInventory_Result');
+
+      if (Data.length <= 0) {
+        return false;
+      }
+      return true;
+    } catch (ex) {
+      print(ex);
+      Fluttertoast.showToast(
+          msg: "probleme de connexion",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1);
+    }
+  }
+  //Insert Item*************************************************************************************
+
+  Future<bool> InsertItem() async {
+    String port = "7047";
+    String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
+    String ip = "192.168.1.9";
+    var envelope =
+        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+            "<soapenv:Body>";
+    envelope = envelope + "<cab:InsertItem>" + config + "</cab:InsertItem>";
+    envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+    try {
+      NTLMClient client = NTLMClient(
+        domain: "",
+        workstation: "DESKTOP-44HHODU",
+        username: "ilyes",
+        password: "1234",
+      );
+      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      print(url);
+      print(envelope);
+      http.Response response = await client.post(url,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:CAB:InsertItem",
+          },
+          body: envelope);
+      print(response.statusCode);
+      print("response.statusCode ==> ${response.statusCode}");
+      print("response.reasonPhrase ==> ${response.reasonPhrase}");
+      print("response.statusCode ==> ${response.body}");
+      var storeDocument = xml.parse(response.body);
+
+      var Data = storeDocument.findAllElements('InsertItem_Result');
+
+      if (Data.length <= 0) {
+        return false;
+      }
+      return true;
+    } catch (ex) {
+      print(ex);
+      Fluttertoast.showToast(
+          msg: "probleme de connexion",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1);
+    }
+  }
+
+  //Export scanned item inventory*************************************************************************************
+
+  Future<List<InventoryE>> getScannedArticle() async {}
 }

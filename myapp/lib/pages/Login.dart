@@ -1,7 +1,7 @@
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Outils/rounded_button.dart';
-import 'package:myapp/WS/ConnexionWs.dart';
+import 'package:myapp/WS/InventaireWs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -303,7 +303,7 @@ class _LoginState extends State<Login> {
                                     statut +
                                     "</cab:statut>" +
                                     "<cab:userName></cab:userName>";
-                                var ws = ConnexionWs(config, "user");
+                                var ws = InventaireWs(config, "user");
 
                                 ws.signIn(context);
                               },

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/List/detailsPage.dart';
 import 'package:myapp/List/mylist.dart';
+import 'package:myapp/WS/InventaireWs.dart';
 import 'package:myapp/model/inventory_Header.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/Data/data.dart';
@@ -11,7 +11,6 @@ import 'package:myapp/Outils/search_widget.dart';
 import 'package:myapp/Outils/slidable_widget.dart';
 import 'package:myapp/Scanner/scan.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
-import 'package:myapp/WS/ConnexionWs.dart';
 
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/myaccountpage.dart';
@@ -41,7 +40,7 @@ class ListCountState extends State<ListCount>
       String config = "<cab:login>C02</cab:login>" +
           "<cab:noInv>INV2101</cab:noInv>" +
           "<cab:vARJson></cab:vARJson>";
-      ConnexionWs ws = new ConnexionWs(config, "inventory_Header");
+      InventaireWs ws = new InventaireWs(config, "inventory_Header");
 
       List<InventoryH> t = await ws.getCoun();
       int n = t.length;
@@ -344,16 +343,16 @@ class ListCountState extends State<ListCount>
     );
   }
 
-  Widget buildListTile(AsyncSnapshot snapshot) {
+  /* Widget buildListTile(AsyncSnapshot snapshot) {
     return Padding(
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
         child: InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => DetailsPage(
-                        //heroTag: item.imgPath,
-                        foodName: snapshot.data.locationCd,
-                        foodPrice: snapshot.data.no,
+                      //heroTag: item.imgPath,
+                      // foodName: snapshot.data.locationCd,
+                      //foodPrice: snapshot.data.no,
                       )));
             },
             child: Row(
@@ -397,7 +396,7 @@ class ListCountState extends State<ListCount>
                     onPressed: () {})
               ],
             )));
-  }
+  }*/
 
   Widget buildSearch() => SearchWidget(
         text: query,

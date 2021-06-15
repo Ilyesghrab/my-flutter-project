@@ -47,6 +47,7 @@ dependencies:
   xml: ^5.1.0
   fluttertoast: ^8.0.7
   ntlm: ^2.0.1
+  simple_animations: ^2.4.2
  
 
 dev_dependencies:
