@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myapp/List/listProd.dart';
 import 'package:myapp/List/mylist.dart';
 import 'package:myapp/Outils/FadeAnimation.dart';
+import 'package:myapp/WS/InventaireWs.dart';
 
 class AddInv extends StatefulWidget {
   @override
@@ -33,6 +36,76 @@ class AddInvState extends State<AddInv> {
     setState(() {
       _counter--;
     });
+  }
+
+  final Barcodecontroller = TextEditingController();
+  final Itemcontroller = TextEditingController();
+  final Countcontroller = TextEditingController();
+  String bc;
+  String ds;
+  String cn;
+
+  Widget _buildBarcode() {
+    return TextFormField(
+      controller: Barcodecontroller,
+      decoration: InputDecoration(
+          icon: Icon(Icons.qr_code),
+          hintText: "Bar code item",
+          hintStyle: TextStyle(color: Colors.grey),
+          border: InputBorder.none),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Bar code is required';
+        }
+        String s;
+        value = value.trim();
+
+        return null;
+      },
+      onSaved: (String value) {},
+    );
+  }
+
+  Widget _buildItem() {
+    return TextFormField(
+      controller: Itemcontroller,
+      decoration: InputDecoration(
+          icon: Icon(Icons.tag),
+          hintText: "Item number",
+          hintStyle: TextStyle(color: Colors.grey),
+          border: InputBorder.none),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Item number is required';
+        }
+        String s;
+        value = value.trim();
+
+        return null;
+      },
+      onSaved: (String value) {},
+    );
+  }
+
+  Widget _buildCount() {
+    return TextFormField(
+      controller: Countcontroller,
+      decoration: InputDecoration(
+          icon: Icon(Icons.calculate),
+          hintText: "Counting",
+          hintStyle: TextStyle(color: Colors.grey),
+          border: InputBorder.none),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Counting number is required';
+        }
+        String s;
+        value = value.trim();
+
+        return null;
+      },
+      onSaved: (String value) {},
+    );
   }
 
   @override
@@ -85,7 +158,7 @@ class AddInvState extends State<AddInv> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            //SizedBox(height: 20),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -116,50 +189,26 @@ class AddInvState extends State<AddInv> {
                               child: Column(
                                 children: <Widget>[
                                   Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.grey[200]))),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          icon: Icon(Icons.qr_code),
-                                          hintText: "Bar code item",
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none),
-                                    ),
-                                  ),
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.grey[200]))),
+                                      child: _buildBarcode()),
                                   Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.grey[200]))),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          icon: Icon(Icons.tag),
-                                          hintText: "Designation",
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none),
-                                    ),
-                                  ),
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.grey[200]))),
+                                      child: _buildItem()),
                                   Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.grey[200]))),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          icon: Icon(Icons.calculate),
-                                          hintText: "Counting",
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none),
-                                    ),
-                                  ),
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.grey[200]))),
+                                      child: _buildCount()),
                                 ],
                               ),
                             )),
@@ -316,18 +365,71 @@ class AddInvState extends State<AddInv> {
                         ),
                         FadeAnimation(
                             1.6,
-                            Container(
-                              height: 50,
-                              margin: EdgeInsets.symmetric(horizontal: 50),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.lightBlue[900]),
-                              child: Center(
-                                child: Text(
-                                  "Add",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                            InkWell(
+                              onTap: () async {
+                                bool sucess;
+                                String bc = Barcodecontroller.value.text.trim();
+                                String cnt = Countcontroller.value.text.trim();
+                                String itno = Itemcontroller.value.text.trim();
+                                String count1 = _counterQ.toString();
+                                String count2 = _counter.toString();
+
+                                String config =
+                                    "<cab:inventoryNum>INV2101</cab:inventoryNum>" +
+                                        "<cab:itemNo>" +
+                                        itno +
+                                        "</cab:itemNo>" +
+                                        "<cab:itemBarCode>" +
+                                        bc +
+                                        "</cab:itemBarCode>" +
+                                        "<cab:quantity>" +
+                                        count1 +
+                                        "</cab:quantity>" +
+                                        "<cab:userId>C02</cab:userId>" +
+                                        "<cab:terminalId></cab:terminalId>" +
+                                        "<cab:vracQuantity>" +
+                                        count2 +
+                                        "</cab:vracQuantity>" +
+                                        "<cab:comptage>" +
+                                        cnt +
+                                        "</cab:comptage>" +
+                                        "<cab:binCode></cab:binCode>";
+                                try {
+                                  var ws =
+                                      InventaireWs(config, "inventory_Entry");
+                                  sucess = await ws.InsertInv();
+                                } catch (e) {
+                                  print("Exception ==> ");
+                                  print(e.toString());
+                                }
+                                if (sucess) {
+                                  Fluttertoast.showToast(
+                                      msg: "Item added",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1);
+                                }
+                                ;
+                                return {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ListProd()))
+                                };
+                              },
+                              child: Container(
+                                height: 50,
+                                margin: EdgeInsets.symmetric(horizontal: 50),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.lightBlue[900]),
+                                child: Center(
+                                  child: Text(
+                                    "Add",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               ),
                             )),

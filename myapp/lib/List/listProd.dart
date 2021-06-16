@@ -1,26 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/List/listCount.dart';
+import 'package:myapp/List/mylist.dart';
 import 'package:myapp/WS/InventaireWs.dart';
-import 'package:myapp/model/inventory_Header.dart';
+import 'package:myapp/model/inventory_Entry.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/Data/data.dart';
 import 'package:myapp/pages/HomePage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:myapp/Outils/search_widget.dart';
-import 'package:myapp/Outils/slidable_widgetINV.dart';
+import 'package:myapp/Outils/slidable_widgetPROD.dart';
 import 'package:myapp/Scanner/scan.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
-import 'package:myapp/model/produit.dart';
-import 'package:myapp/pages/addInv.dart';
-import 'package:myapp/pages/myaccountpage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class MyList extends StatefulWidget with NavigationStates {
+import 'package:myapp/model/produit.dart';
+import 'package:myapp/pages/myaccountpage.dart';
+
+class ListProd extends StatefulWidget with NavigationStates {
   @override
-  MyListState createState() => MyListState();
+  ListProdState createState() => ListProdState();
 }
 
-class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
+class ListProdState extends State<ListProd>
+    with SingleTickerProviderStateMixin {
   bool isOpened = false;
   AnimationController _animationController;
   Animation<Color> _buttonColor;
@@ -28,22 +30,21 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
   Animation<double> _translateButton;
   Curve _curve = Curves.easeOut;
   double _fabHeight = 56.0;
-  Future<List<InventoryH>> getInv;
+  Future<List<InventoryE>> getE;
   List<Produit> items = List.of(Data.produits);
   String query = '';
-  //String login;
+  String login;
   bool pb = false;
 
-  Future<List<InventoryH>> getlist() async {
-    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
-    String login = sharedPrefs.getString('Login');
-
+  Future<List<InventoryE>> getlistE() async {
     try {
-      String config =
-          "<cab:login>$login</cab:login>" + "<cab:vARJson></cab:vARJson>";
-      InventaireWs ws = new InventaireWs(config, "inventory_Header");
+      String config = "<cab:inventoryNum>INV2101</cab:inventoryNum>" +
+          "<cab:terminalId></cab:terminalId>" +
+          "<cab:comptage>1</cab:comptage>" +
+          "<cab:vARJson></cab:vARJson>";
+      InventaireWs ws = new InventaireWs(config, "inventory_Entry");
 
-      List<InventoryH> t = await ws.getAll();
+      List<InventoryE> t = await ws.getScannedArticle();
       int n = t.length;
       print(n.toString());
       if (t == null) {
@@ -55,7 +56,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
         setState(() {
           pb = false;
         });
-        List<InventoryH> a = [];
+        List<InventoryE> a = [];
         setState(() {
           for (int i = 0; i < n; i++) {
             print("i=$i");
@@ -74,13 +75,13 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    getInv = getlist();
+    getE = getlistE();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     _animationController.value = _animationController.value;
     _animationIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-    _buttonColor = ColorTween(begin: Color(0xFF21BFBD), end: Color(0xFF21BFBD))
+    _buttonColor = ColorTween(begin: Color(0xFF21BFBD), end: Colors.red)
         .animate(CurvedAnimation(
             parent: _animationController,
             curve: Interval(0.00, 1.00, curve: Curves.linear)));
@@ -114,7 +115,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CategoriesPage()),
+                      MaterialPageRoute(builder: (context) => ListCount()),
                     );
                   },
                 ),
@@ -138,7 +139,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
             padding: EdgeInsets.only(left: 40.0),
             child: Row(
               children: <Widget>[
-                Text('Inventory',
+                Text('Items',
                     style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -172,10 +173,10 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                           children: <Widget>[
                             buildSearch(),
                             Expanded(
-                                child: FutureBuilder<List<InventoryH>>(
-                                    future: getInv,
+                                child: FutureBuilder<List<InventoryE>>(
+                                    future: getE,
                                     builder: (BuildContext context,
-                                        AsyncSnapshot<List<InventoryH>>
+                                        AsyncSnapshot<List<InventoryE>>
                                             snapshot) {
                                       if (snapshot.data == null) {
                                         return CupertinoActivityIndicator();
@@ -184,6 +185,8 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                             itemCount: snapshot.data.length,
                                             //separatorBuilder: (context, index) => Divider(),
                                             itemBuilder: (context, index) {
+                                              InventoryE t =
+                                                  snapshot.data[index];
                                               return SlidableWidget(
                                                   child: Row(
                                                 mainAxisAlignment:
@@ -193,12 +196,10 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                   Container(
                                                       child: Row(children: [
                                                     Hero(
-                                                        tag: snapshot
-                                                            .data[index]
-                                                            .locationCd,
+                                                        tag: "",
                                                         child: Container(
-                                                          width: 75.0,
-                                                          height: 75.0,
+                                                          width: 60.0,
+                                                          height: 60.0,
                                                           decoration:
                                                               BoxDecoration(
                                                             border: Border.all(
@@ -213,7 +214,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                                 fit: BoxFit
                                                                     .cover,
                                                                 image: AssetImage(
-                                                                    'assets/images/inventory.png')),
+                                                                    'assets/images/jante.jpg')),
                                                           ),
                                                         )),
                                                     SizedBox(width: 10.0),
@@ -222,10 +223,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .no,
+                                                          Text("${t.des}",
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
@@ -235,9 +233,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                                       FontWeight
                                                                           .bold)),
                                                           Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .locationCd,
+                                                              "Reference: ${t.ref} | Quantity: ${t.qte}\nEmplacement ${t.emplacement}\n  ",
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
@@ -247,11 +243,11 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                                       .grey))
                                                         ])
                                                   ])),
-                                                  IconButton(
+                                                  /*IconButton(
                                                       icon: Icon(
                                                           Icons.arrow_back_ios),
                                                       color: Colors.black,
-                                                      onPressed: () {})
+                                                      onPressed: () {})*/
                                                 ],
                                               ));
                                             });
@@ -348,7 +344,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
     );
   }
 
-  /*Widget buildListTile(AsyncSnapshot snapshot) {
+  /* Widget buildListTile(AsyncSnapshot snapshot) {
     return Padding(
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
         child: InkWell(
@@ -405,7 +401,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
 
   Widget buildSearch() => SearchWidget(
         text: query,
-        hintText: 'Name Or Location',
+        hintText: 'Product Name',
         onChanged: searchItem,
       );
 
@@ -428,12 +424,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
   Widget buttonAdd() {
     return Container(
         child: FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AddInv()),
-        );
-      },
+      onPressed: () {},
       tooltip: "Add",
       child: Icon(Icons.add),
     ));

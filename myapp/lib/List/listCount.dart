@@ -8,7 +8,7 @@ import 'package:myapp/Data/data.dart';
 import 'package:myapp/pages/HomePage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:myapp/Outils/search_widget.dart';
-import 'package:myapp/Outils/slidable_widget.dart';
+import 'package:myapp/Outils/slidable_widgetCOUNT.dart';
 import 'package:myapp/Scanner/scan.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
 

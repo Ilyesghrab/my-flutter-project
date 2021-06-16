@@ -87,16 +87,20 @@ class InventaireWs {
 //Liste Inventaire*************************************************************************************
 
   Future<List<InventoryH>> getAll() async {
-    String port = "7047";
-    String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-    String ip = "192.168.1.9";
-    var envelope =
-        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
-            "<soapenv:Body>";
-    envelope =
-        envelope + "<cab:ExportInventory>" + config + "</cab:ExportInventory>";
-    envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+    List<InventoryH> getInv = [];
     try {
+      String port = "7047";
+      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
+      String ip = "192.168.1.9";
+      var envelope =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+              "<soapenv:Body>";
+      envelope = envelope +
+          "<cab:ExportInventory>" +
+          config +
+          "</cab:ExportInventory>";
+      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+
       NTLMClient client = NTLMClient(
         domain: "",
         workstation: "DESKTOP-44HHODU",
@@ -118,7 +122,7 @@ class InventaireWs {
       print("response.reasonPhrase ==> ${response.reasonPhrase}");
       print("response.statusCode ==> ${response.body}");
       var storeDocument = xml.parse(response.body);
-      List<InventoryH> getInv = [];
+
       var StatusXML =
           storeDocument.findAllElements('vARJson').first.children.toString();
       String s = StatusXML;
@@ -156,31 +160,34 @@ class InventaireWs {
         }
         InventoryH t = new InventoryH(Inventaire, Magasin, "");
         getInv.add(t);
-        return getInv;
       }
-    } catch (ex) {
-      print(ex);
+    } catch (Exception) {
+      print(Exception.toString());
+      /*print(ex);
       Fluttertoast.showToast(
           msg: "probleme de connexion !",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1);
+          timeInSecForIosWeb: 1);*/
     }
+    return getInv;
   }
 
 //Liste Comptage*************************************************************************************
 
   Future<List<InventoryH>> getCoun() async {
-    String port = "7047";
-    String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-    String ip = "192.168.1.9";
-    var envelope =
-        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
-            "<soapenv:Body>";
-    envelope =
-        envelope + "<cab:ExportCounting>" + config + "</cab:ExportCounting>";
-    envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+    List<InventoryH> getC = [];
     try {
+      String port = "7047";
+      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
+      String ip = "192.168.1.9";
+      var envelope =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+              "<soapenv:Body>";
+      envelope =
+          envelope + "<cab:ExportCounting>" + config + "</cab:ExportCounting>";
+      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+
       NTLMClient client = NTLMClient(
         domain: "",
         workstation: "DESKTOP-44HHODU",
@@ -202,7 +209,7 @@ class InventaireWs {
       print("response.reasonPhrase ==> ${response.reasonPhrase}");
       print("response.statusCode ==> ${response.body}");
       var storeDocument = xml.parse(response.body);
-      List<InventoryH> getC = [];
+
       var StatusXML =
           storeDocument.findAllElements('vARJson').first.children.toString();
       String s = StatusXML;
@@ -247,16 +254,17 @@ class InventaireWs {
         }
         InventoryH t = new InventoryH(Inventaire, Magasin, Comptage);
         getC.add(t);
-        return getC;
       }
-    } catch (ex) {
-      print(ex);
+    } catch (Exception) {
+      print(Exception.toString());
+      /*print(ex);
       Fluttertoast.showToast(
           msg: "probleme de connexion !",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1);
+          timeInSecForIosWeb: 1);*/
     }
+    return getC;
   }
 
   //Insert Inventory*************************************************************************************
@@ -361,5 +369,90 @@ class InventaireWs {
 
   //Export scanned item inventory*************************************************************************************
 
-  Future<List<InventoryE>> getScannedArticle() async {}
+  Future<List<InventoryE>> getScannedArticle() async {
+    List<InventoryE> getE = [];
+    try {
+      String port = "7047";
+      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
+      String ip = "192.168.1.9";
+      var envelope =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+              "<soapenv:Body>";
+      envelope = envelope +
+          "<cab:ExportScannedItemsInventory>" +
+          config +
+          "</cab:ExportScannedItemsInventory>";
+      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+
+      NTLMClient client = NTLMClient(
+        domain: "",
+        workstation: "DESKTOP-44HHODU",
+        username: "ilyes",
+        password: "1234",
+      );
+      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      print(url);
+      print(envelope);
+      http.Response response = await client.post(url,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportScannedItemsInventory",
+          },
+          body: envelope);
+      print(response.statusCode);
+      print("response.statusCode ==> ${response.statusCode}");
+      print("response.reasonPhrase ==> ${response.reasonPhrase}");
+      print("response.statusCode ==> ${response.body}");
+      var storeDocument = xml.parse(response.body);
+
+      var StatusXML = storeDocument.findAllElements('vARJson').first;
+      var jsonData = StatusXML.text;
+      print("jsonData ==> $jsonData");
+
+      String dataStr = StatusXML.text;
+      String ref;
+      String des;
+      String emplacement;
+      String qte;
+      //String img;
+      //print("dataStr ==> $dataStr");
+      if (dataStr == "{}") {
+        dataStr = null;
+      }
+      while ((dataStr != null)) {
+        ref = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        print("ref==> $ref");
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+
+        des = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        print("des==> $des");
+
+        emplacement = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        print("emplacement==> $emplacement");
+
+        qte = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        print("qte==> $qte");
+
+        InventoryE t = new InventoryE(ref, des, emplacement, qte);
+        getE.add(t);
+      }
+    } catch (Exception) {
+      print(Exception.toString());
+      // print(ex);
+      /*Fluttertoast.showToast(
+          msg: "probleme de connexion !",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1);*/
+    }
+    return getE;
+  }
 }
