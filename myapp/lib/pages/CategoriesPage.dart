@@ -23,6 +23,7 @@ import 'package:myapp/model/transfert.dart';
 import 'package:myapp/model/reception.dart';
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/myaccountpage.dart';
+import 'package:myapp/pages/parametre.dart';
 
 class CategoriesPage extends StatefulWidget with NavigationStates {
   @override
@@ -59,9 +60,24 @@ class CategoriesPageState extends State<CategoriesPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.menu),
+                  icon: Icon(Icons.exit_to_app),
                   color: Colors.grey[400],
-                  onPressed: () {},
+                  onPressed: () {
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.QUESTION,
+                      animType: AnimType.BOTTOMSLIDE,
+                      title: 'Warning',
+                      desc: 'Are you sure you want to quit ?',
+                      btnCancelOnPress: () {},
+                      btnOkOnPress: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      },
+                    )..show();
+                  },
                 ),
                 Container(
                     margin: EdgeInsets.only(left: 16, right: 16, top: 8),
@@ -72,8 +88,7 @@ class CategoriesPageState extends State<CategoriesPage> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => MyAccountsPage()),
+                              MaterialPageRoute(builder: (context) => Param()),
                             );
                           },
                           child: Container(
@@ -376,7 +391,7 @@ class CategoriesPageState extends State<CategoriesPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyAccountsPage()),
+                  MaterialPageRoute(builder: (context) => Param()),
                 );
               },
             ),

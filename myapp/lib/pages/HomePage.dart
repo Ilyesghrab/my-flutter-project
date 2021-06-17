@@ -21,6 +21,13 @@ class _HomePageState extends State<HomePage> {
   String login = "login";
   String statut = "status";
   String username = "username";
+  String port = "Port";
+  String webserv = "Webserv";
+  String ip = "Ip";
+  String domaine = "Domaine";
+  String workstation = "Workstation";
+  String usernamentlm = "UsernameNTLM";
+
   Future<String> getlog() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     String _address = sp.getString("Login");
@@ -38,6 +45,42 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences sp = await SharedPreferences.getInstance();
     String _ins = sp.getString("Username");
     return _ins;
+  }
+
+  Future<String> getport() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String p = sp.getString("Port");
+    return p;
+  }
+
+  Future<String> getwebserv() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String w = sp.getString("Webserv");
+    return w;
+  }
+
+  Future<String> getIp() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String i = sp.getString("Ip");
+    return i;
+  }
+
+  Future<String> getdomaine() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String i = sp.getString("Domaine");
+    return i;
+  }
+
+  Future<String> getworkstation() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String i = sp.getString("Workstation");
+    return i;
+  }
+
+  Future<String> getusernameNtlm() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String i = sp.getString("UsernameNTLM");
+    return i;
   }
 
   @override
@@ -146,9 +189,18 @@ class _HomePageState extends State<HomePage> {
                             login = fh[0];
                             statut = fh[1];
                             username = fh[2];
+                            port = fh[3];
+                            webserv = fh[4];
+                            ip = fh[5];
                             sp.setString("Login", login);
                             sp.setString("Statut", statut);
                             sp.setString("Username", username);
+                            sp.setString("Port", port);
+                            sp.setString("Webserv", webserv);
+                            sp.setString("Ip", ip);
+                            sp.setString("Domaine", domaine);
+                            sp.setString("Workstation", workstation);
+                            sp.setString("UsernameNTLM", usernamentlm);
                             // qrCodeResult = codeSanner;
                             print(sp.toString());
                           });

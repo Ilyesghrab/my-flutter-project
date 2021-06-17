@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/List/detailsPage.dart';
 import 'package:myapp/List/listCount.dart';
 import 'package:myapp/List/mylist.dart';
 import 'package:myapp/WS/InventaireWs.dart';
@@ -187,69 +188,86 @@ class ListProdState extends State<ListProd>
                                             itemBuilder: (context, index) {
                                               InventoryE t =
                                                   snapshot.data[index];
-                                              return SlidableWidget(
-                                                  child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Row(children: [
-                                                    Hero(
-                                                        tag: "",
-                                                        child: Container(
-                                                          width: 60.0,
-                                                          height: 60.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .white,
-                                                                //0xFF21BFBD),
-                                                                width: 3),
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: Colors.white,
-                                                            image: DecorationImage(
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                image: AssetImage(
-                                                                    'assets/images/jante.jpg')),
-                                                          ),
-                                                        )),
-                                                    SizedBox(width: 10.0),
-                                                    Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text("${t.des}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      17.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                          Text(
-                                                              "Reference: ${t.ref} | Quantity: ${t.qte}\nEmplacement ${t.emplacement}\n  ",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Colors
-                                                                      .grey))
-                                                        ])
-                                                  ])),
-                                                  /*IconButton(
+                                              return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 10.0,
+                                                      right: 10.0,
+                                                      top: 10.0),
+                                                  child: InkWell(
+                                                      onTap: () {
+                                                        Navigator.of(context).push(
+                                                            MaterialPageRoute(
+                                                                builder: (context) => DetailsPage(
+                                                                    designation:
+                                                                        t.des,
+                                                                    emplacement: t
+                                                                        .emplacement,
+                                                                    quatite:
+                                                                        t.qte,
+                                                                    reference: t
+                                                                        .ref)));
+                                                      },
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Container(
+                                                              child: Row(
+                                                                  children: [
+                                                                Hero(
+                                                                    tag: "",
+                                                                    child:
+                                                                        Container(
+                                                                      width:
+                                                                          60.0,
+                                                                      height:
+                                                                          60.0,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        border: Border.all(
+                                                                            color: Colors.white,
+                                                                            //0xFF21BFBD),
+                                                                            width: 3),
+                                                                        shape: BoxShape
+                                                                            .circle,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        image: DecorationImage(
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            image: AssetImage('assets/images/jante.jpg')),
+                                                                      ),
+                                                                    )),
+                                                                SizedBox(
+                                                                    width:
+                                                                        10.0),
+                                                                Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                          "${t.des}",
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Montserrat',
+                                                                              fontSize: 17.0,
+                                                                              fontWeight: FontWeight.bold)),
+                                                                      Text(
+                                                                          "Reference: ${t.ref} | Quantity: ${t.qte}\nEmplacement ${t.emplacement}\n  ",
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Montserrat',
+                                                                              fontSize: 15.0,
+                                                                              color: Colors.grey))
+                                                                    ])
+                                                              ])),
+                                                          /*IconButton(
                                                       icon: Icon(
                                                           Icons.arrow_back_ios),
                                                       color: Colors.black,
                                                       onPressed: () {})*/
-                                                ],
-                                              ));
+                                                        ],
+                                                      )));
                                             });
                                       }
                                     }))

@@ -152,7 +152,7 @@ class AddInvState extends State<AddInv> {
                   FadeAnimation(
                       1.3,
                       Text(
-                        "Inventory",
+                        "Item to counting",
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       )),
                 ],

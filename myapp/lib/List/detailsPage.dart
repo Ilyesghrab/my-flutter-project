@@ -1,12 +1,15 @@
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Outils/FadeAnimation.dart';
 
 class DetailsPage extends StatefulWidget {
-  final heroTag;
-  final foodName;
-  final foodPrice;
+  final designation;
+  final emplacement;
+  final quatite;
+  final reference;
 
-  DetailsPage({this.heroTag, this.foodName, this.foodPrice});
+  DetailsPage(
+      {this.designation, this.emplacement, this.quatite, this.reference});
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
@@ -75,10 +78,10 @@ class _DetailsPageState extends State<DetailsPage> {
                     height: MediaQuery.of(context).size.height - 100.0,
                     width: MediaQuery.of(context).size.width)),
             Positioned(
-                top: 30.0,
+                top: 20.0,
                 left: (MediaQuery.of(context).size.width / 2) - 100.0,
                 child: Hero(
-                    tag: widget.heroTag,
+                    tag: widget.designation,
                     child: Container(
                         decoration: BoxDecoration(
                             border:
@@ -86,8 +89,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             shape: BoxShape.circle,
                             color: Colors.white,
                             image: DecorationImage(
-                                image:
-                                    AssetImage("assets/images/inventory.png"),
+                                image: AssetImage("assets/images/jante.jpg"),
                                 fit: BoxFit.cover)),
                         height: 200.0,
                         width: 200.0))),
@@ -98,22 +100,36 @@ class _DetailsPageState extends State<DetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(widget.foodPrice,
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold)),
-                    SizedBox(height: 20.0),
+                    FadeAnimation(
+                      1.4,
+                      Text(widget.designation,
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.normal)),
+                    ),
+                    SizedBox(height: 30.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(widget.foodPrice,
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 20.0,
-                                color: Colors.grey)),
+                        FadeAnimation(
+                          1.4,
+                          Text("Qte: ${widget.quatite}",
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 20.0,
+                                  color: Colors.grey)),
+                        ),
                         Container(height: 25.0, color: Colors.grey, width: 1.0),
-                        Container(
+                        FadeAnimation(
+                          1.4,
+                          Text("Ref: ${widget.reference}",
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 20.0,
+                                  color: Colors.grey)),
+                        ),
+                        /*Container(
                           width: 125.0,
                           height: 40.0,
                           decoration: BoxDecoration(
@@ -163,22 +179,37 @@ class _DetailsPageState extends State<DetailsPage> {
                               )
                             ],
                           ),
-                        )
+                        )*/
                       ],
                     ),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 40.0),
                     Container(
                         height: 150.0,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            _buildInfoCard('Weight', '300', 'KG'),
+                          children: [
+                            FadeAnimation(
+                              1.4,
+                              _buildInfoCard(
+                                  'Designation', '${widget.designation}', ''),
+                            ),
                             SizedBox(width: 10.0),
-                            _buildInfoCard('Price', '267', 'HTT'),
+                            FadeAnimation(
+                              1.4,
+                              _buildInfoCard(
+                                  'Reference', '${widget.reference}', ''),
+                            ),
                             SizedBox(width: 10.0),
-                            _buildInfoCard('Location', 'A, B6', ''),
+                            FadeAnimation(
+                                1.4,
+                                _buildInfoCard(
+                                    'Quantité', '${widget.quatite}', '')),
                             SizedBox(width: 10.0),
-                            _buildInfoCard('AVAIL', 'NO', 'AV')
+                            FadeAnimation(
+                              1.4,
+                              _buildInfoCard(
+                                  'Emplacement', '${widget.emplacement}', ''),
+                            )
                           ],
                         )),
                     SizedBox(height: 20.0),
@@ -191,7 +222,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                 topRight: Radius.circular(10.0),
                                 bottomLeft: Radius.circular(25.0),
                                 bottomRight: Radius.circular(25.0)),
-                            color: Colors.black),
+                            color: Color(0xFF7A9BEE)),
                         height: 50.0,
                         child: Center(
                           child: GestureDetector(
@@ -271,8 +302,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                 fontSize: 14.0,
                                 color: cardTitle == selectedCard
                                     ? Colors.white
-                                    : Colors.black,
-                                fontWeight: FontWeight.bold)),
+                                    : Color(0xFF7A9BEE),
+                                fontWeight: FontWeight.normal)),
                         Text(unit,
                             style: TextStyle(
                               fontFamily: 'Montserrat',

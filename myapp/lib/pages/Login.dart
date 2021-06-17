@@ -322,27 +322,5 @@ class _LoginState extends State<Login> {
     );
   }
 
-  /*Future<void> Qr_scan() async {
-    List<String> fh;
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    String codeSanner = await BarcodeScanner.scan(); //barcode scnner
-    setState(() {
-      this.codeSanner = codeSanner == "-1" ? "login" : codeSanner;
-      fh = codeSanner.split("/");
-      login = fh[0];
-      statut = fh[1];
-      username = fh[2];
-      sp.setString("Login", login);
-      sp.setString("Statut", statut);
-      sp.setString("Username", username);
-      // qrCodeResult = codeSanner;
-      print(sp.toString());
-    });
-    return {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Login()),
-      )
-    };
-  }*/
+  
 }
