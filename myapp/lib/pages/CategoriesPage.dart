@@ -12,6 +12,7 @@ import 'package:myapp/Data/receptions.dart';
 import 'package:myapp/Data/scanners.dart';
 import 'package:myapp/Data/transferts.dart';
 import 'package:myapp/Data/categories.dart';
+import 'package:myapp/List/listPurchase.dart';
 import 'package:myapp/Scanner/scan.dart';
 import 'package:myapp/model/inventory.dart';
 import 'package:myapp/pages/HomePage.dart';
@@ -293,12 +294,21 @@ class CategoriesPageState extends State<CategoriesPage> {
                             isSelected: current == index,
                             context: this),
                       ),
-                      OperationCat(
-                          operation: ritems[index].receptionName,
-                          selectedIcon: ritems[index].selectedIcon,
-                          unselectedIcon: ritems[index].unselectedIcon,
-                          isSelected: current == index,
-                          context: this),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ListPurchase()),
+                          );
+                        },
+                        child: OperationCat(
+                            operation: ritems[index].receptionName,
+                            selectedIcon: ritems[index].selectedIcon,
+                            unselectedIcon: ritems[index].unselectedIcon,
+                            isSelected: current == index,
+                            context: this),
+                      ),
                       OperationCat(
                           operation: titems[index].transfertName,
                           selectedIcon: titems[index].selectedIcon,

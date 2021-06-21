@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myapp/List/listProd.dart';
+
+import 'package:myapp/List/listPurchase.dart';
 import 'package:myapp/List/mylist.dart';
 import 'package:myapp/Outils/FadeAnimation.dart';
-import 'package:myapp/WS/InventaireWs.dart';
 
-class AddInv extends StatefulWidget {
+import 'package:myapp/WS/ReceptionWs.dart';
+
+class AddReception extends StatefulWidget {
   @override
-  AddInvState createState() => AddInvState();
+  AddReceptionState createState() => AddReceptionState();
 }
 
-class AddInvState extends State<AddInv> {
+class AddReceptionState extends State<AddReception> {
   int _counter = 0;
   int _counterQ = 0;
 
@@ -40,7 +42,7 @@ class AddInvState extends State<AddInv> {
 
   final Barcodecontroller = TextEditingController();
   final Itemcontroller = TextEditingController();
-  final Countcontroller = TextEditingController();
+  final Ordercontroller = TextEditingController();
   String bc;
   String ds;
   String cn;
@@ -49,7 +51,7 @@ class AddInvState extends State<AddInv> {
     return TextFormField(
       controller: Barcodecontroller,
       decoration: InputDecoration(
-          icon: Icon(Icons.qr_code, color: Colors.lightBlue[900]),
+          icon: Icon(Icons.qr_code, color: Colors.deepPurple[400]),
           hintText: "Bar code item",
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
@@ -70,7 +72,7 @@ class AddInvState extends State<AddInv> {
     return TextFormField(
       controller: Itemcontroller,
       decoration: InputDecoration(
-          icon: Icon(Icons.tag, color: Colors.lightBlue[900]),
+          icon: Icon(Icons.tag, color: Colors.deepPurple[400]),
           hintText: "Item number",
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
@@ -87,17 +89,20 @@ class AddInvState extends State<AddInv> {
     );
   }
 
-  Widget _buildCount() {
+  Widget _buildOrder() {
     return TextFormField(
-      controller: Countcontroller,
+      controller: Ordercontroller,
       decoration: InputDecoration(
-          icon: Icon(Icons.calculate, color: Colors.lightBlue[900]),
-          hintText: "Counting",
+          icon: Icon(
+            Icons.calculate,
+            color: Colors.deepPurple[400],
+          ),
+          hintText: "Purchase order",
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
       validator: (String value) {
         if (value.isEmpty) {
-          return 'Counting number is required';
+          return 'Purchase order number is required';
         }
         String s;
         value = value.trim();
@@ -115,9 +120,9 @@ class AddInvState extends State<AddInv> {
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.lightBlue[900],
-          Colors.lightBlue[800],
-          Colors.lightBlue[400]
+          Colors.deepPurple[400],
+          Colors.deepPurple[300],
+          Colors.deepPurple[200]
         ])),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +136,7 @@ class AddInvState extends State<AddInv> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyList()),
+                  MaterialPageRoute(builder: (context) => ListPurchase()),
                 );
               },
             ),
@@ -152,7 +157,7 @@ class AddInvState extends State<AddInv> {
                   FadeAnimation(
                       1.3,
                       Text(
-                        "Item to counting",
+                        "Reception",
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       )),
                 ],
@@ -207,7 +212,7 @@ class AddInvState extends State<AddInv> {
                                           border: Border(
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
-                                      child: _buildCount()),
+                                      child: _buildOrder()),
                                 ],
                               ),
                             )),
@@ -219,7 +224,7 @@ class AddInvState extends State<AddInv> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Vrac Quantity',
+                              Text('Package',
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontFamily: 'Montserrat')),
@@ -228,7 +233,7 @@ class AddInvState extends State<AddInv> {
                                 height: 40.0,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(17.0),
-                                    color: Colors.lightBlue[900]),
+                                    color: Colors.deepPurple[400]),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -246,7 +251,7 @@ class AddInvState extends State<AddInv> {
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(7.0),
-                                            color: Colors.lightBlue[900]),
+                                            color: Colors.deepPurple[400]),
                                         child: Center(
                                           child: Icon(
                                             Icons.remove,
@@ -273,7 +278,7 @@ class AddInvState extends State<AddInv> {
                                         child: Center(
                                           child: Icon(
                                             Icons.add,
-                                            color: Colors.lightBlue[900],
+                                            color: Colors.deepPurple[400],
                                             size: 20.0,
                                           ),
                                         ),
@@ -302,7 +307,7 @@ class AddInvState extends State<AddInv> {
                                 height: 40.0,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(17.0),
-                                    color: Colors.lightBlue[900]),
+                                    color: Colors.deepPurple[400]),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -320,7 +325,7 @@ class AddInvState extends State<AddInv> {
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(7.0),
-                                            color: Colors.lightBlue[900]),
+                                            color: Colors.deepPurple[400]),
                                         child: Center(
                                           child: Icon(
                                             Icons.remove,
@@ -347,7 +352,7 @@ class AddInvState extends State<AddInv> {
                                         child: Center(
                                           child: Icon(
                                             Icons.add,
-                                            color: Colors.lightBlue[900],
+                                            color: Colors.deepPurple[400],
                                             size: 20.0,
                                           ),
                                         ),
@@ -368,41 +373,38 @@ class AddInvState extends State<AddInv> {
                               onTap: () async {
                                 bool sucess;
                                 String bc = Barcodecontroller.value.text.trim();
-                                String cnt = Countcontroller.value.text.trim();
+                                String cnt = Ordercontroller.value.text.trim();
                                 String itno = Itemcontroller.value.text.trim();
                                 String count1 = _counterQ.toString();
                                 String count2 = _counter.toString();
-                                String config =
-                                    "<cab:inventoryNum>INV2101</cab:inventoryNum>" +
-                                        "<cab:itemNo>" +
-                                        itno +
-                                        "</cab:itemNo>" +
-                                        "<cab:itemBarCode>" +
-                                        bc +
-                                        "</cab:itemBarCode>" +
-                                        "<cab:quantity>" +
-                                        count1 +
-                                        "</cab:quantity>" +
-                                        "<cab:userId>C02</cab:userId>" +
-                                        "<cab:terminalId></cab:terminalId>" +
-                                        "<cab:vracQuantity>" +
-                                        count2 +
-                                        "</cab:vracQuantity>" +
-                                        "<cab:comptage>" +
-                                        cnt +
-                                        "</cab:comptage>" +
-                                        "<cab:binCode></cab:binCode>";
+                                String config = "<cab:purchOrderNum>" +
+                                    cnt +
+                                    "</cab:purchOrderNum>" +
+                                    "<cab:itemNo>" +
+                                    itno +
+                                    "</cab:itemNo>" +
+                                    "<cab:itemBarCode>" +
+                                    bc +
+                                    "</cab:itemBarCode>" +
+                                    "<cab:quantity>" +
+                                    count1 +
+                                    "</cab:quantity>" +
+                                    "<cab:userId></cab:userId>" +
+                                    "<cab:terminalId>0</cab:terminalId>" +
+                                    "<cab:package>" +
+                                    count2 +
+                                    "</cab:package>";
                                 try {
                                   var ws =
-                                      InventaireWs(config, "inventory_Entry");
-                                  sucess = await ws.InsertInv();
+                                      ReceptionWs(config, "purchace_Entry");
+                                  sucess = await ws.InsertReception();
                                 } catch (e) {
                                   print("Exception ==> ");
                                   print(e.toString());
                                 }
                                 if (sucess) {
                                   Fluttertoast.showToast(
-                                      msg: "Item added",
+                                      msg: "Reception added",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1);
@@ -412,7 +414,7 @@ class AddInvState extends State<AddInv> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ListProd()))
+                                          builder: (context) => ListPurchase()))
                                 };
                               },
                               child: Container(
@@ -420,7 +422,7 @@ class AddInvState extends State<AddInv> {
                                 margin: EdgeInsets.symmetric(horizontal: 50),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
-                                    color: Colors.lightBlue[900]),
+                                    color: Colors.deepPurple[400]),
                                 child: Center(
                                   child: Text(
                                     "Add",
