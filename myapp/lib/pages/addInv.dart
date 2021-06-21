@@ -158,7 +158,6 @@ class AddInvState extends State<AddInv> {
                 ],
               ),
             ),
-            //SizedBox(height: 20),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -373,7 +372,6 @@ class AddInvState extends State<AddInv> {
                                 String itno = Itemcontroller.value.text.trim();
                                 String count1 = _counterQ.toString();
                                 String count2 = _counter.toString();
-
                                 String config =
                                     "<cab:inventoryNum>INV2101</cab:inventoryNum>" +
                                         "<cab:itemNo>" +
@@ -436,58 +434,9 @@ class AddInvState extends State<AddInv> {
                         SizedBox(
                           height: 50,
                         ),
-                        /*FadeAnimation(
-                            1.7,
-                            Text(
-                              "Continue with social media",
-                              style: TextStyle(color: Colors.grey),
-                            )),*/
                         SizedBox(
                           height: 30,
                         ),
-                        /*Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: FadeAnimation(
-                                  1.8,
-                                  Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.blue),
-                                    child: Center(
-                                      child: Text(
-                                        "Facebook",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Expanded(
-                              child: FadeAnimation(
-                                  1.9,
-                                  Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.black),
-                                    child: Center(
-                                      child: Text(
-                                        "Github",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )),
-                            )
-                          ],
-                        )*/
                       ],
                     ),
                   ),

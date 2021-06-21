@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myapp/List/listProd.dart';
-import 'package:myapp/List/mylist.dart';
+
 import 'package:myapp/Outils/FadeAnimation.dart';
-import 'package:myapp/WS/InventaireWs.dart';
+
 import 'package:myapp/model/media_source.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -285,27 +283,9 @@ class ParamState extends State<Param> {
                         "Parameter",
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       )),
-                  /* Container(
-                    padding: EdgeInsets.all(10.0),
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.width / 5,
-                    decoration: BoxDecoration(
-                      border:
-                          Border.all(color: Colors.lightBlue[400], width: 5),
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: fileMedia == null
-                            ? AssetImage("assets/images/mavision.png")
-                            : FileImage(File(fileMedia.path)),
-                      ),
-                    ),
-                  ),*/
                 ],
               ),
             ),
-            //SizedBox(height: 20),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(

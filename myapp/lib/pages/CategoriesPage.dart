@@ -22,7 +22,6 @@ import 'package:myapp/model/scanner.dart';
 import 'package:myapp/model/transfert.dart';
 import 'package:myapp/model/reception.dart';
 import 'package:myapp/model/produit.dart';
-import 'package:myapp/pages/myaccountpage.dart';
 import 'package:myapp/pages/parametre.dart';
 
 class CategoriesPage extends StatefulWidget with NavigationStates {
@@ -210,28 +209,6 @@ class CategoriesPageState extends State<CategoriesPage> {
                               color: Colors.black),
                         ),
                       ),
-                      /*  Positioned(
-                            left: 202,
-                            bottom: 45,
-                            child: Text(
-                              'EXPIRY DATE',
-                              style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          Positioned(
-                            left: 202,
-                            bottom: 21,
-                            child: Text(
-                              cards[index].cardExpired,
-                              style: GoogleFonts.inter(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: kWhiteColor),
-                            ),
-                          )*/
                     ],
                   ),
                 );

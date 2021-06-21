@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:myapp/List/listCount.dart';
+import 'package:myapp/List/listCummul.dart';
 import 'package:myapp/List/listProd.dart';
 
 enum SlidableAction { archive, share, more, delete }
@@ -37,10 +38,15 @@ class SlidableWidget<T> extends StatelessWidget {
             },
           ),
           IconSlideAction(
-            caption: 'Delete',
+            caption: 'Cummul',
             color: Colors.blue[800],
             icon: Icons.delete,
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ListCummul()),
+              );
+            },
           ),
           IconSlideAction(
             caption: 'Archive',

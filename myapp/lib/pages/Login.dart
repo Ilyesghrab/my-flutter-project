@@ -1,7 +1,7 @@
-import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Outils/rounded_button.dart';
 import 'package:myapp/WS/InventaireWs.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -105,74 +105,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  /*Widget _buildName() {
-    return TextFormField(
-      enableSuggestions: true,
-      controller: logincontroller,
-      decoration: InputDecoration(
-          hintText: login,
-          labelText: 'Login',
-          icon: Icon(Icons.person),
-          hintStyle: TextStyle(
-            letterSpacing: 2,
-            color: Colors.black54,
-            fontWeight: FontWeight.bold,
-          ),
-          fillColor: Colors.grey[50],
-          filled: true,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none)),
-      maxLength: 16,
-      validator: (String value) {
-        if (value.isEmpty) {
-          return 'login is Required';
-        }
-        String s;
-        value = value.trim();
-
-        return null;
-      },
-      onSaved: (String value) {
-        user = value;
-      },
-    );
-  }*/
-
-  /*Widget _buildStatus() {
-    return TextFormField(
-      enableSuggestions: true,
-      controller: statuscontroller,
-      decoration: InputDecoration(
-          hintText: statut,
-          labelText: 'status',
-          icon: Icon(Icons.online_prediction),
-          hintStyle: TextStyle(
-            letterSpacing: 2,
-            color: Colors.black54,
-            fontWeight: FontWeight.bold,
-          ),
-          fillColor: Colors.grey[50],
-          filled: true,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none)),
-      maxLength: 1,
-      validator: (String value) {
-        if (value.isEmpty) {
-          return 'login is Required';
-        }
-        String s;
-        value = value.trim();
-
-        return null;
-      },
-      onSaved: (String value) {
-        user = value;
-      },
-    );
-  }*/
-
   Widget _buildPassword() {
     return TextFormField(
       obscureText: ci,
@@ -266,20 +198,9 @@ class _LoginState extends State<Login> {
                           textfield(
                             hintText: "Login : $login",
                           ),
-                          /*textfield(
-                            hintText: username,
-                          ),*/
                           textfield(
                             hintText: "Statut : $statut",
                           ),
-                          /* Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: _buildStatus(),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: _buildName(),
-                          ),*/
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: _buildPassword(),
@@ -290,11 +211,7 @@ class _LoginState extends State<Login> {
                               text: "LogIn",
                               fontSize: 20,
                               press: () async {
-                                //String login =
-                                // logincontroller.value.text.trim();
                                 String pwd = passwordcontroller.value.text;
-                                // String status =
-                                // statuscontroller.value.text.trim();
                                 String config = "<cab:login>" +
                                     login +
                                     "</cab:login><cab:pw>" +
@@ -304,7 +221,6 @@ class _LoginState extends State<Login> {
                                     "</cab:statut>" +
                                     "<cab:userName></cab:userName>";
                                 var ws = InventaireWs(config, "user");
-
                                 ws.signIn(context);
                               },
                             ),
@@ -321,6 +237,4 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
-  
 }
