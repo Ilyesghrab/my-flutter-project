@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/List/mylist.dart';
 import 'package:myapp/WS/InventaireWs.dart';
+import 'package:myapp/WS/TransfertWs.dart';
+import 'package:myapp/model/Transfert_Header.dart';
 import 'package:myapp/model/inventory_Header.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/Data/data.dart';
@@ -15,12 +18,13 @@ import 'package:myapp/pages/addInv.dart';
 import 'package:myapp/pages/myaccountpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MyList extends StatefulWidget with NavigationStates {
+class ListTransfert extends StatefulWidget with NavigationStates {
   @override
-  MyListState createState() => MyListState();
+  ListTransfertState createState() => ListTransfertState();
 }
 
-class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
+class ListTransfertState extends State<ListTransfert>
+    with SingleTickerProviderStateMixin {
   bool isOpened = false;
   AnimationController _animationController;
   Animation<Color> _buttonColor;
@@ -28,22 +32,21 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
   Animation<double> _translateButton;
   Curve _curve = Curves.easeOut;
   double _fabHeight = 56.0;
-  Future<List<InventoryH>> getInv;
+  Future<List<TransfertH>> getTrans;
   List<Produit> items = List.of(Data.produits);
   String query = '';
   //String login;
   bool pb = false;
 
-  Future<List<InventoryH>> getlist() async {
-    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
-    String login = sharedPrefs.getString('Login');
+  Future<List<TransfertH>> getlist() async {
+    /*SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    String login = sharedPrefs.getString('Login');*/
 
     try {
-      String config =
-          "<cab:login>$login</cab:login>" + "<cab:vARJson></cab:vARJson>";
-      InventaireWs ws = new InventaireWs(config, "inventory_Header");
+      String config = "<cab:vARJson></cab:vARJson>";
+      TransfertWs ws = new TransfertWs(config, "transfert_Header");
 
-      List<InventoryH> t = await ws.getAll();
+      List<TransfertH> t = await ws.getAllT();
       int n = t.length;
       print(n.toString());
       if (t == null) {
@@ -55,7 +58,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
         setState(() {
           pb = false;
         });
-        List<InventoryH> a = [];
+        List<TransfertH> a = [];
         setState(() {
           for (int i = 0; i < n; i++) {
             print("i=$i");
@@ -74,7 +77,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    getInv = getlist();
+    getTrans = getlist();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     _animationController.value = _animationController.value;
@@ -138,7 +141,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
             padding: EdgeInsets.only(left: 40.0),
             child: Row(
               children: <Widget>[
-                Text('Inventory',
+                Text('Transfert',
                     style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -172,10 +175,10 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                           children: <Widget>[
                             buildSearch(),
                             Expanded(
-                                child: FutureBuilder<List<InventoryH>>(
-                                    future: getInv,
+                                child: FutureBuilder<List<TransfertH>>(
+                                    future: getTrans,
                                     builder: (BuildContext context,
-                                        AsyncSnapshot<List<InventoryH>>
+                                        AsyncSnapshot<List<TransfertH>>
                                             snapshot) {
                                       if (snapshot.data == null) {
                                         return CupertinoActivityIndicator();
@@ -184,6 +187,8 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                             itemCount: snapshot.data.length,
                                             //separatorBuilder: (context, index) => Divider(),
                                             itemBuilder: (context, index) {
+                                              TransfertH t =
+                                                  snapshot.data[index];
                                               return SlidableWidget(
                                                   child: Row(
                                                 mainAxisAlignment:
@@ -193,9 +198,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                   Container(
                                                       child: Row(children: [
                                                     Hero(
-                                                        tag: snapshot
-                                                            .data[index]
-                                                            .locationCd,
+                                                        tag: "${t.trans}",
                                                         child: Container(
                                                           width: 75.0,
                                                           height: 75.0,
@@ -222,10 +225,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .no,
+                                                          Text("${t.trans}",
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
@@ -235,9 +235,16 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                                                       FontWeight
                                                                           .bold)),
                                                           Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .locationCd,
+                                                              "Prov: ${t.prov}  |  Dest: ${t.dest}",
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize:
+                                                                      15.0,
+                                                                  color: Colors
+                                                                      .grey)),
+                                                          Text(
+                                                              "Date: ${t.dateT}",
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
@@ -347,6 +354,61 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
       drawer: Drawer(),
     );
   }
+
+  /*Widget buildListTile(AsyncSnapshot snapshot) {
+    return Padding(
+        padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+        child: InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DetailsPage(
+                      //heroTag: item.imgPath,
+                      // foodName: snapshot.data.locationCd,
+                      //foodPrice: snapshot.data.no,
+                      )));
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                    child: Row(children: [
+                  Hero(
+                      //tag: item.imgPath,
+                      child: Container(
+                    width: 75.0,
+                    height: 75.0,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF21BFBD), width: 3),
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage("assets/images/inventory.png")),
+                    ),
+                  )),
+                  SizedBox(width: 10.0),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(snapshot.data.locationCd,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold)),
+                        Text(snapshot.data.no,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 15.0,
+                                color: Colors.grey))
+                      ])
+                ])),
+                IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    color: Colors.black,
+                    onPressed: () {})
+              ],
+            )));
+  }*/
 
   Widget buildSearch() => SearchWidget(
         text: query,

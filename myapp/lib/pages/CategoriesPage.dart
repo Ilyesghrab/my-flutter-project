@@ -13,6 +13,7 @@ import 'package:myapp/Data/scanners.dart';
 import 'package:myapp/Data/transferts.dart';
 import 'package:myapp/Data/categories.dart';
 import 'package:myapp/List/listPurchase.dart';
+import 'package:myapp/List/listTransfert.dart';
 import 'package:myapp/Scanner/scan.dart';
 import 'package:myapp/model/inventory.dart';
 import 'package:myapp/pages/HomePage.dart';
@@ -50,6 +51,7 @@ class CategoriesPageState extends State<CategoriesPage> {
   List<Transfert> titems = List.of(Transferts.transferts);
   List<Scanner> sitems = List.of(Scanners.scanners);
   String qrCodeResult = "Not Yet Scanned";
+
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.white,
@@ -309,12 +311,37 @@ class CategoriesPageState extends State<CategoriesPage> {
                             isSelected: current == index,
                             context: this),
                       ),
-                      OperationCat(
-                          operation: titems[index].transfertName,
-                          selectedIcon: titems[index].selectedIcon,
-                          unselectedIcon: titems[index].unselectedIcon,
-                          isSelected: current == index,
-                          context: this),
+                      InkWell(
+                        onTap: () {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.WARNING,
+                            animType: AnimType.BOTTOMSLIDE,
+                            title: 'Option',
+                            desc: 'Please choose action to continue',
+                            btnCancelText: "Reclassifica-\ntion",
+                            btnCancelColor: Colors.lightBlue[900],
+                            btnCancelIcon: Icons.outbond,
+                            btnCancelOnPress: () {},
+                            btnOkText: "Transfert",
+                            btnOkColor: Colors.purple[700],
+                            btnOkIcon: Icons.transfer_within_a_station_outlined,
+                            btnOkOnPress: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ListTransfert()),
+                              );
+                            },
+                          )..show();
+                        },
+                        child: OperationCat(
+                            operation: titems[index].transfertName,
+                            selectedIcon: titems[index].selectedIcon,
+                            unselectedIcon: titems[index].unselectedIcon,
+                            isSelected: current == index,
+                            context: this),
+                      ),
                     ],
                   ),
                 );

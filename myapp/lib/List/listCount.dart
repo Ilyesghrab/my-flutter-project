@@ -14,6 +14,7 @@ import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
 
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/myaccountpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ListCount extends StatefulWidget with NavigationStates {
   @override
@@ -37,7 +38,10 @@ class ListCountState extends State<ListCount>
 
   Future<List<InventoryH>> getlistC() async {
     try {
-      String config = "<cab:login>C02</cab:login>" +
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String login = sharedPrefs.getString('Login');
+
+      String config = "<cab:login>$login</cab:login>" +
           "<cab:noInv>INV2101</cab:noInv>" +
           "<cab:vARJson></cab:vARJson>";
       InventaireWs ws = new InventaireWs(config, "inventory_Header");

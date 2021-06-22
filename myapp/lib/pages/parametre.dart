@@ -295,11 +295,21 @@ class ParamState extends State<Param> {
                         topRight: Radius.circular(60))),
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(
                       children: <Widget>[
                         SizedBox(
-                          height: 60,
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Serveur Param",
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 18,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ),
+                          height: 50,
                         ),
                         FadeAnimation(
                             1.4,
@@ -343,7 +353,17 @@ class ParamState extends State<Param> {
                               ),
                             )),
                         SizedBox(
-                          height: 40,
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Autentication NTLM",
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 18,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ),
+                          height: 50,
                         ),
                         FadeAnimation(
                             1.4,
@@ -398,7 +418,17 @@ class ParamState extends State<Param> {
                               ),
                             )),
                         SizedBox(
-                          height: 40,
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "User logIn",
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 18,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ),
+                          height: 50,
                         ),
                         FadeAnimation(
                             1.4,

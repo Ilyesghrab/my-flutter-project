@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                 icon: Icon(Icons.close),
                 label: Text("Exit"),
               ),
-              FloatingActionButton.extended(
+              /* FloatingActionButton.extended(
                   heroTag: null,
                   onPressed: () {
                     Navigator.push(
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   backgroundColor: Colors.green,
                   icon: Icon(Icons.home),
-                  label: Text("Home")),
+                  label: Text("Home")),*/
               FloatingActionButton.extended(
                 heroTag: null,
                 onPressed: () {

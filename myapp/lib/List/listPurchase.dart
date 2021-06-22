@@ -35,13 +35,9 @@ class ListPurchaseState extends State<ListPurchase>
   Future<List<PurchaseH>> getPur;
   List<Produit> items = List.of(Data.produits);
   String query = '';
-  //String login;
   bool pb = false;
 
   Future<List<PurchaseH>> getlist() async {
-    //SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
-    //String login = sharedPrefs.getString('Login');
-
     try {
       String config = "<cab:vARJson></cab:vARJson>";
       ReceptionWs ws = new ReceptionWs(config, "purchase_Header");
