@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/List/mylist.dart';
-import 'package:myapp/WS/InventaireWs.dart';
 import 'package:myapp/WS/TransfertWs.dart';
 import 'package:myapp/model/Transfert_Header.dart';
-import 'package:myapp/model/inventory_Header.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/Data/data.dart';
 import 'package:myapp/pages/HomePage.dart';
@@ -16,7 +14,6 @@ import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/addInv.dart';
 import 'package:myapp/pages/myaccountpage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ListTransfert extends StatefulWidget with NavigationStates {
   @override

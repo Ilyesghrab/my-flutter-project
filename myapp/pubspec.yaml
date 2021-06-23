@@ -120,7 +120,7 @@ flutter:
   fonts:
     - family: Schyler
       fonts:
-        - asset: assets/Montserrat-Regular.ttf
+        - asset: assets/textStyle/Montserrat-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -4,7 +4,6 @@ import 'package:myapp/List/mylist.dart';
 
 import 'package:myapp/WS/ReceptionWs.dart';
 import 'package:myapp/model/Purchase_Header.dart';
-
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/Data/data.dart';
 import 'package:myapp/pages/HomePage.dart';
@@ -14,7 +13,6 @@ import 'package:myapp/Outils/slidable_widgetCommande.dart';
 import 'package:myapp/Scanner/scan.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
 import 'package:myapp/model/produit.dart';
-import 'package:myapp/pages/addInv.dart';
 import 'package:myapp/pages/addReception.dart';
 import 'package:myapp/pages/myaccountpage.dart';
 

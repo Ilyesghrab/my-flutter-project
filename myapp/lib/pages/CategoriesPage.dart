@@ -12,6 +12,7 @@ import 'package:myapp/Data/receptions.dart';
 import 'package:myapp/Data/scanners.dart';
 import 'package:myapp/Data/transferts.dart';
 import 'package:myapp/Data/categories.dart';
+import 'package:myapp/List/dropDownReclass.dart';
 import 'package:myapp/List/listPurchase.dart';
 import 'package:myapp/List/listTransfert.dart';
 import 'package:myapp/Scanner/scan.dart';
@@ -322,7 +323,13 @@ class CategoriesPageState extends State<CategoriesPage> {
                             btnCancelText: "Reclassifica-\ntion",
                             btnCancelColor: Colors.lightBlue[900],
                             btnCancelIcon: Icons.outbond,
-                            btnCancelOnPress: () {},
+                            btnCancelOnPress: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DropDownRec()),
+                              );
+                            },
                             btnOkText: "Transfert",
                             btnOkColor: Colors.purple[700],
                             btnOkIcon: Icons.transfer_within_a_station_outlined,
