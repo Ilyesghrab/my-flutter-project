@@ -6,6 +6,7 @@ import 'package:myapp/Outils/FadeAnimation.dart';
 
 import 'package:myapp/model/media_source.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
+import 'package:myapp/pages/source_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Param extends StatefulWidget {
@@ -263,28 +264,57 @@ class ParamState extends State<Param> {
                 );
               },
             ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  FadeAnimation(
-                      1,
-                      Text(
-                        "Connexion",
-                        style: TextStyle(color: Colors.white, fontSize: 40),
-                      )),
-                  SizedBox(
-                    height: 10,
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      FadeAnimation(
+                          1,
+                          Text(
+                            "Connexion",
+                            style: TextStyle(color: Colors.white, fontSize: 35),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      FadeAnimation(
+                          1.3,
+                          Text(
+                            "Parameter",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          )),
+                    ],
                   ),
-                  FadeAnimation(
-                      1.3,
-                      Text(
-                        "Parameter",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      )),
-                ],
-              ),
+                ),
+                FadeAnimation(
+                  1.3,
+                  GestureDetector(
+                    onTap: () => capture(MediaSource.image),
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.width / 3.5,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 2),
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: fileMedia == null
+                              ? AssetImage("assets/images/mavision.png")
+                              : FileImage(File(fileMedia.path)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 20,
             ),
             Expanded(
               child: Container(
@@ -528,5 +558,20 @@ class ParamState extends State<Param> {
         ),
       ),
     );
+  }
+
+  Future capture(MediaSource source) async {
+    final result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SourcePage(),
+        settings: RouteSettings(
+          arguments: source,
+        )));
+    if (result == null) {
+      AssetImage("assets/images/mavision.png");
+    } else {
+      setState(() {
+        fileMedia = result;
+      });
+    }
   }
 }

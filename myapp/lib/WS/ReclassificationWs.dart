@@ -1,4 +1,5 @@
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myapp/model/feuille_Line.dart';
 
 import 'package:myapp/model/inventory_Entry.dart';
 import 'package:myapp/model/magasin_Rec.dart';
@@ -300,6 +301,96 @@ class ReclassificationWs {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1);
     }
+  }
+
+  //Export feuille transfert*************************************************************************************
+
+  Future<List<FeuilleL>> getAllF() async {
+    List<FeuilleL> getFeuil = [];
+    try {
+      String port = "7047";
+      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
+      String ip = "192.168.1.7";
+      var envelope =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+              "<soapenv:Body>";
+      envelope = envelope +
+          "<cab:ExportLineFeuilleTransfert>" +
+          config +
+          "</cab:ExportLineFeuilleTransfert>";
+      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+
+      NTLMClient client = NTLMClient(
+        domain: "",
+        workstation: "DESKTOP-44HHODU",
+        username: "ilyes",
+        password: "1234",
+      );
+      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      print(url);
+      print(envelope);
+      http.Response response = await client.post(url,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportLineFeuilleTransfert",
+          },
+          body: envelope);
+      print(response.statusCode);
+      print("response.statusCode ==> ${response.statusCode}");
+      print("response.reasonPhrase ==> ${response.reasonPhrase}");
+      print("response.statusCode ==> ${response.body}");
+      var storeDocument = xml.parse(response.body);
+
+      var Data = storeDocument.findAllElements('vARJson').first;
+
+      var jsonData = Data.text;
+      print(Data.text);
+      print("jsonData ==> $jsonData");
+      //print("DATA ===>");
+
+      String dataStr = Data.text;
+
+      String emplacement;
+      String article;
+      String des;
+      String qte;
+
+      while (dataStr != null) {
+        emplacement = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        print("emplacement==> $emplacement");
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+
+        article = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        print("article==> $article");
+
+        des = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        print("des==> $des");
+
+        if (dataStr.indexOf("\",") == -1) // Last
+        {
+          qte = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\"}"));
+          dataStr = null;
+        } else {
+          qte = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+          dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        }
+        print("qte==> $qte");
+
+        FeuilleL l = FeuilleL(emplacement, article, des, qte);
+        getFeuil.add(l);
+      }
+    } catch (Exception) {
+      print(Exception.toString());
+    }
+    return getFeuil;
   }
 
   //Export scanned item purchase*************************************************************************************
