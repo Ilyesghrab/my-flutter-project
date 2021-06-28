@@ -1,4 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myapp/List/DropDownReclass.dart';
+import 'package:myapp/model/article.dart';
 import 'package:myapp/model/feuille_Line.dart';
 
 import 'package:myapp/model/inventory_Entry.dart';
@@ -9,6 +14,8 @@ import 'package:myapp/model/nom_reclass.dart';
 import 'package:myapp/model/purchase_Entry.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:myapp/pages/CategoriesPage.dart';
+import 'package:myapp/pages/addReclass.dart';
 import 'package:ntlm/ntlm.dart';
 import 'package:xml/xml.dart' as xml;
 
@@ -24,7 +31,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.7";
+      String ip = "192.168.1.10";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -98,7 +105,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.7";
+      String ip = "192.168.1.10";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -178,7 +185,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.7";
+      String ip = "192.168.1.10";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -257,7 +264,7 @@ class ReclassificationWs {
   Future<bool> InsertReception() async {
     String port = "7047";
     String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-    String ip = "192.168.1.7";
+    String ip = "192.168.1.10";
     var envelope =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
             "<soapenv:Body>";
@@ -310,7 +317,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.7";
+      String ip = "192.168.1.10";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -400,7 +407,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.7";
+      String ip = "192.168.1.10";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -492,7 +499,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.7";
+      String ip = "192.168.1.10";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -574,6 +581,162 @@ class ReclassificationWs {
     return getCummul;
   }
 
-  //FindItem inventory*************************************************************************************
+  //FindItem Reclassement*************************************************************************************
+  Future<Article> getAricleReclass(BuildContext context) async {
+    Article article;
+    try {
+      //SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      //String ip = sharedPrefs.getString('AdresseIp');
+      //String port = sharedPrefs.getString('Port');
+      //String ws = sharedPrefs.getString('WS');
+      //String namespace = sharedPrefs.getString('NameSpace');
+      //String config = sharedPrefs.getString('config');
+      String port = "7047";
+      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
+      String ip = "192.168.1.10";
+      var envelope =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+              "<soapenv:Body>";
 
+      envelope = envelope +
+          "<cab:FindItemReclassement>" +
+          config +
+          "</cab:FindItemReclassement>";
+      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+
+      NTLMClient client = NTLMClient(
+        domain: "",
+        workstation: "DESKTOP-44HHODU",
+        username: "ilyes",
+        password: "1234",
+      );
+      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      print(url);
+      print(envelope);
+      http.Response response = await client.post(url,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:FindItemReclassement",
+
+            //"authorization": basicAuth,
+            //"Host": ip + ":" + port,
+          },
+          body: envelope);
+      print(response.statusCode);
+      print("response.statusCode ==> ${response.statusCode}");
+      print("response.reasonPhrase ==> ${response.reasonPhrase}");
+      print("response.statusCode ==> ${response.body}");
+
+      var storeDocument = xml.parse(response.body);
+      print(storeDocument);
+      String qte = storeDocument.findAllElements('quantity').first.text;
+      print("QTE ==> $qte");
+
+      if (qte == "-1") {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.BOTTOMSLIDE,
+          title: 'Option',
+          desc: 'Article not found !! Do you want to add it ?',
+          btnCancelText: "No",
+          btnCancelColor: Colors.red,
+          btnCancelIcon: Icons.outbond,
+          btnCancelOnPress: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DropDownRec()),
+            );
+          },
+          btnOkText: "Ok",
+          btnOkColor: Colors.green,
+          btnOkIcon: Icons.transfer_within_a_station_outlined,
+          btnOkOnPress: () {
+            return null;
+          },
+        )..show();
+      } else if (qte == "0") {
+        Fluttertoast.showToast(
+            msg: "Article not found",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1);
+
+        return null;
+      }
+
+      String reference = storeDocument.findAllElements('itemNo').first.text;
+      print("REFERENCE ==> $reference");
+
+      String designation =
+          storeDocument.findAllElements('designation').first.text;
+      print("designation ==> $designation");
+
+      article = Article(reference, designation, qte);
+    } catch (Exception) {
+      print("Exception in Service getItemToAddDetails (Reclassement)");
+      print(Exception.toString());
+    }
+    return article;
+  }
+
+  //FindItem Reclassement*************************************************************************************
+  Future<bool> InsertReclassement() async {
+    try {
+      //SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      //String ip = sharedPrefs.getString('AdresseIp');
+      //String port = sharedPrefs.getString('Port');
+      //String ws = sharedPrefs.getString('WS');
+      //String namespace = sharedPrefs.getString('NameSpace');
+      //String config = sharedPrefs.getString('config');
+      String port = "7047";
+      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
+      String ip = "192.168.1.10";
+      var envelope =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+              "<soapenv:Body>";
+
+      envelope = envelope +
+          "<cab:InsertLigneFeuilleTransfert>" +
+          config +
+          "</cab:InsertLigneFeuilleTransfert>";
+      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+
+      NTLMClient client = NTLMClient(
+        domain: "",
+        workstation: "DESKTOP-44HHODU",
+        username: "ilyes",
+        password: "1234",
+      );
+      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      print(url);
+      print(envelope);
+      http.Response response = await client.post(url,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:InsertLigneFeuilleTransfert",
+
+            //"authorization": basicAuth,
+            //"Host": ip + ":" + port,
+          },
+          body: envelope);
+      print(response.statusCode);
+      print("response.statusCode ==> ${response.statusCode}");
+      print("response.reasonPhrase ==> ${response.reasonPhrase}");
+      print("response.statusCode ==> ${response.body}");
+      var storeDocument = xml.parse(response.body);
+
+      var Data = storeDocument.findAllElements('return_value');
+
+      if (Data.length <= 0) {
+        return false;
+      }
+      return true;
+    } catch (Exception) {
+      print(Exception.toString());
+      return false;
+    }
+  }
 }

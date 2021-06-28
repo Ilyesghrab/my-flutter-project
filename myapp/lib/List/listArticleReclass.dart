@@ -1,3 +1,4 @@
+import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,9 @@ import 'package:myapp/model/feuille_Line.dart';
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/pages/HomePage.dart';
+import 'package:myapp/pages/addReclass.dart';
 import 'package:myapp/pages/myaccountpage.dart';
-
-import 'detailsPageCom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailsReclassement extends StatefulWidget with NavigationStates {
   String modele, nom, mgSrc, mgDest;
@@ -39,6 +40,39 @@ class _DetailsReclassementState extends State<DetailsReclassement>
   String login;
   bool pb = false;
   Future<List<FeuilleL>> getFeuil;
+  String quatity = "quantity";
+  String itemNo = "itemNo";
+  String designation = "designation";
+  String qteEmplacement = "qteEmplacement";
+  String codeScanner;
+
+  Future<String> getQuantity() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _quantity = sp.getString("Quantity");
+
+    return _quantity;
+  }
+
+  Future<String> getItem() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _item = sp.getString("ItemNo");
+
+    return _item;
+  }
+
+  Future<String> getDesignation() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _designation = sp.getString("Designation");
+
+    return _designation;
+  }
+
+  Future<String> getQteEmpl() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _qteEmplacement = sp.getString("QteEmplacement");
+
+    return _qteEmplacement;
+  }
 
   Future<List<FeuilleL>> getlist() async {
     try {
@@ -149,7 +183,7 @@ class _DetailsReclassementState extends State<DetailsReclassement>
                         fontWeight: FontWeight.bold,
                         fontSize: 25.0)),
                 SizedBox(width: 10.0),
-                Text("${widget.mgSrc}->${widget.mgDest}",
+                Text("${widget.modele}|${widget.nom}",
                     style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -392,11 +426,38 @@ class _DetailsReclassementState extends State<DetailsReclassement>
   Widget buttonScan() {
     return Container(
         child: FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ScanPage()),
-        );
+      onPressed: () async {
+        List<String> fh;
+        SharedPreferences sp = await SharedPreferences.getInstance();
+        String codeScanner = await BarcodeScanner.scan();
+        setState(() {
+          this.codeScanner = codeScanner == "-1" ? "itemNo" : codeScanner;
+          fh = codeScanner.split(" ");
+          itemNo = fh[0];
+          sp.setString("ItemNo", itemNo);
+          String config = "<cab:barCode>$itemNo</cab:barCode>" +
+              "<cab:modele></cab:modele>" +
+              "<cab:nom></cab:nom>" +
+              "<cab:magasinOrigine></cab:magasinOrigine>" +
+              "<cab:magasinDestination></cab:magasinDestination>" +
+              "<cab:emplacementOrigine></cab:emplacementOrigine>" +
+              "<cab:emplacementDestination></cab:emplacementDestination>" +
+              "<cab:itemNo></cab:itemNo>" +
+              "<cab:designation></cab:designation>" +
+              "<cab:quantity>0</cab:quantity>" +
+              "<cab:qteEmplacement>0</cab:qteEmplacement>";
+          var ws = ReclassificationWs(config, "article");
+          ws.getAricleReclass(context);
+        });
+
+        return {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AddReclass(
+                    widget.modele, widget.nom, widget.mgSrc, widget.mgDest)),
+          )
+        };
       },
       tooltip: "Scan",
       child: Icon(Icons.qr_code),

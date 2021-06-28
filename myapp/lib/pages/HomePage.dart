@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Outils/rounded_button.dart';
-import 'package:myapp/pages/CategoriesPage.dart';
 import 'package:myapp/pages/Login.dart';
 import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
 
@@ -212,19 +211,6 @@ class _HomePageState extends State<HomePage> {
                           };
                         }),
                   ),
-                  /*SizedBox(
-                    width: MediaQuery.of(context).size.width * .6,
-                    child: RoundedButton(
-                      text: "LogIn",
-                      fontSize: 20,
-                      press: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Login()),
-                        );
-                      },
-                    ),
-                  ),*/
                 ],
               ),
             ),
