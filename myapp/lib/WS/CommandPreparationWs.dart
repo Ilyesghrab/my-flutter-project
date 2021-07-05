@@ -1,25 +1,24 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myapp/model/Purchase_Header.dart';
-import 'package:myapp/model/Transfert_Header.dart';
-import 'package:myapp/model/inventory_Entry.dart';
-import 'package:myapp/model/inventory_Header.dart';
-import 'package:myapp/model/purchase_Entry.dart';
-import 'package:myapp/model/user.dart';
-import 'package:myapp/pages/CategoriesPage.dart';
+import 'package:myapp/List/dropDownReclass.dart';
+import 'package:myapp/model/salesOrder.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:myapp/model/sales_Line.dart';
 import 'package:ntlm/ntlm.dart';
 import 'package:xml/xml.dart' as xml;
 
-class TransfertWs {
+class CommandPreparationWs {
   String config;
   String nomtable;
-  TransfertWs(this.config, this.nomtable);
+  CommandPreparationWs(this.config, this.nomtable);
 
-  //Liste Transfert*************************************************************************************
+  //Liste Sales orders*************************************************************************************
 
-  Future<List<TransfertH>> getAllT() async {
-    List<TransfertH> getTrans = [];
+  Future<List<SalesOrder>> getAllO() async {
+    List<SalesOrder> getOrders = [];
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
@@ -28,9 +27,9 @@ class TransfertWs {
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
       envelope = envelope +
-          "<cab:ExportTransfert>" +
+          "<cab:ExportSalesOrder>" +
           config +
-          "</cab:ExportTransfert>";
+          "</cab:ExportSalesOrder>";
       envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
 
       NTLMClient client = NTLMClient(
@@ -46,7 +45,7 @@ class TransfertWs {
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
             "SOAPAction":
-                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportTransfert",
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportSalesOrder",
           },
           body: envelope);
       print(response.statusCode);
@@ -58,40 +57,28 @@ class TransfertWs {
       var Data = storeDocument.findAllElements('vARJson').first;
 
       String dataStr = Data.text;
-      String trans;
-      String prov;
-      String dest;
-      String date;
+      String idCommande;
+      String codeClient;
       while (dataStr != null) {
-        trans = dataStr.substring(
+        idCommande = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("trans==> $trans");
+        print("idCommande==> $idCommande");
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-
-        prov = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("prov==> $prov");
-
-        dest = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("dest==> $dest");
 
         if (dataStr.indexOf("\",") == -1) // Last
         {
-          date = dataStr.substring(
+          codeClient = dataStr.substring(
               dataStr.indexOf(":\"") + 2, dataStr.indexOf("\"}"));
           dataStr = null;
         } else {
-          date = dataStr.substring(
+          codeClient = dataStr.substring(
               dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
           dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
         }
-        print("date==> $date");
+        print("codeClient==> $codeClient");
 
-        TransfertH t = TransfertH(trans, prov, dest, date);
-        getTrans.add(t);
+        SalesOrder c = SalesOrder(idCommande, codeClient);
+        getOrders.add(c);
       }
     } catch (Exception) {
       print(Exception.toString());
@@ -102,20 +89,24 @@ class TransfertWs {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1);*/
     }
-    return getTrans;
+    return getOrders;
   }
 
-  //Insert Reception*************************************************************************************
+  //Insert article Preparation*************************************************************************************
 
-  Future<bool> InsertReception() async {
+  Future<String> InsertPrep() async {
+    List<SalesL> articles = [];
+    var storeDocument;
     String port = "7047";
     String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
     String ip = "192.168.1.3";
     var envelope =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
             "<soapenv:Body>";
-    envelope =
-        envelope + "<cab:InsertReception>" + config + "</cab:InsertReception>";
+    envelope = envelope +
+        "<cab:InsertSalesLine_DetailPreparation>" +
+        config +
+        "</cab:InsertSalesLine_DetailPreparation>";
     envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
     try {
       NTLMClient client = NTLMClient(
@@ -131,7 +122,7 @@ class TransfertWs {
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
             "SOAPAction":
-                "urn:microsoft-dynamics-schemas/codeunit/CAB:InsertReception",
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:InsertSalesLine_DetailPreparation",
           },
           body: envelope);
       print(response.statusCode);
@@ -140,118 +131,66 @@ class TransfertWs {
       print("response.statusCode ==> ${response.body}");
       var storeDocument = xml.parse(response.body);
 
-      var Data = storeDocument.findAllElements('InsertReception_Result');
+      var Data = storeDocument.findAllElements('vARJson').first;
 
-      if (Data.length <= 0) {
-        return false;
+      if (Data.text == "{}") {
+        return "false";
       }
-      return true;
-    } catch (ex) {
-      print(ex);
-      Fluttertoast.showToast(
-          msg: "probleme de connexion",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1);
-    }
-  }
-
-  //Export scanned item purchase*************************************************************************************
-
-  Future<List<PurchaseE>> getScannedCommand() async {
-    List<PurchaseE> getPurE = [];
-    try {
-      String port = "7047";
-      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.3";
-      var envelope =
-          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
-              "<soapenv:Body>";
-      envelope = envelope +
-          "<cab:ExportScannedItemsPurchase>" +
-          config +
-          "</cab:ExportScannedItemsPurchase>";
-      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
-
-      NTLMClient client = NTLMClient(
-        domain: "",
-        workstation: "DESKTOP-44HHODU",
-        username: "ilyes",
-        password: "1234",
-      );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
-      print(url);
-      print(envelope);
-      http.Response response = await client.post(url,
-          headers: {
-            "Content-Type": "text/xml; charset=utf-8",
-            "SOAPAction":
-                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportScannedItemsPurchase",
-          },
-          body: envelope);
-      print(response.statusCode);
-      print("response.statusCode ==> ${response.statusCode}");
-      print("response.reasonPhrase ==> ${response.reasonPhrase}");
-      print("response.statusCode ==> ${response.body}");
-      var storeDocument = xml.parse(response.body);
-
-      var StatusXML = storeDocument.findAllElements('vARJson').first;
-      var jsonData = StatusXML.text;
+      var jsonData = Data.text;
+      print(Data.text);
       print("jsonData ==> $jsonData");
+      //print("DATA ===>");
 
-      String dataStr = StatusXML.text;
+      String dataStr = Data.text;
       String reference;
-      String des;
-      String barcode;
-      String qte;
-      if (dataStr == "{}") {
-        dataStr = null;
-      }
+      String designation;
+      String qt;
+      String qte_prepare;
       while (dataStr != null) {
         reference = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         print("reference==> $reference");
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
 
-        des = dataStr.substring(
+        designation = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("des==> $des");
+        print("designation==> $designation");
 
-        barcode = dataStr.substring(
+        qt = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("barcode==> $barcode");
+        print("qt==> $qt");
 
-        qte = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("qte==> $qte");
+        if (dataStr.indexOf("\",") == -1) // Last
+        {
+          qte_prepare = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\"}"));
+          dataStr = null;
+        } else {
+          qte_prepare = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+          dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        }
+        print("qte_prepare==> $qte_prepare");
 
-        PurchaseE a = PurchaseE(
-          reference,
-          des,
-          barcode,
-          qte,
-        );
-        getPurE.add(a);
+        SalesL a = SalesL(reference, designation, qt, qte_prepare);
+        articles.add(a);
       }
-    } catch (Exception) {
-      print(Exception.toString());
-      // print(ex);
-      /*Fluttertoast.showToast(
-          msg: "probleme de connexion !",
+    } catch (ex) {
+      print(ex);
+      Fluttertoast.showToast(
+          msg: "Vous ne pouvez pas expédier plus de quantité !!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1);*/
+          timeInSecForIosWeb: 3);
     }
-    return getPurE;
   }
 
-//Export scanned item inventory total*************************************************************************************
+  //Export Sales line preparation*************************************************************************************
 
-  Future<List<InventoryE>> getScannedCummul() async {
-    List<InventoryE> getCummul = [];
+  Future<List<SalesL>> getExportLinePrep() async {
+    List<SalesL> getLineP = [];
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
@@ -260,9 +199,9 @@ class TransfertWs {
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
       envelope = envelope +
-          "<cab:ExportScannedItemsTotal>" +
+          "<cab:ExportSalesLinePreparation>" +
           config +
-          "</cab:ExportScannedItemsTotal>";
+          "</cab:ExportSalesLinePreparation>";
       envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
 
       NTLMClient client = NTLMClient(
@@ -278,7 +217,7 @@ class TransfertWs {
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
             "SOAPAction":
-                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportScannedItemsTotal",
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportSalesLinePreparation",
           },
           body: envelope);
       print(response.statusCode);
@@ -287,43 +226,46 @@ class TransfertWs {
       print("response.statusCode ==> ${response.body}");
       var storeDocument = xml.parse(response.body);
 
-      var StatusXML = storeDocument.findAllElements('vARJson').first;
-      var jsonData = StatusXML.text;
-      print("jsonData ==> $jsonData");
+      var Data = storeDocument.findAllElements('vARJson').first;
 
-      String dataStr = StatusXML.text;
-      String ref;
-      String des;
-      String emplacement;
+      //print("jsonData ==> $jsonData");
+
+      String dataStr = Data.text;
+      String reference;
+      String designation;
       String qte;
-      //String img;
-      //print("dataStr ==> $dataStr");
-      if (dataStr == "{}") {
-        dataStr = null;
-      }
-      while ((dataStr != null)) {
-        ref = dataStr.substring(
+      String qte_prepare;
+
+      while (dataStr != null) {
+        reference = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("ref==> $ref");
+        print("reference==> $reference");
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
 
-        des = dataStr.substring(
+        designation = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("des==> $des");
-
-        emplacement = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("emplacement==> $emplacement");
+        print("designation==> $designation");
 
         qte = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
         print("qte==> $qte");
 
-        InventoryE t = new InventoryE(ref, des, emplacement, qte);
-        getCummul.add(t);
+        if (dataStr.indexOf("\",") == -1) // Last
+        {
+          qte_prepare = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\"}"));
+          dataStr = null;
+        } else {
+          qte_prepare = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+          dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        }
+        print("qte_prepare==> ..");
+
+        SalesL a = SalesL(reference, designation, qte, qte_prepare);
+        getLineP.add(a);
       }
     } catch (Exception) {
       print(Exception.toString());
@@ -334,7 +276,94 @@ class TransfertWs {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1);*/
     }
-    return getCummul;
+    return getLineP;
+  }
+
+//Export scanned item inventory total*************************************************************************************
+
+  Future<SalesL> getScannedSales(BuildContext context) async {
+    SalesL sales;
+    try {
+      String port = "7047";
+      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
+      String ip = "192.168.1.3";
+      var envelope =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+              "<soapenv:Body>";
+      envelope =
+          envelope + "<cab:FindItemSales>" + config + "</cab:FindItemSales>";
+      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+
+      NTLMClient client = NTLMClient(
+        domain: "",
+        workstation: "DESKTOP-44HHODU",
+        username: "ilyes",
+        password: "1234",
+      );
+      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      print(url);
+      print(envelope);
+      http.Response response = await client.post(url,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:FindItemSales",
+          },
+          body: envelope);
+      print(response.statusCode);
+      print("response.statusCode ==> ${response.statusCode}");
+      print("response.reasonPhrase ==> ${response.reasonPhrase}");
+      print("response.statusCode ==> ${response.body}");
+      var storeDocument = xml.parse(response.body);
+      print(storeDocument);
+      String qte = storeDocument.findAllElements('quantity').first.text;
+      print("QTE ==> $qte");
+
+      if (qte == "-1") {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.BOTTOMSLIDE,
+          title: 'Option',
+          desc: 'Article not found !! Do you want to add it ?',
+          btnCancelText: "No",
+          btnCancelColor: Colors.red,
+          btnCancelIcon: Icons.outbond,
+          btnCancelOnPress: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DropDownRec()),
+            );
+          },
+          btnOkText: "Ok",
+          btnOkColor: Colors.green,
+          btnOkIcon: Icons.transfer_within_a_station_outlined,
+          btnOkOnPress: () {
+            return null;
+          },
+        )..show();
+      } else if (qte == "0") {
+        Fluttertoast.showToast(
+            msg: "Article not found",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1);
+
+        return null;
+      }
+
+      String reference = storeDocument.findAllElements('itemNo').first.text;
+      print("REFERENCE ==> $reference");
+      String designation =
+          storeDocument.findAllElements('designation').first.text;
+      print("designation ==> $designation");
+
+      sales = SalesL(reference, designation, qte, "");
+    } catch (Exception) {
+      print("Exception in Service getItemToAddDetails (Reclassement)");
+      print(Exception.toString());
+    }
+    return sales;
   }
 
   //FindItem inventory*************************************************************************************

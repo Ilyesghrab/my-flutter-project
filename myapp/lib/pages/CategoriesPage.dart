@@ -12,6 +12,7 @@ import 'package:myapp/Data/receptions.dart';
 import 'package:myapp/Data/scanners.dart';
 import 'package:myapp/Data/transferts.dart';
 import 'package:myapp/Data/categories.dart';
+import 'package:myapp/List/ListPrepCom.dart';
 import 'package:myapp/List/dropDownReclass.dart';
 import 'package:myapp/List/listPurchase.dart';
 import 'package:myapp/List/listTransfert.dart';
@@ -273,7 +274,8 @@ class CategoriesPageState extends State<CategoriesPage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ScanPage()),
+                            MaterialPageRoute(
+                                builder: (context) => ListPrepCom()),
                           );
                         },
                         child: OperationCat(

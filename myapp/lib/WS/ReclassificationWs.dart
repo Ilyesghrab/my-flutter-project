@@ -14,8 +14,7 @@ import 'package:myapp/model/nom_reclass.dart';
 import 'package:myapp/model/purchase_Entry.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:myapp/pages/CategoriesPage.dart';
-import 'package:myapp/pages/addReclass.dart';
+
 import 'package:ntlm/ntlm.dart';
 import 'package:xml/xml.dart' as xml;
 
@@ -31,7 +30,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -105,7 +104,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -185,7 +184,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -264,7 +263,7 @@ class ReclassificationWs {
   Future<bool> InsertReception() async {
     String port = "7047";
     String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-    String ip = "192.168.1.10";
+    String ip = "192.168.1.3";
     var envelope =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
             "<soapenv:Body>";
@@ -317,7 +316,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -407,7 +406,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -499,7 +498,7 @@ class ReclassificationWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -593,7 +592,7 @@ class ReclassificationWs {
       //String config = sharedPrefs.getString('config');
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -692,7 +691,7 @@ class ReclassificationWs {
       //String config = sharedPrefs.getString('config');
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
