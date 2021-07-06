@@ -6,6 +6,7 @@ import 'package:myapp/List/ListPrepCom.dart';
 import 'package:myapp/List/detailsPagePrep.dart';
 
 import 'package:myapp/List/mylist.dart';
+import 'package:myapp/Outils/AnimatedFlipCounter.dart';
 import 'package:myapp/WS/CommandPreparationWs.dart';
 
 import 'package:myapp/model/sales_Line.dart';
@@ -21,6 +22,7 @@ import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
 import 'package:myapp/model/produit.dart';
 import 'package:myapp/pages/addPrep.dart';
 import 'package:myapp/pages/myaccountpage.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ListSalesLinePrep extends StatefulWidget with NavigationStates {
@@ -161,7 +163,7 @@ class ListSalesLinePrepState extends State<ListSalesLinePrep>
                         fontWeight: FontWeight.bold,
                         fontSize: 25.0)),
                 SizedBox(width: 10.0),
-                Text('Preperation',
+                Text('N°${widget.idCommande}',
                     style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -200,6 +202,38 @@ class ListSalesLinePrepState extends State<ListSalesLinePrep>
                                             //separatorBuilder: (context, index) => Divider(),
                                             itemBuilder: (context, index) {
                                               SalesL t = snapshot.data[index];
+                                              double sum =
+                                                  (double.parse(t.qte_prepare) /
+                                                      double.parse(t.qte));
+                                              int p = (sum * 100).round();
+                                              Color c;
+                                              if ((p >= 0) && (p <= 10))
+                                                c = Color.fromRGBO(
+                                                    190, 33, 43, 1.0);
+                                              else if ((p > 10) && (p <= 20))
+                                                c = Color.fromRGBO(
+                                                    236, 66, 49, 1.0);
+                                              else if ((p > 20) && (p <= 40))
+                                                c = Color.fromRGBO(
+                                                    239, 91, 41, 1.0);
+                                              else if ((p > 40) && (p <= 50))
+                                                c = Color.fromRGBO(
+                                                    247, 175, 66, 1.0);
+                                              else if ((p > 50) && (p <= 60))
+                                                c = Color.fromRGBO(
+                                                    248, 237, 54, 1.0);
+                                              else if ((p > 60) && (p <= 70))
+                                                c = Color.fromRGBO(
+                                                    216, 222, 51, 1.0);
+                                              else if ((p > 70) && (p <= 80))
+                                                c = Color.fromRGBO(
+                                                    140, 199, 63, 1.0);
+                                              else if ((p > 80) && (p <= 90))
+                                                c = Color.fromRGBO(
+                                                    58, 180, 71, 1.0);
+                                              else if ((p > 90) && (p <= 100))
+                                                c = Color.fromRGBO(
+                                                    9, 150, 71, 1.0);
                                               return Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 10.0,
@@ -228,7 +262,41 @@ class ListSalesLinePrepState extends State<ListSalesLinePrep>
                                                                 Hero(
                                                                     tag: "",
                                                                     child:
-                                                                        Container(
+                                                                        CircularPercentIndicator(
+                                                                      animation:
+                                                                          true,
+                                                                      animationDuration:
+                                                                          1500,
+                                                                      radius:
+                                                                          50.0,
+                                                                      lineWidth:
+                                                                          5.0,
+                                                                      percent:
+                                                                          sum,
+                                                                      center:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          AnimatedFlipCounter(
+                                                                            duration:
+                                                                                Duration(milliseconds: 1200),
+                                                                            value:
+                                                                                p,
+                                                                            /* pass in a number like 2014 */
+                                                                            color:
+                                                                                Colors.black,
+                                                                            size:
+                                                                                13,
+                                                                          ),
+                                                                          Text(
+                                                                              "%")
+                                                                        ],
+                                                                      ), //new Text("$p%"),
+                                                                      progressColor:
+                                                                          c,
+                                                                    )
+                                                                    /*Container(
                                                                       width:
                                                                           60.0,
                                                                       height:
@@ -248,7 +316,8 @@ class ListSalesLinePrepState extends State<ListSalesLinePrep>
                                                                                 BoxFit.cover,
                                                                             image: AssetImage('assets/images/jante.jpg')),
                                                                       ),
-                                                                    )),
+                                                                    )*/
+                                                                    ),
                                                                 SizedBox(
                                                                     width:
                                                                         10.0),

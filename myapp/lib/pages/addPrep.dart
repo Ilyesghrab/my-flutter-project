@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myapp/List/dropDownReclass.dart';
-
-import 'package:myapp/List/listProd.dart';
 import 'package:myapp/List/listSalesLinePrep.dart';
-
 import 'package:myapp/Outils/FadeAnimation.dart';
 import 'package:myapp/WS/CommandPreparationWs.dart';
-import 'package:myapp/WS/InventaireWs.dart';
-import 'package:myapp/WS/ReclassificationWs.dart';
-import 'package:myapp/model/article.dart';
 import 'package:myapp/model/sales_Line.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddPrep extends StatefulWidget {
@@ -430,11 +421,12 @@ class AddPrepState extends State<AddPrep> {
 
                                 return {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ListSalesLinePrep(
-                                                  widget.idCommande)))
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ListSalesLinePrep(
+                                                      widget.idCommande)))
+                                      .then((_) => setState(() {}))
                                 };
                               },
                               child: Container(

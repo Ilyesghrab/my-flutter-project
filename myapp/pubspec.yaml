@@ -48,6 +48,7 @@ dependencies:
   fluttertoast: ^8.0.7
   ntlm: ^2.0.1
   simple_animations: ^2.4.2
+  percent_indicator: ^3.0.1
  
 
 dev_dependencies:

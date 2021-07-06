@@ -1,6 +1,9 @@
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Outils/AnimatedFlipCounter.dart';
 import 'package:myapp/Outils/FadeAnimation.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class DetailsPagePrep extends StatefulWidget {
   final designation;
@@ -129,57 +132,6 @@ class _DetailsPagePrepState extends State<DetailsPagePrep> {
                                   fontSize: 20.0,
                                   color: Colors.grey)),
                         ),
-                        /*Container(
-                          width: 125.0,
-                          height: 40.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(17.0),
-                              color: Color(0xFF7A9BEE)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: decrement,
-                                child: Container(
-                                  height: 25.0,
-                                  width: 25.0,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7.0),
-                                      color: Color(0xFF7A9BEE)),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.remove,
-                                      color: Colors.white,
-                                      size: 20.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Text('$_counter',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 15.0)),
-                              InkWell(
-                                onTap: increment,
-                                child: Container(
-                                  height: 25.0,
-                                  width: 25.0,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7.0),
-                                      color: Colors.white),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Color(0xFF7A9BEE),
-                                      size: 20.0,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        )*/
                       ],
                     ),
                     SizedBox(height: 40.0),
@@ -213,42 +165,40 @@ class _DetailsPagePrepState extends State<DetailsPagePrep> {
                           ],
                         )),
                     SizedBox(height: 20.0),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 5.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10.0),
-                                topRight: Radius.circular(10.0),
-                                bottomLeft: Radius.circular(25.0),
-                                bottomRight: Radius.circular(25.0)),
-                            color: Color(0xFF7A9BEE)),
-                        height: 50.0,
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () async {
-                              String codeSanner =
-                                  await BarcodeScanner.scan(); //barcode scnner
-                              setState(() {
-                                qrCodeResult = codeSanner;
-                              });
-                              /*Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return ScanPage();
-                                  },
+                    FadeAnimation(
+                      1.4,
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 5.0),
+                        child: buildPercent(),
+                        /*child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(10.0),
+                                    bottomLeft: Radius.circular(25.0),
+                                    bottomRight: Radius.circular(25.0)),
+                                color: Color(0xFF7A9BEE)),
+                            height: 50.0,
+                            child: Center(
+                              
+                                child: GestureDetector(
+                                onTap: () async {
+                                  String codeSanner =
+                                      await BarcodeScanner.scan(); //barcode scnner
+                                  setState(() {
+                                    qrCodeResult = codeSanner;
+                                  });
+                                  
+                                },
+                                child: Text('Scan Product',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Montserrat')),
+                              ),
                                 ),
-                              );*/
-                            },
-                            child: Text('Scan Product',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Montserrat')),
-                          ),
-                        ),
+                          ),*/
                       ),
-                    )
+                    ),
                   ],
                 ))
           ])
@@ -322,5 +272,52 @@ class _DetailsPagePrepState extends State<DetailsPagePrep> {
     setState(() {
       selectedCard = cardTitle;
     });
+  }
+
+  Widget buildPercent() {
+    double sum =
+        (double.parse(widget.quantityPrep) / double.parse(widget.quatite));
+    int p = (sum * 100).round();
+    Color c;
+    if ((p >= 0) && (p <= 10))
+      c = Color(0xFF7A9BEE);
+    else if ((p > 10) && (p <= 20))
+      c = Color(0xFF7A9BEE);
+    else if ((p > 20) && (p <= 40))
+      c = Color(0xFF7A9BEE);
+    else if ((p > 40) && (p <= 50))
+      c = Color(0xFF7A9BEE);
+    else if ((p > 50) && (p <= 60))
+      c = Color(0xFF7A9BEE);
+    else if ((p > 60) && (p <= 70))
+      c = Color(0xFF7A9BEE);
+    else if ((p > 70) && (p <= 80))
+      c = Color(0xFF7A9BEE);
+    else if ((p > 80) && (p <= 90))
+      c = Color(0xFF7A9BEE);
+    else if ((p > 90) && (p <= 100)) c = Color(0xFF7A9BEE);
+    return LinearPercentIndicator(
+      animation: true,
+      animationDuration: 1500,
+      lineHeight: 25,
+
+      //radius: 50.0,
+      //lineWidth: 5.0,
+      percent: sum,
+      center: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedFlipCounter(
+            duration: Duration(milliseconds: 1200),
+            value: p,
+            /* pass in a number like 2014 */
+            color: Colors.black,
+            size: 13,
+          ),
+          Text("%")
+        ],
+      ), //new Text("$p%"),
+      progressColor: c,
+    );
   }
 }

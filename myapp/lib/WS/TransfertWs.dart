@@ -23,7 +23,7 @@ class TransfertWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.3";
+      String ip = "192.168.1.8";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -110,7 +110,7 @@ class TransfertWs {
   Future<bool> InsertReception() async {
     String port = "7047";
     String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-    String ip = "192.168.1.3";
+    String ip = "192.168.1.8";
     var envelope =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
             "<soapenv:Body>";
@@ -163,7 +163,7 @@ class TransfertWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.3";
+      String ip = "192.168.1.8";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -255,7 +255,7 @@ class TransfertWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.3";
+      String ip = "192.168.1.8";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";

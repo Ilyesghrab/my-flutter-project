@@ -198,9 +198,9 @@ class ListPrepComState extends State<ListPrepCom>
                                             itemBuilder: (context, index) {
                                               return Padding(
                                                   padding: EdgeInsets.only(
-                                                      left: 10.0,
-                                                      right: 10.0,
-                                                      top: 10.0),
+                                                      left: 5.0,
+                                                      right: 2.0,
+                                                      top: 2.0),
                                                   child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -267,7 +267,7 @@ class ListPrepComState extends State<ListPrepCom>
                                                       ])),
                                                       IconButton(
                                                           icon: Icon(Icons
-                                                              .arrow_back_ios),
+                                                              .arrow_forward_ios),
                                                           color: Colors.black,
                                                           onPressed: () {
                                                             Navigator.of(context).push(MaterialPageRoute(
