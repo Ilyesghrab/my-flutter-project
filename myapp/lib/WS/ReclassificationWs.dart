@@ -2,16 +2,16 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myapp/List/DropDownReclass.dart';
-import 'package:myapp/model/article.dart';
-import 'package:myapp/model/feuille_Line.dart';
+import 'package:myapp/Views/List/DropDownReclass.dart';
+import 'package:myapp/Models/article.dart';
+import 'package:myapp/Models/Transfert&Reclass/feuille_Line.dart';
 
-import 'package:myapp/model/inventory_Entry.dart';
-import 'package:myapp/model/magasin_Rec.dart';
+import 'package:myapp/Models/Inventaire/inventory_Entry.dart';
+import 'package:myapp/Models/Transfert&Reclass/magasin_Rec.dart';
 
-import 'package:myapp/model/model_reclass.dart';
-import 'package:myapp/model/nom_reclass.dart';
-import 'package:myapp/model/purchase_Entry.dart';
+import 'package:myapp/Models/Transfert&Reclass/model_reclass.dart';
+import 'package:myapp/Models/Transfert&Reclass/nom_reclass.dart';
+import 'package:myapp/Models/Reception/purchase_Entry.dart';
 
 import 'package:http/http.dart' as http;
 

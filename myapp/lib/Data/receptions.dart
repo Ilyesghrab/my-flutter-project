@@ -1,4 +1,4 @@
-import 'package:myapp/model/reception.dart';
+import 'package:myapp/Models/reception.dart';
 
 class Receptions {
   static const receptions = <Reception>[

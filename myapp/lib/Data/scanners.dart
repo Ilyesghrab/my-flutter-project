@@ -1,4 +1,4 @@
-import 'package:myapp/model/scanner.dart';
+import 'package:myapp/Models/scanner.dart';
 
 class Scanners {
   static const scanners = <Scanner>[

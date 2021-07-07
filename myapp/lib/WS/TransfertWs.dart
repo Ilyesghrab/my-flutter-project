@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myapp/model/Purchase_Header.dart';
-import 'package:myapp/model/Transfert_Header.dart';
-import 'package:myapp/model/inventory_Entry.dart';
-import 'package:myapp/model/inventory_Header.dart';
-import 'package:myapp/model/purchase_Entry.dart';
-import 'package:myapp/model/user.dart';
-import 'package:myapp/pages/CategoriesPage.dart';
+
+import 'package:myapp/Models/Transfert&Reclass/Transfert_Header.dart';
+import 'package:myapp/Models/Inventaire/inventory_Entry.dart';
+import 'package:myapp/Models/Inventaire/inventory_Header.dart';
+import 'package:myapp/Models/Reception/purchase_Entry.dart';
+import 'package:myapp/Models/Authentification/user.dart';
+import 'package:myapp/Views/pages/CategoriesPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ntlm/ntlm.dart';
 import 'package:xml/xml.dart' as xml;

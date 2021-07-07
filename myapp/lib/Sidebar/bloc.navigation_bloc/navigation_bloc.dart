@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:myapp/pages/CategoriesPage.dart';
-import 'package:myapp/pages/HomePage.dart';
-import 'package:myapp/List/mylist.dart';
-import 'package:myapp/Scanner/scan.dart';
+import 'package:myapp/Views/pages/CategoriesPage.dart';
+import 'package:myapp/Views/pages/HomePage.dart';
+import 'package:myapp/Views/List/mylist.dart';
+import 'package:myapp/Outils/Scanner/scan.dart';
 
 enum NavigationEvents {
   HomePageClickedEvent,

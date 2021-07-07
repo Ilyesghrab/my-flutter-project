@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myapp/Models/Livraison/loading.dart';
 import 'package:myapp/Views/List/dropDownReclass.dart';
 import 'package:myapp/Models/PreparationCommande/salesOrder.dart';
 
@@ -10,15 +11,15 @@ import 'package:myapp/Models/PreparationCommande/sales_Line.dart';
 import 'package:ntlm/ntlm.dart';
 import 'package:xml/xml.dart' as xml;
 
-class CommandPreparationWs {
+class LivraisonWs {
   String config;
   String nomtable;
-  CommandPreparationWs(this.config, this.nomtable);
+  LivraisonWs(this.config, this.nomtable);
 
-  //Liste Sales orders*************************************************************************************
+  //Liste details chargement*************************************************************************************
 
-  Future<List<SalesOrder>> getAllO() async {
-    List<SalesOrder> getOrders = [];
+  Future<List<Loading>> getAllCh() async {
+    List<Loading> getdetails = [];
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
@@ -27,9 +28,9 @@ class CommandPreparationWs {
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
       envelope = envelope +
-          "<cab:ExportSalesOrder>" +
+          "<cab:ExportLoadingDetails>" +
           config +
-          "</cab:ExportSalesOrder>";
+          "</cab:ExportLoadingDetails>";
       envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
 
       NTLMClient client = NTLMClient(
@@ -45,7 +46,7 @@ class CommandPreparationWs {
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
             "SOAPAction":
-                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportSalesOrder",
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportLoadingDetails",
           },
           body: envelope);
       print(response.statusCode);
@@ -57,28 +58,61 @@ class CommandPreparationWs {
       var Data = storeDocument.findAllElements('vARJson').first;
 
       String dataStr = Data.text;
-      String idCommande;
+      String numBL;
+      String numcom;
       String codeClient;
+      String nomClient;
+      String adresse;
+      String dateBl;
+      String mHT;
+      String mTTC;
+      if (dataStr == "{}") {
+        dataStr = null;
+      }
       while (dataStr != null) {
-        idCommande = dataStr.substring(
+        numBL = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("idCommande==> $idCommande");
+        print("numBL==> $numBL");
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
 
-        if (dataStr.indexOf("\",") == -1) // Last
-        {
-          codeClient = dataStr.substring(
-              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\"}"));
-          dataStr = null;
-        } else {
-          codeClient = dataStr.substring(
-              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-          dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        }
-        print("codeClient==> $codeClient");
+        numcom = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        print("numcom==> $numcom");
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
 
-        SalesOrder c = SalesOrder(idCommande, codeClient);
-        getOrders.add(c);
+        codeClient = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        print("codeClient==> $codeClient");
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+
+        nomClient = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        print("nomClient==> $nomClient");
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+
+        adresse = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        print("adresse==> $adresse");
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+
+        dateBl = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        print("dateBl==> $dateBl");
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+
+        mHT = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        print("mHT==> $mHT");
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+
+        mTTC = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        print("mTTC==> $mTTC");
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+
+        Loading c = Loading(
+            numBL, numcom, codeClient, nomClient, adresse, dateBl, mHT, mTTC);
+        getdetails.add(c);
       }
     } catch (Exception) {
       print(Exception.toString());
@@ -89,7 +123,7 @@ class CommandPreparationWs {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1);*/
     }
-    return getOrders;
+    return getdetails;
   }
 
   //Insert article Preparation*************************************************************************************

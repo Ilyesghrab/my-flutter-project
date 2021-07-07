@@ -4,7 +4,7 @@
         "name": "Flutter",
         "type": "dart",
         "request": "launch",
-        "program": "myapp/lib/pages/main.dart"
+        "program": "myapp/lib/Views/pages/main.dart"
     }
     ]
 }

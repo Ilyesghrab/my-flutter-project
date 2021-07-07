@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myapp/Outils/list_tile_widget.dart';
-import 'package:myapp/model/media_source.dart';
+import 'package:myapp/Models/media_source.dart';
 
 class GalleryButtonWidget extends StatelessWidget {
   @override

@@ -1,4 +1,4 @@
-import 'package:myapp/model/produit.dart';
+import 'package:myapp/Models/produit.dart';
 
 class Data {
   static const produits = <Produit>[

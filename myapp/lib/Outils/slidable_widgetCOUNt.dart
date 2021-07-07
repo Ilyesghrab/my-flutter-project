@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:myapp/List/listCount.dart';
-import 'package:myapp/List/listCummul.dart';
-import 'package:myapp/List/listProd.dart';
+import 'package:myapp/Views/List/listCount.dart';
+import 'package:myapp/Views/List/listCummul.dart';
+import 'package:myapp/Views/List/listProd.dart';
 
 enum SlidableAction { archive, share, more, delete }
 

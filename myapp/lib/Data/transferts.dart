@@ -1,4 +1,4 @@
-import 'package:myapp/model/transfert.dart';
+import 'package:myapp/Models/transfert.dart';
 
 class Transferts {
   static const transferts = <Transfert>[

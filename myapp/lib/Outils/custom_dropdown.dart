@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/WS/ReclassificationWs.dart';
-import 'package:myapp/model/model_reclass.dart';
-import 'package:myapp/model/nom_reclass.dart';
+import 'package:myapp/Models/Transfert&Reclass/model_reclass.dart';
+import 'package:myapp/Models/Transfert&Reclass/nom_reclass.dart';
 
 class CustomDropdown extends StatefulWidget {
   //final String text;

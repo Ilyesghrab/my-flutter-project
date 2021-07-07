@@ -1,4 +1,4 @@
-import 'package:myapp/model/category.dart';
+import 'package:myapp/Models/category.dart';
 
 class Categories {
   static const categoris = <Category>[
