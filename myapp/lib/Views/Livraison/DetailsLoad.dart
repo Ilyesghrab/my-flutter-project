@@ -134,7 +134,7 @@ class _DetailsLoadState extends State<DetailsLoad> {
                         Container(height: 25.0, color: Colors.grey, width: 1.0),
                         FadeAnimation(
                           1.4,
-                          Text("Date: ${widget.dateBL}",
+                          Text("Code Client: ${widget.codeClient}",
                               style: TextStyle(
                                   fontFamily: 'Montserrat',
                                   fontSize: 20.0,
@@ -296,7 +296,7 @@ class _DetailsLoadState extends State<DetailsLoad> {
                   width: 0.75),
             ),
             height: 100.0,
-            width: 100.0,
+            width: 150.0,
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,

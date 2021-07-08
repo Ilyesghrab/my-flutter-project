@@ -1,10 +1,14 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Models/Livraison/loading.dart';
+import 'package:myapp/Outils/GoogleMaps.dart';
 import 'package:myapp/Views/List/ListPrepCom.dart';
 
 import 'package:myapp/Views/List/detailsPagePrep.dart';
+import 'package:myapp/Views/List/dropDownReclass.dart';
+import 'package:myapp/Views/List/listTransfert.dart';
 
 import 'package:myapp/Views/List/mylist.dart';
 import 'package:myapp/Outils/AnimatedFlipCounter.dart';
@@ -27,6 +31,7 @@ import 'package:myapp/Views/pages/myaccountpage.dart';
 import 'package:myapp/WS/LivraisonWs.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ListDetailsload extends StatefulWidget with NavigationStates {
   @override
@@ -133,7 +138,7 @@ class ListDetailsloadState extends State<ListDetailsload>
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ListPrepCom()),
+                      MaterialPageRoute(builder: (context) => CategoriesPage()),
                     );
                   },
                 ),
@@ -272,7 +277,7 @@ class ListDetailsloadState extends State<ListDetailsload>
                                                                             .start,
                                                                     children: [
                                                                       Text(
-                                                                          "${t.codeClient} : ${t.nomClient}",
+                                                                          "${t.nomClient}",
                                                                           style: TextStyle(
                                                                               fontFamily: 'Montserrat',
                                                                               fontSize: 17.0,
@@ -285,6 +290,56 @@ class ListDetailsloadState extends State<ListDetailsload>
                                                                               color: Colors.grey))
                                                                     ])
                                                               ])),
+                                                          IconButton(
+                                                              icon: Icon(Icons
+                                                                  .arrow_forward_ios),
+                                                              color:
+                                                                  Colors.black,
+                                                              onPressed: () {
+                                                                AwesomeDialog(
+                                                                  context:
+                                                                      context,
+                                                                  dialogType:
+                                                                      DialogType
+                                                                          .WARNING,
+                                                                  animType: AnimType
+                                                                      .BOTTOMSLIDE,
+                                                                  title:
+                                                                      'Option',
+                                                                  desc:
+                                                                      'Please choose action to continue',
+                                                                  btnCancelText:
+                                                                      "Call Client",
+                                                                  btnCancelColor:
+                                                                      Colors
+                                                                          .green,
+                                                                  btnCancelIcon:
+                                                                      Icons
+                                                                          .call,
+                                                                  btnCancelOnPress:
+                                                                      () {
+                                                                    launch(
+                                                                        ('tel://${t.numcom}'));
+                                                                  },
+                                                                  btnOkText:
+                                                                      "Get Location",
+                                                                  btnOkColor:
+                                                                      Colors
+                                                                          .blue,
+                                                                  btnOkIcon: Icons
+                                                                      .location_on_outlined,
+                                                                  btnOkOnPress:
+                                                                      () {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              GoogleMaps(t.adresse)),
+                                                                    );
+                                                                  },
+                                                                )..show();
+                                                              })
                                                           /*IconButton(
                                                       icon: Icon(
                                                           Icons.arrow_back_ios),
@@ -302,7 +357,7 @@ class ListDetailsloadState extends State<ListDetailsload>
           )
         ],
       ),
-      floatingActionButton: Column(
+      /* floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           AnimatedBuilder(
@@ -321,7 +376,7 @@ class ListDetailsloadState extends State<ListDetailsload>
                   )),
           buttonToggle()
         ],
-      ),
+      ),*/
       bottomNavigationBar: CurvedNavigationBar(
         color: Color(0xFF21BFBD),
         backgroundColor: Colors.white,

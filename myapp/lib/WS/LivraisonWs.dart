@@ -23,7 +23,7 @@ class LivraisonWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.8";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -55,7 +55,80 @@ class LivraisonWs {
       print("response.statusCode ==> ${response.body}");
       var storeDocument = xml.parse(response.body);
 
-      var Data = storeDocument.findAllElements('vARJson').first;
+      var StatusXML =
+          storeDocument.findAllElements('vARJson').first.children.toString();
+      String s = StatusXML;
+      s = s.substring(1, s.length - 1);
+
+      String ch = s;
+      double l = 0;
+      for (int i = 0; i < s.length; i++) {
+        if (s[i] == ",") l++;
+      }
+      l = l + 1;
+      l = (l / 8) as double;
+
+      for (int j = 0; j < l; j++) {
+        String numBL = ch.substring(0, ch.indexOf(",") + 1);
+        numBL = numBL.substring(numBL.indexOf(":") + 1, numBL.length - 1);
+        numBL = numBL.substring(1, numBL.length - 1);
+        print("numBL=====>${numBL.toString()}");
+
+        ch = ch.substring(ch.indexOf(",") + 1);
+
+        String numcom = ch.substring(0, ch.indexOf(",") + 1);
+        numcom = numcom.substring(numcom.indexOf(":") + 1, numcom.length - 1);
+        numcom = numcom.substring(1, numcom.length - 1);
+        print("numcom=====>${numcom.toString()}");
+        ch = ch.substring(ch.indexOf(",") + 1);
+
+        String codeClient = ch.substring(0, ch.indexOf(",") + 1);
+        codeClient = codeClient.substring(
+            codeClient.indexOf(":") + 1, codeClient.length - 1);
+        codeClient = codeClient.substring(1, codeClient.length - 1);
+        print("codeClient=====>${codeClient.toString()}");
+        ch = ch.substring(ch.indexOf(",") + 1);
+
+        String nomClient = ch.substring(0, ch.indexOf(",") + 1);
+        nomClient = nomClient.substring(
+            nomClient.indexOf(":") + 1, nomClient.length - 1);
+        nomClient = nomClient.substring(1, nomClient.length - 1);
+        print("nomClient=====>${nomClient.toString()}");
+        ch = ch.substring(ch.indexOf(",") + 1);
+
+        String adresse = ch.substring(0, ch.indexOf(",") + 1);
+        adresse =
+            adresse.substring(adresse.indexOf(":") + 1, adresse.length - 1);
+        adresse = adresse.substring(1, adresse.length - 1);
+        print("adresse=====>${adresse.toString()}");
+        ch = ch.substring(ch.indexOf(",") + 1);
+
+        String dateBl = ch.substring(0, ch.indexOf(",") + 1);
+        dateBl = dateBl.substring(dateBl.indexOf(":") + 1, dateBl.length - 1);
+        dateBl = dateBl.substring(1, dateBl.length - 1);
+        print("dateBl=====>${dateBl.toString()}");
+        ch = ch.substring(ch.indexOf(",") + 1);
+
+        String mHT = ch.substring(0, ch.indexOf(",") + 1);
+        mHT = mHT.substring(mHT.indexOf(":") + 1, mHT.length - 1);
+        mHT = mHT.substring(1, mHT.length - 1);
+        print("mHT=====>${mHT.toString()}");
+        ch = ch.substring(ch.indexOf(",") + 1);
+
+        String mTTC = "";
+        if (j < l - 1) {
+          mTTC = ch.substring(0, ch.indexOf(",") + 1);
+          mTTC = mTTC.substring(mTTC.indexOf(":") + 1, mTTC.length - 1);
+          mTTC = mTTC.substring(1, mTTC.length - 1);
+          ch = ch.substring(ch.indexOf(",") + 1);
+        } else {
+          mTTC = ch.substring(0, ch.indexOf("}") + 1);
+          mTTC = mTTC.substring(mTTC.indexOf(":") + 1, mTTC.length - 1);
+          mTTC = mTTC.substring(1, mTTC.length - 1);
+          print("mTTC=====>${mTTC.toString()}");
+        }
+
+        /*var Data = storeDocument.findAllElements('vARJson').first;
 
       String dataStr = Data.text;
       String numBL;
@@ -102,13 +175,13 @@ class LivraisonWs {
 
         mHT = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("mHT==> $mHT");
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        print("mHT==> $mHT");
 
         mTTC = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("mTTC==> $mTTC");
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        print("mTTC==> $mTTC");*/
 
         Loading c = Loading(
             numBL, numcom, codeClient, nomClient, adresse, dateBl, mHT, mTTC);
@@ -133,7 +206,7 @@ class LivraisonWs {
     var storeDocument;
     String port = "7047";
     String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-    String ip = "192.168.1.8";
+    String ip = "192.168.1.3";
     var envelope =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
             "<soapenv:Body>";
@@ -228,7 +301,7 @@ class LivraisonWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.8";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -320,7 +393,7 @@ class LivraisonWs {
     try {
       String port = "7047";
       String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.8";
+      String ip = "192.168.1.3";
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
