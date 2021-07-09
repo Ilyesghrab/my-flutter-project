@@ -49,8 +49,8 @@ dependencies:
   ntlm: ^2.0.1
   simple_animations: ^2.4.2
   percent_indicator: ^3.0.1
-  geolocator: ^2.1.0
-  google_maps_flutter: ^2.0.6
+  #geolocator: ^2.1.0
+  #google_maps_flutter: ^2.0.6
   #flutter_google_places: ^0.2.8
  
 

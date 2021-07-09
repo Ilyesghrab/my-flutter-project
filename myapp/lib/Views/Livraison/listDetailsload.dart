@@ -330,13 +330,13 @@ class ListDetailsloadState extends State<ListDetailsload>
                                                                       .location_on_outlined,
                                                                   btnOkOnPress:
                                                                       () {
-                                                                    Navigator
+                                                                    /*Navigator
                                                                         .push(
                                                                       context,
                                                                       MaterialPageRoute(
                                                                           builder: (context) =>
                                                                               GoogleMaps(t.adresse)),
-                                                                    );
+                                                                    );*/
                                                                   },
                                                                 )..show();
                                                               })
