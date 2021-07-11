@@ -6,6 +6,8 @@ import 'package:myapp/Outils/FadeAnimation.dart';
 import 'package:myapp/WS/InventaireWs.dart';
 
 class AddInv extends StatefulWidget {
+  String noInv;
+  AddInv(this.noInv);
   @override
   AddInvState createState() => AddInvState();
 }
@@ -373,7 +375,7 @@ class AddInvState extends State<AddInv> {
                                 String count1 = _counterQ.toString();
                                 String count2 = _counter.toString();
                                 String config =
-                                    "<cab:inventoryNum>INV2101</cab:inventoryNum>" +
+                                    "<cab:inventoryNum>${widget.noInv}</cab:inventoryNum>" +
                                         "<cab:itemNo>" +
                                         itno +
                                         "</cab:itemNo>" +
@@ -412,7 +414,8 @@ class AddInvState extends State<AddInv> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ListProd()))
+                                          builder: (context) =>
+                                              ListProd(widget.noInv)))
                                 };
                               },
                               child: Container(

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Views/List/listSalesLinePrep.dart';
 import 'package:myapp/Views/List/mylist.dart';
+import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/CommandPreparationWs.dart';
 
 import 'package:myapp/Models/PreparationCommande/salesOrder.dart';
@@ -348,7 +349,7 @@ class ListPrepComState extends State<ListPrepCom>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyList()),
+                MaterialPageRoute(builder: (context) => Param()),
               );
             },
           ),
@@ -396,7 +397,7 @@ class ListPrepComState extends State<ListPrepCom>
   }
 
   Widget buttonAdd() {
-    return Container(
+    /* return Container(
         child: FloatingActionButton(
       onPressed: () {
         Navigator.push(
@@ -406,7 +407,7 @@ class ListPrepComState extends State<ListPrepCom>
       },
       tooltip: "Add",
       child: Icon(Icons.add),
-    ));
+    ));*/
   }
 
   Widget buttonScan() {

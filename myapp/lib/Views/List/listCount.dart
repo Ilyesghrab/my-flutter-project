@@ -1,6 +1,11 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Views/List/listCummul.dart';
+import 'package:myapp/Views/List/listProd.dart';
 import 'package:myapp/Views/List/mylist.dart';
+import 'package:myapp/Views/pages/addInv.dart';
+import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/InventaireWs.dart';
 import 'package:myapp/Models/Inventaire/inventory_Header.dart';
 import 'package:myapp/Views/pages/CategoriesPage.dart';
@@ -17,6 +22,8 @@ import 'package:myapp/Views/pages/myaccountpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ListCount extends StatefulWidget with NavigationStates {
+  String noInv;
+  ListCount(this.noInv);
   @override
   ListCountState createState() => ListCountState();
 }
@@ -42,7 +49,7 @@ class ListCountState extends State<ListCount>
       String login = sharedPrefs.getString('Login');
 
       String config = "<cab:login>$login</cab:login>" +
-          "<cab:noInv>INV2101</cab:noInv>" +
+          "<cab:noInv>${widget.noInv}</cab:noInv>" +
           "<cab:vARJson></cab:vARJson>";
       InventaireWs ws = new InventaireWs(config, "inventory_Header");
 
@@ -189,70 +196,117 @@ class ListCountState extends State<ListCount>
                                             itemBuilder: (context, index) {
                                               InventoryH t =
                                                   snapshot.data[index];
-                                              return SlidableWidget(
+                                              return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 5.0,
+                                                      right: 2.0,
+                                                      top: 2.0),
                                                   child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Row(children: [
-                                                    Hero(
-                                                        tag: "",
-                                                        child: Container(
-                                                          width: 75.0,
-                                                          height: 75.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Container(
+                                                          child: Row(children: [
+                                                        Hero(
+                                                            tag: "",
+                                                            child: Container(
+                                                              width: 75.0,
+                                                              height: 75.0,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors.white,
+                                                                    //0xFF21BFBD),
+                                                                    width: 3),
+                                                                shape: BoxShape
+                                                                    .circle,
                                                                 color: Colors
                                                                     .white,
-                                                                //0xFF21BFBD),
-                                                                width: 3),
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: Colors.white,
-                                                            image: DecorationImage(
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                image: AssetImage(
-                                                                    'assets/images/note.png')),
-                                                          ),
-                                                        )),
-                                                    SizedBox(width: 10.0),
-                                                    Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                              "Comptage ${t.noCount}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      17.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                          Text(
-                                                              "${t.no}: ${t.locationCd}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Colors
-                                                                      .grey))
-                                                        ])
-                                                  ])),
-                                                  IconButton(
-                                                      icon: Icon(
-                                                          Icons.arrow_back_ios),
-                                                      color: Colors.black,
-                                                      onPressed: () {})
-                                                ],
-                                              ));
+                                                                image: DecorationImage(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image: AssetImage(
+                                                                        'assets/images/note.png')),
+                                                              ),
+                                                            )),
+                                                        SizedBox(width: 10.0),
+                                                        Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                  "Comptage ${t.noCount}",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          17.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                              Text(
+                                                                  "${t.no}: ${t.locationCd}",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          15.0,
+                                                                      color: Colors
+                                                                          .grey))
+                                                            ])
+                                                      ])),
+                                                      IconButton(
+                                                          icon: Icon(Icons
+                                                              .arrow_forward_ios),
+                                                          color: Colors.black,
+                                                          onPressed: () {
+                                                            AwesomeDialog(
+                                                              context: context,
+                                                              dialogType:
+                                                                  DialogType
+                                                                      .WARNING,
+                                                              animType: AnimType
+                                                                  .BOTTOMSLIDE,
+                                                              title: 'Option',
+                                                              desc:
+                                                                  'Please choose action to continue',
+                                                              btnCancelText:
+                                                                  "Cummul Prod",
+                                                              btnCancelColor:
+                                                                  Colors.green,
+                                                              btnCancelIcon:
+                                                                  Icons.call,
+                                                              btnCancelOnPress:
+                                                                  () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          ListCummul(
+                                                                              widget.noInv)),
+                                                                );
+                                                              },
+                                                              btnOkText:
+                                                                  "Counted Prod",
+                                                              btnOkColor:
+                                                                  Colors.blue,
+                                                              btnOkIcon: Icons
+                                                                  .location_on_outlined,
+                                                              btnOkOnPress: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          ListProd(
+                                                                              widget.noInv)),
+                                                                );
+                                                              },
+                                                            )..show();
+                                                          })
+                                                    ],
+                                                  ));
                                             });
                                       }
                                     }))
@@ -322,7 +376,7 @@ class ListCountState extends State<ListCount>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyList()),
+                MaterialPageRoute(builder: (context) => Param()),
               );
             },
           ),
@@ -427,7 +481,12 @@ class ListCountState extends State<ListCount>
   Widget buttonAdd() {
     return Container(
         child: FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddInv(widget.noInv)),
+        );
+      },
       tooltip: "Add",
       child: Icon(Icons.add),
     ));

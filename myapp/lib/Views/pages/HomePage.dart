@@ -66,20 +66,20 @@ class _HomePageState extends State<HomePage> {
 
   Future<String> getdomaine() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    String i = sp.getString("Domaine");
-    return i;
+    String id = sp.getString("Domaine");
+    return id;
   }
 
   Future<String> getworkstation() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    String i = sp.getString("Workstation");
-    return i;
+    String iw = sp.getString("Workstation");
+    return iw;
   }
 
   Future<String> getusernameNtlm() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    String i = sp.getString("UsernameNTLM");
-    return i;
+    String iu = sp.getString("UsernameNTLM");
+    return iu;
   }
 
   @override
@@ -191,6 +191,9 @@ class _HomePageState extends State<HomePage> {
                             port = fh[3];
                             webserv = fh[4];
                             ip = fh[5];
+                            domaine = fh[6];
+                            workstation = fh[7];
+                            usernamentlm = fh[8];
                             sp.setString("Login", login);
                             sp.setString("Statut", statut);
                             sp.setString("Username", username);

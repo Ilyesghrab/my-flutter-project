@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Views/List/listCount.dart';
 import 'package:myapp/WS/InventaireWs.dart';
 import 'package:myapp/Models/Inventaire/inventory_Header.dart';
 import 'package:myapp/Views/pages/CategoriesPage.dart';
@@ -184,76 +185,89 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                                             itemCount: snapshot.data.length,
                                             //separatorBuilder: (context, index) => Divider(),
                                             itemBuilder: (context, index) {
-                                              return SlidableWidget(
+                                              return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 5.0,
+                                                      right: 2.0,
+                                                      top: 2.0),
                                                   child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Row(children: [
-                                                    Hero(
-                                                        tag: snapshot
-                                                            .data[index]
-                                                            .locationCd,
-                                                        child: Container(
-                                                          width: 75.0,
-                                                          height: 75.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Container(
+                                                          child: Row(children: [
+                                                        Hero(
+                                                            tag: snapshot
+                                                                .data[index]
+                                                                .locationCd,
+                                                            child: Container(
+                                                              width: 75.0,
+                                                              height: 75.0,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors.white,
+                                                                    //0xFF21BFBD),
+                                                                    width: 3),
+                                                                shape: BoxShape
+                                                                    .circle,
                                                                 color: Colors
                                                                     .white,
-                                                                //0xFF21BFBD),
-                                                                width: 3),
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: Colors.white,
-                                                            image: DecorationImage(
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                image: AssetImage(
-                                                                    'assets/images/inventory.png')),
-                                                          ),
-                                                        )),
-                                                    SizedBox(width: 10.0),
-                                                    Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .no,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      17.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                          Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .locationCd,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Colors
-                                                                      .grey))
-                                                        ])
-                                                  ])),
-                                                  IconButton(
-                                                      icon: Icon(
-                                                          Icons.arrow_back_ios),
-                                                      color: Colors.black,
-                                                      onPressed: () {})
-                                                ],
-                                              ));
+                                                                image: DecorationImage(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image: AssetImage(
+                                                                        'assets/images/inventory.png')),
+                                                              ),
+                                                            )),
+                                                        SizedBox(width: 10.0),
+                                                        Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                  snapshot
+                                                                      .data[
+                                                                          index]
+                                                                      .no,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          17.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                              Text(
+                                                                  snapshot
+                                                                      .data[
+                                                                          index]
+                                                                      .locationCd,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          15.0,
+                                                                      color: Colors
+                                                                          .grey))
+                                                            ])
+                                                      ])),
+                                                      IconButton(
+                                                          icon: Icon(Icons
+                                                              .arrow_forward_ios),
+                                                          color: Colors.black,
+                                                          onPressed: () {
+                                                            Navigator.of(context).push(MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    ListCount(snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .no)));
+                                                          })
+                                                    ],
+                                                  ));
                                             });
                                       }
                                     }))
@@ -264,7 +278,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
           )
         ],
       ),
-      floatingActionButton: Column(
+      /* floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           AnimatedBuilder(
@@ -283,7 +297,7 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
                   )),
           buttonToggle()
         ],
-      ),
+      ),*/
       bottomNavigationBar: CurvedNavigationBar(
         color: Color(0xFF21BFBD),
         backgroundColor: Colors.white,
@@ -371,17 +385,17 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
   }
 
   Widget buttonAdd() {
-    return Container(
+    /*return Container(
         child: FloatingActionButton(
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AddInv()),
+          MaterialPageRoute(builder: (context) => AddInv(widget.noInv)),
         );
       },
       tooltip: "Add",
       child: Icon(Icons.add),
-    ));
+    ));*/
   }
 
   Widget buttonScan() {

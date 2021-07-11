@@ -9,21 +9,26 @@ import 'package:myapp/Models/PreparationCommande/salesOrder.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/Models/PreparationCommande/sales_Line.dart';
 import 'package:ntlm/ntlm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart' as xml;
 
 class LivraisonWs {
   String config;
   String nomtable;
   LivraisonWs(this.config, this.nomtable);
+  String ip = "Ip";
+  String webserv = "Webserv";
+  String port = "Port";
 
   //Liste details chargement*************************************************************************************
 
   Future<List<Loading>> getAllCh() async {
     List<Loading> getdetails = [];
     try {
-      String port = "7047";
-      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String ip = sharedPrefs.getString('Ip');
+      String port = sharedPrefs.getString('Port');
+      String webserv = sharedPrefs.getString('Webserv');
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -39,7 +44,7 @@ class LivraisonWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -128,61 +133,6 @@ class LivraisonWs {
           print("mTTC=====>${mTTC.toString()}");
         }
 
-        /*var Data = storeDocument.findAllElements('vARJson').first;
-
-      String dataStr = Data.text;
-      String numBL;
-      String numcom;
-      String codeClient;
-      String nomClient;
-      String adresse;
-      String dateBl;
-      String mHT;
-      String mTTC;
-      if (dataStr == "{}") {
-        dataStr = null;
-      }
-      while (dataStr != null) {
-        numBL = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("numBL==> $numBL");
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-
-        numcom = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("numcom==> $numcom");
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-
-        codeClient = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("codeClient==> $codeClient");
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-
-        nomClient = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("nomClient==> $nomClient");
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-
-        adresse = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("adresse==> $adresse");
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-
-        dateBl = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("dateBl==> $dateBl");
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-
-        mHT = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("mHT==> $mHT");
-
-        mTTC = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("mTTC==> $mTTC");*/
-
         Loading c = Loading(
             numBL, numcom, codeClient, nomClient, adresse, dateBl, mHT, mTTC);
         getdetails.add(c);
@@ -204,9 +154,10 @@ class LivraisonWs {
   Future<String> InsertPrep() async {
     List<SalesL> articles = [];
     var storeDocument;
-    String port = "7047";
-    String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-    String ip = "192.168.1.10";
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    String ip = sharedPrefs.getString('Ip');
+    String port = sharedPrefs.getString('Port');
+    String webserv = sharedPrefs.getString('Webserv');
     var envelope =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
             "<soapenv:Body>";
@@ -222,7 +173,7 @@ class LivraisonWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -299,9 +250,10 @@ class LivraisonWs {
   Future<List<SalesL>> getExportLinePrep() async {
     List<SalesL> getLineP = [];
     try {
-      String port = "7047";
-      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String ip = sharedPrefs.getString('Ip');
+      String port = sharedPrefs.getString('Port');
+      String webserv = sharedPrefs.getString('Webserv');
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -317,7 +269,7 @@ class LivraisonWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -391,9 +343,10 @@ class LivraisonWs {
   Future<SalesL> getScannedSales(BuildContext context) async {
     SalesL sales;
     try {
-      String port = "7047";
-      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String ip = sharedPrefs.getString('Ip');
+      String port = sharedPrefs.getString('Port');
+      String webserv = sharedPrefs.getString('Webserv');
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -407,7 +360,7 @@ class LivraisonWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,

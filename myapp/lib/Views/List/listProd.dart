@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/Views/List/detailsPage.dart';
 import 'package:myapp/Views/List/listCount.dart';
 import 'package:myapp/Views/List/mylist.dart';
+import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/InventaireWs.dart';
 import 'package:myapp/Models/Inventaire/inventory_Entry.dart';
 import 'package:myapp/Views/pages/CategoriesPage.dart';
@@ -18,6 +19,8 @@ import 'package:myapp/Models/produit.dart';
 import 'package:myapp/Views/pages/myaccountpage.dart';
 
 class ListProd extends StatefulWidget with NavigationStates {
+  String noInv;
+  ListProd(this.noInv);
   @override
   ListProdState createState() => ListProdState();
 }
@@ -39,7 +42,7 @@ class ListProdState extends State<ListProd>
 
   Future<List<InventoryE>> getlistE() async {
     try {
-      String config = "<cab:inventoryNum>INV2101</cab:inventoryNum>" +
+      String config = "<cab:inventoryNum>${widget.noInv}</cab:inventoryNum>" +
           "<cab:terminalId></cab:terminalId>" +
           "<cab:comptage>1</cab:comptage>" +
           "<cab:vARJson></cab:vARJson>";
@@ -116,7 +119,8 @@ class ListProdState extends State<ListProd>
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ListCount()),
+                      MaterialPageRoute(
+                          builder: (context) => ListCount(widget.noInv)),
                     );
                   },
                 ),
@@ -337,7 +341,7 @@ class ListProdState extends State<ListProd>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyList()),
+                MaterialPageRoute(builder: (context) => Param()),
               );
             },
           ),

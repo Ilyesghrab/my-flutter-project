@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Views/List/mylist.dart';
+import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/TransfertWs.dart';
 import 'package:myapp/Models/Transfert&Reclass/Transfert_Header.dart';
 import 'package:myapp/Views/pages/CategoriesPage.dart';
@@ -186,78 +187,82 @@ class ListTransfertState extends State<ListTransfert>
                                             itemBuilder: (context, index) {
                                               TransfertH t =
                                                   snapshot.data[index];
-                                              return SlidableWidget(
+                                              return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 5.0,
+                                                      right: 2.0,
+                                                      top: 2.0),
                                                   child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Row(children: [
-                                                    Hero(
-                                                        tag: "${t.trans}",
-                                                        child: Container(
-                                                          width: 75.0,
-                                                          height: 75.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Container(
+                                                          child: Row(children: [
+                                                        Hero(
+                                                            tag: "${t.trans}",
+                                                            child: Container(
+                                                              width: 75.0,
+                                                              height: 75.0,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors.white,
+                                                                    //0xFF21BFBD),
+                                                                    width: 3),
+                                                                shape: BoxShape
+                                                                    .circle,
                                                                 color: Colors
                                                                     .white,
-                                                                //0xFF21BFBD),
-                                                                width: 3),
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: Colors.white,
-                                                            image: DecorationImage(
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                image: AssetImage(
-                                                                    'assets/images/inventory.png')),
-                                                          ),
-                                                        )),
-                                                    SizedBox(width: 10.0),
-                                                    Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text("${t.trans}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      17.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                          Text(
-                                                              "Prov: ${t.prov}  |  Dest: ${t.dest}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Colors
-                                                                      .grey)),
-                                                          Text(
-                                                              "Date: ${t.dateT}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Colors
-                                                                      .grey))
-                                                        ])
-                                                  ])),
-                                                  IconButton(
-                                                      icon: Icon(
-                                                          Icons.arrow_back_ios),
-                                                      color: Colors.black,
-                                                      onPressed: () {})
-                                                ],
-                                              ));
+                                                                image: DecorationImage(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image: AssetImage(
+                                                                        'assets/images/inventory.png')),
+                                                              ),
+                                                            )),
+                                                        SizedBox(width: 10.0),
+                                                        Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text("${t.trans}",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          17.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                              Text(
+                                                                  "Prov: ${t.prov}  |  Dest: ${t.dest}",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          15.0,
+                                                                      color: Colors
+                                                                          .grey)),
+                                                              Text(
+                                                                  "Date: ${t.dateT}",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          15.0,
+                                                                      color: Colors
+                                                                          .grey))
+                                                            ])
+                                                      ])),
+                                                      IconButton(
+                                                          icon: Icon(Icons
+                                                              .arrow_back_ios),
+                                                          color: Colors.black,
+                                                          onPressed: () {})
+                                                    ],
+                                                  ));
                                             });
                                       }
                                     }))
@@ -327,7 +332,7 @@ class ListTransfertState extends State<ListTransfert>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyList()),
+                MaterialPageRoute(builder: (context) => Param()),
               );
             },
           ),
@@ -430,7 +435,7 @@ class ListTransfertState extends State<ListTransfert>
   }
 
   Widget buttonAdd() {
-    return Container(
+    /*return Container(
         child: FloatingActionButton(
       onPressed: () {
         Navigator.push(
@@ -440,7 +445,7 @@ class ListTransfertState extends State<ListTransfert>
       },
       tooltip: "Add",
       child: Icon(Icons.add),
-    ));
+    ));*/
   }
 
   Widget buttonScan() {

@@ -9,21 +9,26 @@ import 'package:myapp/Models/Authentification/user.dart';
 import 'package:myapp/Views/pages/CategoriesPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ntlm/ntlm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart' as xml;
 
 class TransfertWs {
   String config;
   String nomtable;
   TransfertWs(this.config, this.nomtable);
+  String ip = "Ip";
+  String webserv = "Webserv";
+  String port = "Port";
 
   //Liste Transfert*************************************************************************************
 
   Future<List<TransfertH>> getAllT() async {
     List<TransfertH> getTrans = [];
     try {
-      String port = "7047";
-      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String ip = sharedPrefs.getString('Ip');
+      String port = sharedPrefs.getString('Port');
+      String webserv = sharedPrefs.getString('Webserv');
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -39,7 +44,7 @@ class TransfertWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -108,9 +113,10 @@ class TransfertWs {
   //Insert Reception*************************************************************************************
 
   Future<bool> InsertReception() async {
-    String port = "7047";
-    String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-    String ip = "192.168.1.10";
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    String ip = sharedPrefs.getString('Ip');
+    String port = sharedPrefs.getString('Port');
+    String webserv = sharedPrefs.getString('Webserv');
     var envelope =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
             "<soapenv:Body>";
@@ -124,7 +130,7 @@ class TransfertWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -161,9 +167,10 @@ class TransfertWs {
   Future<List<PurchaseE>> getScannedCommand() async {
     List<PurchaseE> getPurE = [];
     try {
-      String port = "7047";
-      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String ip = sharedPrefs.getString('Ip');
+      String port = sharedPrefs.getString('Port');
+      String webserv = sharedPrefs.getString('Webserv');
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -179,7 +186,7 @@ class TransfertWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -253,9 +260,10 @@ class TransfertWs {
   Future<List<InventoryE>> getScannedCummul() async {
     List<InventoryE> getCummul = [];
     try {
-      String port = "7047";
-      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String ip = sharedPrefs.getString('Ip');
+      String port = sharedPrefs.getString('Port');
+      String webserv = sharedPrefs.getString('Webserv');
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -271,7 +279,7 @@ class TransfertWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,

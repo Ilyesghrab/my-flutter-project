@@ -7,6 +7,7 @@ import 'package:myapp/Views/List/detailsPagePrep.dart';
 
 import 'package:myapp/Views/List/mylist.dart';
 import 'package:myapp/Outils/AnimatedFlipCounter.dart';
+import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/CommandPreparationWs.dart';
 
 import 'package:myapp/Models/PreparationCommande/sales_Line.dart';
@@ -415,7 +416,7 @@ class ListSalesLinePrepState extends State<ListSalesLinePrep>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyList()),
+                MaterialPageRoute(builder: (context) => Param()),
               );
             },
           ),

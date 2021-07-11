@@ -16,21 +16,26 @@ import 'package:myapp/Models/Reception/purchase_Entry.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:ntlm/ntlm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart' as xml;
 
 class ReclassificationWs {
   String config;
   String nomtable;
   ReclassificationWs(this.config, this.nomtable);
+  String ip = "Ip";
+  String webserv = "Webserv";
+  String port = "Port";
 
   //Liste Modéle*************************************************************************************
 
   Future<List<ModelR>> getAllM() async {
     List<ModelR> getModel = [];
     try {
-      String port = "7047";
-      String ws = "BC140/WS/CRONUS%20France%20S.A./Codeunit/";
-      String ip = "192.168.1.10";
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String ip = sharedPrefs.getString('Ip');
+      String port = sharedPrefs.getString('Port');
+      String webserv = sharedPrefs.getString('Webserv');
       var envelope =
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
@@ -44,7 +49,7 @@ class ReclassificationWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -117,7 +122,7 @@ class ReclassificationWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -200,7 +205,7 @@ class ReclassificationWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -277,7 +282,7 @@ class ReclassificationWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -332,7 +337,7 @@ class ReclassificationWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -422,7 +427,7 @@ class ReclassificationWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -514,7 +519,7 @@ class ReclassificationWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -609,7 +614,7 @@ class ReclassificationWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,
@@ -708,7 +713,7 @@ class ReclassificationWs {
         username: "ilyes",
         password: "1234",
       );
-      var url = Uri.parse('http://' + ip + ':' + port + '/' + ws + 'CAB');
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
       print(url);
       print(envelope);
       http.Response response = await client.post(url,

@@ -49,6 +49,7 @@ dependencies:
   ntlm: ^2.0.1
   simple_animations: ^2.4.2
   percent_indicator: ^3.0.1
+  lottie: ^1.1.0
   #geolocator: ^2.1.0
   #google_maps_flutter: ^2.0.6
   #flutter_google_places: ^0.2.8
@@ -103,6 +104,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/sideImg.png
     - assets/images/Capture1.PNG
+    - assets/animations/5427-scan-qr-code.json
     
 
   # To add assets to your application, add an assets section, like this:

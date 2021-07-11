@@ -68,20 +68,20 @@ class ParamState extends State<Param> {
 
   Future<String> getdomaine() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    String i = sp.getString("Domaine");
-    return i;
+    String id = sp.getString("Domaine");
+    return id;
   }
 
   Future<String> getworkstation() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    String i = sp.getString("Workstation");
-    return i;
+    String iw = sp.getString("Workstation");
+    return iw;
   }
 
   Future<String> getusernameNtlm() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    String i = sp.getString("UsernameNTLM");
-    return i;
+    String iu = sp.getString("UsernameNTLM");
+    return iu;
   }
 
   @override
@@ -93,9 +93,9 @@ class ParamState extends State<Param> {
     getport().then(updatePort);
     getwebserv().then(updateWebserv);
     getIp().then(updateIp);
-    getdomaine().then(updateIp);
-    getworkstation().then(updateIp);
-    getusernameNtlm().then(updateIp);
+    getdomaine().then(updatedomaine);
+    getworkstation().then(updateworkstation);
+    getusernameNtlm().then(updateusernamentlm);
     super.initState();
   }
 

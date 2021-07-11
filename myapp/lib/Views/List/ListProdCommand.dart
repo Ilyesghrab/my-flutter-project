@@ -6,6 +6,7 @@ import 'package:myapp/Views/List/listCount.dart';
 import 'package:myapp/Views/List/listPurchase.dart';
 import 'package:myapp/Views/List/mylist.dart';
 import 'package:myapp/Outils/Scanner/scan.dart';
+import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/InventaireWs.dart';
 import 'package:myapp/WS/ReceptionWs.dart';
 import 'package:myapp/Models/Inventaire/inventory_Entry.dart';
@@ -21,6 +22,8 @@ import 'package:myapp/Models/produit.dart';
 import 'package:myapp/Views/pages/myaccountpage.dart';
 
 class ListProdCommand extends StatefulWidget with NavigationStates {
+  String orderNum;
+  ListProdCommand(this.orderNum);
   @override
   ListProdCommandState createState() => ListProdCommandState();
 }
@@ -42,7 +45,7 @@ class ListProdCommandState extends State<ListProdCommand>
 
   Future<List<PurchaseE>> getlistE() async {
     try {
-      String config = "<cab:orderNum>104001</cab:orderNum>" +
+      String config = "<cab:orderNum>${widget.orderNum}</cab:orderNum>" +
           "<cab:terminalId></cab:terminalId>" +
           "<cab:totalRecords>0</cab:totalRecords>" +
           "<cab:vARJson></cab:vARJson>";
@@ -340,7 +343,7 @@ class ListProdCommandState extends State<ListProdCommand>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyList()),
+                MaterialPageRoute(builder: (context) => Param()),
               );
             },
           ),

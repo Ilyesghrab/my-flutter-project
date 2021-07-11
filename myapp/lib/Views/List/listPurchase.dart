@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Views/List/ListProdCommand.dart';
 import 'package:myapp/Views/List/mylist.dart';
+import 'package:myapp/Views/pages/parametre.dart';
 
 import 'package:myapp/WS/ReceptionWs.dart';
 import 'package:myapp/Models/Reception/Purchase_Header.dart';
@@ -181,87 +183,101 @@ class ListPurchaseState extends State<ListPurchase>
                                             itemCount: snapshot.data.length,
                                             //separatorBuilder: (context, index) => Divider(),
                                             itemBuilder: (context, index) {
-                                              return SlidableWidget(
+                                              return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 5.0,
+                                                      right: 2.0,
+                                                      top: 2.0),
                                                   child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Row(children: [
-                                                    Hero(
-                                                        tag: snapshot
-                                                            .data[index]
-                                                            .commande,
-                                                        child: Container(
-                                                          width: 75.0,
-                                                          height: 75.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Container(
+                                                          child: Row(children: [
+                                                        Hero(
+                                                            tag: snapshot
+                                                                .data[index]
+                                                                .commande,
+                                                            child: Container(
+                                                              width: 75.0,
+                                                              height: 75.0,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors.white,
+                                                                    //0xFF21BFBD),
+                                                                    width: 3),
+                                                                shape: BoxShape
+                                                                    .circle,
                                                                 color: Colors
                                                                     .white,
-                                                                //0xFF21BFBD),
-                                                                width: 3),
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: Colors.white,
-                                                            image: DecorationImage(
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                image: AssetImage(
-                                                                    'assets/images/information-desk.png')),
-                                                          ),
-                                                        )),
-                                                    SizedBox(width: 10.0),
-                                                    Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .fournisseur,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      17.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                          Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .grp,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Colors
-                                                                      .grey)),
-                                                          Text(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .commande,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Colors
-                                                                      .grey))
-                                                        ])
-                                                  ])),
-                                                  IconButton(
-                                                      icon: Icon(
-                                                          Icons.arrow_back_ios),
-                                                      color: Colors.black,
-                                                      onPressed: () {})
-                                                ],
-                                              ));
+                                                                image: DecorationImage(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image: AssetImage(
+                                                                        'assets/images/information-desk.png')),
+                                                              ),
+                                                            )),
+                                                        SizedBox(width: 10.0),
+                                                        Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                  snapshot
+                                                                      .data[
+                                                                          index]
+                                                                      .fournisseur,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          17.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                              Text(
+                                                                  snapshot
+                                                                      .data[
+                                                                          index]
+                                                                      .grp,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          15.0,
+                                                                      color: Colors
+                                                                          .grey)),
+                                                              Text(
+                                                                  snapshot
+                                                                      .data[
+                                                                          index]
+                                                                      .commande,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          15.0,
+                                                                      color: Colors
+                                                                          .grey))
+                                                            ])
+                                                      ])),
+                                                      IconButton(
+                                                          icon: Icon(Icons
+                                                              .arrow_forward_ios),
+                                                          color: Colors.black,
+                                                          onPressed: () {
+                                                            Navigator.of(context).push(MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    ListProdCommand(snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .commande)));
+                                                          })
+                                                    ],
+                                                  ));
                                             });
                                       }
                                     }))
@@ -331,7 +347,7 @@ class ListPurchaseState extends State<ListPurchase>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyList()),
+                MaterialPageRoute(builder: (context) => Param()),
               );
             },
           ),

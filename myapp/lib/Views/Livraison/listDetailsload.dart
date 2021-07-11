@@ -13,6 +13,7 @@ import 'package:myapp/Views/List/listTransfert.dart';
 import 'package:myapp/Views/List/mylist.dart';
 import 'package:myapp/Outils/AnimatedFlipCounter.dart';
 import 'package:myapp/Views/Livraison/DetailsLoad.dart';
+import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/CommandPreparationWs.dart';
 
 import 'package:myapp/Models/PreparationCommande/sales_Line.dart';
@@ -416,7 +417,7 @@ class ListDetailsloadState extends State<ListDetailsload>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyList()),
+                MaterialPageRoute(builder: (context) => Param()),
               );
             },
           ),
