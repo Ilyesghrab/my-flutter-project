@@ -6,6 +6,7 @@ import 'package:myapp/Models/Inventaire/inventory_Entry.dart';
 import 'package:myapp/Models/Inventaire/inventory_Header.dart';
 import 'package:myapp/Models/Reception/purchase_Entry.dart';
 import 'package:myapp/Models/Authentification/user.dart';
+import 'package:myapp/Models/Transfert&Reclass/tranfer_Line.dart';
 import 'package:myapp/Views/pages/CategoriesPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ntlm/ntlm.dart';
@@ -110,9 +111,12 @@ class TransfertWs {
     return getTrans;
   }
 
-  //Insert Reception*************************************************************************************
+  //Get status*************************************************************************************
 
-  Future<bool> InsertReception() async {
+  Future<bool> getStatusTransfert() async {
+    bool status;
+    String recvd;
+    String shipd;
     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     String ip = sharedPrefs.getString('Ip');
     String port = sharedPrefs.getString('Port');
@@ -120,8 +124,7 @@ class TransfertWs {
     var envelope =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
             "<soapenv:Body>";
-    envelope =
-        envelope + "<cab:InsertReception>" + config + "</cab:InsertReception>";
+    envelope = envelope + "<cab:GetStatus>" + config + "</cab:GetStatus>";
     envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
     try {
       NTLMClient client = NTLMClient(
@@ -137,35 +140,30 @@ class TransfertWs {
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
             "SOAPAction":
-                "urn:microsoft-dynamics-schemas/codeunit/CAB:InsertReception",
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:GetStatus",
           },
           body: envelope);
       print(response.statusCode);
       print("response.statusCode ==> ${response.statusCode}");
       print("response.reasonPhrase ==> ${response.reasonPhrase}");
       print("response.statusCode ==> ${response.body}");
+
       var storeDocument = xml.parse(response.body);
 
-      var Data = storeDocument.findAllElements('InsertReception_Result');
+      recvd = storeDocument.findAllElements('receive').first.text;
 
-      if (Data.length <= 0) {
-        return false;
-      }
-      return true;
-    } catch (ex) {
-      print(ex);
-      Fluttertoast.showToast(
-          msg: "probleme de connexion",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1);
+      shipd = storeDocument.findAllElements('shipped').first.text;
+    } catch (Exception) {
+      print("Exception in service getStatusTransfert");
+      print(Exception.toString());
     }
+    return status;
   }
 
-  //Export scanned item purchase*************************************************************************************
+  //Export Line transfert*************************************************************************************
 
-  Future<List<PurchaseE>> getScannedCommand() async {
-    List<PurchaseE> getPurE = [];
+  Future<List<TransferL>> getTransferLine() async {
+    List<TransferL> getTline = [];
     try {
       SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
       String ip = sharedPrefs.getString('Ip');
@@ -175,9 +173,9 @@ class TransfertWs {
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
       envelope = envelope +
-          "<cab:ExportScannedItemsPurchase>" +
+          "<cab:ExportLineTransfert>" +
           config +
-          "</cab:ExportScannedItemsPurchase>";
+          "</cab:ExportLineTransfert>";
       envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
 
       NTLMClient client = NTLMClient(
@@ -193,7 +191,7 @@ class TransfertWs {
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
             "SOAPAction":
-                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportScannedItemsPurchase",
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportLineTransfert",
           },
           body: envelope);
       print(response.statusCode);
@@ -208,40 +206,44 @@ class TransfertWs {
 
       String dataStr = StatusXML.text;
       String reference;
-      String des;
-      String barcode;
+      String designation;
       String qte;
-      if (dataStr == "{}") {
-        dataStr = null;
-      }
+      String qte_prep;
       while (dataStr != null) {
         reference = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         print("reference==> $reference");
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
 
-        des = dataStr.substring(
+        designation = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("des==> $des");
-
-        barcode = dataStr.substring(
-            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("barcode==> $barcode");
+        print("designation==> $designation");
 
         qte = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
         print("qte==> $qte");
 
-        PurchaseE a = PurchaseE(
+        if (dataStr.indexOf("\",") == -1) // Last
+        {
+          qte_prep = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\"}"));
+          dataStr = null;
+        } else {
+          qte_prep = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+          dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        }
+        print("qte_prep==> $qte_prep");
+
+        TransferL a = TransferL(
           reference,
-          des,
-          barcode,
+          designation,
           qte,
+          qte_prep,
         );
-        getPurE.add(a);
+        getTline.add(a);
       }
     } catch (Exception) {
       print(Exception.toString());
@@ -252,13 +254,13 @@ class TransfertWs {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1);*/
     }
-    return getPurE;
+    return getTline;
   }
 
-//Export scanned item inventory total*************************************************************************************
+  //FindItem Transfert*************************************************************************************
 
-  Future<List<InventoryE>> getScannedCummul() async {
-    List<InventoryE> getCummul = [];
+  Future<TransferL> getItemTransfert() async {
+    TransferL article;
     try {
       SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
       String ip = sharedPrefs.getString('Ip');
@@ -268,9 +270,9 @@ class TransfertWs {
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
       envelope = envelope +
-          "<cab:ExportScannedItemsTotal>" +
+          "<cab:ExportLineTransfert>" +
           config +
-          "</cab:ExportScannedItemsTotal>";
+          "</cab:ExportLineTransfert>";
       envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
 
       NTLMClient client = NTLMClient(
@@ -286,7 +288,7 @@ class TransfertWs {
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
             "SOAPAction":
-                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportScannedItemsTotal",
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportLineTransfert",
           },
           body: envelope);
       print(response.statusCode);
@@ -294,57 +296,135 @@ class TransfertWs {
       print("response.reasonPhrase ==> ${response.reasonPhrase}");
       print("response.statusCode ==> ${response.body}");
       var storeDocument = xml.parse(response.body);
+      print(storeDocument);
+      String qte = storeDocument.findAllElements('quantity').first.text;
+      print("QTE ==> $qte");
 
-      var StatusXML = storeDocument.findAllElements('vARJson').first;
-      var jsonData = StatusXML.text;
-      print("jsonData ==> $jsonData");
+      String reference = storeDocument.findAllElements('itemNo').first.text;
+      print("REFERENCE ==> $reference");
+      String designation =
+          storeDocument.findAllElements('designation').first.text;
+      print("designation ==> $designation");
 
-      String dataStr = StatusXML.text;
-      String ref;
-      String des;
-      String emplacement;
-      String qte;
-      //String img;
-      //print("dataStr ==> $dataStr");
-      if (dataStr == "{}") {
-        dataStr = null;
+      print("qte ==> $qte");
+      article = TransferL(reference, designation, qte, "");
+    } catch (Exception) {
+      print(Exception.toString());
+      return TransferL("", "", "-1", "");
+    }
+    return article;
+  }
+
+//FindItem Transfert*************************************************************************************
+  Future<String> insertArticleToTransfert() async {
+    var storeDocument;
+    List<TransferL> articles = [];
+    try {
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String ip = sharedPrefs.getString('Ip');
+      String port = sharedPrefs.getString('Port');
+      String webserv = sharedPrefs.getString('Webserv');
+      var envelope =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+              "<soapenv:Body>";
+      envelope = envelope +
+          "<cab:ExportLineTransfert>" +
+          config +
+          "</cab:ExportLineTransfert>";
+      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+
+      NTLMClient client = NTLMClient(
+        domain: "",
+        workstation: "DESKTOP-44HHODU",
+        username: "ilyes",
+        password: "1234",
+      );
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
+      print(url);
+      print(envelope);
+      http.Response response = await client.post(url,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportLineTransfert",
+          },
+          body: envelope);
+      print(response.statusCode);
+      print("response.statusCode ==> ${response.statusCode}");
+      print("response.reasonPhrase ==> ${response.reasonPhrase}");
+      print("response.statusCode ==> ${response.body}");
+      storeDocument = xml.parse(response.body);
+      print(response.body);
+      var Data = storeDocument.findAllElements('vARJson').first;
+
+      if (Data.text == "{}") {
+        return "false";
       }
-      while ((dataStr != null)) {
-        ref = dataStr.substring(
+      var jsonData = Data.text;
+      print(Data.text);
+      print("jsonData ==> $jsonData");
+      //print("DATA ===>");
+
+      String dataStr = Data.text;
+
+      String reference;
+      String designation;
+      String qt;
+      String qte_prepare;
+      String EmpSource;
+      String EmpDest;
+
+      while (dataStr != null) {
+        reference = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-        print("ref==> $ref");
+        print("reference==> $reference");
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
 
-        des = dataStr.substring(
+        designation = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("des==> $des");
+        print("designation==> $designation");
 
-        emplacement = dataStr.substring(
+        qt = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("emplacement==> $emplacement");
+        print("qt==> $qt");
 
-        qte = dataStr.substring(
+        qte_prepare = dataStr.substring(
             dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        print("qte==> $qte");
+        print("qte_prepare==> $qte_prepare");
 
-        InventoryE t = new InventoryE(ref, des, emplacement, qte);
-        getCummul.add(t);
+        EmpSource = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        print("EmpSource==> $EmpSource");
+
+        EmpDest = dataStr.substring(
+            dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+        dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        print("EmpDest==> $EmpDest");
+
+        if (dataStr.indexOf("\",") == -1) // Last
+        {
+          EmpDest = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\"}"));
+          dataStr = null;
+        } else {
+          EmpDest = dataStr.substring(
+              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
+          dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
+        }
+        print("EmpDest==> $EmpDest");
+
+        TransferL a = TransferL(reference, designation, qt, qte_prepare);
+        articles.add(a);
       }
     } catch (Exception) {
       print(Exception.toString());
-      // print(ex);
-      /*Fluttertoast.showToast(
-          msg: "probleme de connexion !",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1);*/
+      String error = storeDocument.findAllElements('faultstring').first.text;
+      return error;
     }
-    return getCummul;
+    return "true";
   }
-
-  //FindItem inventory*************************************************************************************
-
 }

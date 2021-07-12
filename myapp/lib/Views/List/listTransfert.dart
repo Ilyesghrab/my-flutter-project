@@ -1,5 +1,8 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myapp/Views/List/listTransferLine.dart';
 import 'package:myapp/Views/List/mylist.dart';
 import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/TransfertWs.dart';
@@ -17,6 +20,9 @@ import 'package:myapp/Views/pages/addInv.dart';
 import 'package:myapp/Views/pages/myaccountpage.dart';
 
 class ListTransfert extends StatefulWidget with NavigationStates {
+  bool reception;
+  bool expedition;
+  ListTransfert(this.reception, this.expedition);
   @override
   ListTransfertState createState() => ListTransfertState();
 }
@@ -189,7 +195,7 @@ class ListTransfertState extends State<ListTransfert>
                                                   snapshot.data[index];
                                               return Padding(
                                                   padding: EdgeInsets.only(
-                                                      left: 5.0,
+                                                      left: 1.0,
                                                       right: 2.0,
                                                       top: 2.0),
                                                   child: Row(
@@ -258,9 +264,97 @@ class ListTransfertState extends State<ListTransfert>
                                                       ])),
                                                       IconButton(
                                                           icon: Icon(Icons
-                                                              .arrow_back_ios),
+                                                              .arrow_forward_ios),
                                                           color: Colors.black,
-                                                          onPressed: () {})
+                                                          onPressed: () {
+                                                            AwesomeDialog(
+                                                              context: context,
+                                                              dialogType:
+                                                                  DialogType
+                                                                      .WARNING,
+                                                              animType: AnimType
+                                                                  .BOTTOMSLIDE,
+                                                              title: 'Option',
+                                                              desc:
+                                                                  'Please choose action to continue',
+                                                              btnCancelText:
+                                                                  "Reception",
+                                                              btnCancelColor:
+                                                                  Colors.green,
+                                                              btnCancelIcon:
+                                                                  Icons.receipt,
+                                                              btnCancelOnPress:
+                                                                  () async {
+                                                                String config =
+                                                                    "<cab:ordredeTransfert>${t.trans}</cab:ordredeTransfert>" +
+                                                                        "<cab:receive>true</cab:receive>" +
+                                                                        "<cab:shipped>false</cab:shipped>";
+                                                                var ws =
+                                                                    TransfertWs(
+                                                                        config,
+                                                                        "Transfert_Header");
+                                                                ws.getStatusTransfert();
+                                                                Fluttertoast.showToast(
+                                                                    msg:
+                                                                        "Le transfert ${t.trans} est totalement reçu",
+                                                                    toastLength:
+                                                                        Toast
+                                                                            .LENGTH_SHORT,
+                                                                    gravity:
+                                                                        ToastGravity
+                                                                            .BOTTOM,
+                                                                    timeInSecForIosWeb:
+                                                                        3);
+                                                                return {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) => ListTransferLine(
+                                                                              t.trans,
+                                                                              true,
+                                                                              false)))
+                                                                };
+                                                              },
+                                                              btnOkText:
+                                                                  "Expédition",
+                                                              btnOkColor:
+                                                                  Colors.blue,
+                                                              btnOkIcon:
+                                                                  Icons.outbond,
+                                                              btnOkOnPress:
+                                                                  () async {
+                                                                String config =
+                                                                    "<cab:ordredeTransfert>${t.trans}</cab:ordredeTransfert>" +
+                                                                        "<cab:receive>false</cab:receive>" +
+                                                                        "<cab:shipped>true</cab:shipped>";
+                                                                var ws =
+                                                                    TransfertWs(
+                                                                        config,
+                                                                        "Transfert_Header");
+                                                                ws.getStatusTransfert();
+                                                                Fluttertoast.showToast(
+                                                                    msg:
+                                                                        "Le transfert ${t.trans} est totalement expédié",
+                                                                    toastLength:
+                                                                        Toast
+                                                                            .LENGTH_SHORT,
+                                                                    gravity:
+                                                                        ToastGravity
+                                                                            .BOTTOM,
+                                                                    timeInSecForIosWeb:
+                                                                        3);
+                                                                return {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) => ListTransferLine(
+                                                                              t.trans,
+                                                                              false,
+                                                                              true)))
+                                                                };
+                                                              },
+                                                            )..show();
+                                                          })
                                                     ],
                                                   ));
                                             });
@@ -273,7 +367,7 @@ class ListTransfertState extends State<ListTransfert>
           )
         ],
       ),
-      floatingActionButton: Column(
+      /*floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           AnimatedBuilder(
@@ -292,7 +386,7 @@ class ListTransfertState extends State<ListTransfert>
                   )),
           buttonToggle()
         ],
-      ),
+      ),*/
       bottomNavigationBar: CurvedNavigationBar(
         color: Color(0xFF21BFBD),
         backgroundColor: Colors.white,

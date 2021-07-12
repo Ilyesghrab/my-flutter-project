@@ -33,6 +33,8 @@ import 'package:myapp/Models/produit.dart';
 import 'package:myapp/Views/pages/parametre.dart';
 
 class CategoriesPage extends StatefulWidget with NavigationStates {
+  bool reception;
+  bool expedition;
   @override
   CategoriesPageState createState() => CategoriesPageState();
 }
@@ -345,7 +347,8 @@ class CategoriesPageState extends State<CategoriesPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ListTransfert()),
+                                    builder: (context) => ListTransfert(
+                                        widget.reception, widget.expedition)),
                               );
                             },
                           )..show();
