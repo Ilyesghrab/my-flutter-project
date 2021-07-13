@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myapp/Models/Transfert&Reclass/tranfer_Line.dart';
 import 'package:myapp/Views/List/listSalesLinePrep.dart';
 import 'package:myapp/Outils/FadeAnimation.dart';
@@ -71,6 +72,8 @@ class AddTransState extends State<AddTrans> {
   String cn;
   String itemNo = "itemNo";
   String login = "login";
+  bool value1;
+  bool value2;
 
   Future<String> loadArticle() async {
     //Article article;
@@ -268,7 +271,7 @@ class AddTransState extends State<AddTrans> {
                   FadeAnimation(
                       1.3,
                       Text(
-                        "Item to counting",
+                        "Line Transfert",
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       )),
                 ],
@@ -320,7 +323,7 @@ class AddTransState extends State<AddTrans> {
                                                   color: Colors.grey[200]))),
                                       child: _buildModel(
                                           hintText:
-                                              "Commande:    ${widget.idTrans}")),
+                                              "N°Ligne:    ${widget.idTrans}")),
                                   Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
@@ -329,7 +332,7 @@ class AddTransState extends State<AddTrans> {
                                                   color: Colors.grey[200]))),
                                       child: _buildReception(
                                           hintText:
-                                              "Commande:    ${widget.reception}")),
+                                              "Réception:    ${widget.reception}")),
                                   Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
@@ -338,7 +341,7 @@ class AddTransState extends State<AddTrans> {
                                                   color: Colors.grey[200]))),
                                       child: _buildExp(
                                           hintText:
-                                              "Commande:    ${widget.expedition}")),
+                                              "Expédition:    ${widget.expedition}")),
                                 ],
                               ),
                             )),
@@ -425,7 +428,7 @@ class AddTransState extends State<AddTrans> {
                               onTap: () async {
                                 String count1 = _counterQ.toString();
                                 String config = "<cab:itemNo>$itemNo</cab:itemNo>" +
-                                    "<cab:cde>${widget.idTrans}</cab:cde>" +
+                                    "<cab:transfert>${widget.idTrans}</cab:transfert>" +
                                     "<cab:qte>" +
                                     count1 +
                                     "</cab:qte>" +
@@ -444,6 +447,13 @@ class AddTransState extends State<AddTrans> {
                                   print("Exception ==> ");
                                   print(e.toString());
                                 }
+                                /*if (sucess) {
+                                  Fluttertoast.showToast(
+                                      msg: "Produit(s) ajouté(s)",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2);
+                                }*/
 
                                 return {
                                   Navigator.push(

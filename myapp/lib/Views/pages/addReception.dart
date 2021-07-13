@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myapp/Views/List/ListProdCommand.dart';
 
 import 'package:myapp/Views/List/listPurchase.dart';
 import 'package:myapp/Views/List/mylist.dart';
 import 'package:myapp/Outils/FadeAnimation.dart';
 
 import 'package:myapp/WS/ReceptionWs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddReception extends StatefulWidget {
+  String orderNum;
+  AddReception(this.orderNum);
   @override
   AddReceptionState createState() => AddReceptionState();
 }
@@ -40,6 +44,23 @@ class AddReceptionState extends State<AddReception> {
     });
   }
 
+  String itemNo = "itemNo";
+  String login = "login";
+
+  Future<String> getlog() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _address = sp.getString("Login");
+
+    return _address;
+  }
+
+  Future<String> getItem() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _item = sp.getString("ItemNo");
+
+    return _item;
+  }
+
   final Barcodecontroller = TextEditingController();
   final Itemcontroller = TextEditingController();
   final Ordercontroller = TextEditingController();
@@ -47,12 +68,13 @@ class AddReceptionState extends State<AddReception> {
   String ds;
   String cn;
 
-  Widget _buildBarcode() {
+  Widget _buildBarcode({@required String hintText}) {
     return TextFormField(
       controller: Barcodecontroller,
       decoration: InputDecoration(
           icon: Icon(Icons.qr_code, color: Colors.deepPurple[400]),
-          hintText: "Bar code item",
+          //hintText: "Bar code item",
+          hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
       validator: (String value) {
@@ -68,12 +90,12 @@ class AddReceptionState extends State<AddReception> {
     );
   }
 
-  Widget _buildItem() {
+  Widget _buildItem({@required String hintText}) {
     return TextFormField(
       controller: Itemcontroller,
       decoration: InputDecoration(
           icon: Icon(Icons.tag, color: Colors.deepPurple[400]),
-          hintText: "Item number",
+          hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
       validator: (String value) {
@@ -89,7 +111,7 @@ class AddReceptionState extends State<AddReception> {
     );
   }
 
-  Widget _buildOrder() {
+  Widget _buildOrder({@required String hintText}) {
     return TextFormField(
       controller: Ordercontroller,
       decoration: InputDecoration(
@@ -97,7 +119,7 @@ class AddReceptionState extends State<AddReception> {
             Icons.calculate,
             color: Colors.deepPurple[400],
           ),
-          hintText: "Purchase order",
+          hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
       validator: (String value) {
@@ -111,6 +133,19 @@ class AddReceptionState extends State<AddReception> {
       },
       onSaved: (String value) {},
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getItem().then(updateItemNo);
+    super.initState();
+  }
+
+  void updateItemNo(String _add) {
+    setState(() {
+      this.itemNo = _add;
+    });
   }
 
   @override
@@ -198,21 +233,17 @@ class AddReceptionState extends State<AddReception> {
                                           border: Border(
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
-                                      child: _buildBarcode()),
+                                      child: _buildBarcode(
+                                          hintText: "Item Bar code: $itemNo")),
                                   Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                           border: Border(
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
-                                      child: _buildItem()),
-                                  Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey[200]))),
-                                      child: _buildOrder()),
+                                      child: _buildOrder(
+                                          hintText:
+                                              "Purchase order N° ${widget.orderNum}")),
                                 ],
                               ),
                             )),
@@ -377,23 +408,18 @@ class AddReceptionState extends State<AddReception> {
                                 String itno = Itemcontroller.value.text.trim();
                                 String count1 = _counterQ.toString();
                                 String count2 = _counter.toString();
-                                String config = "<cab:purchOrderNum>" +
-                                    cnt +
-                                    "</cab:purchOrderNum>" +
-                                    "<cab:itemNo>" +
-                                    itno +
-                                    "</cab:itemNo>" +
-                                    "<cab:itemBarCode>" +
-                                    bc +
-                                    "</cab:itemBarCode>" +
-                                    "<cab:quantity>" +
-                                    count1 +
-                                    "</cab:quantity>" +
-                                    "<cab:userId></cab:userId>" +
-                                    "<cab:terminalId>0</cab:terminalId>" +
-                                    "<cab:package>" +
-                                    count2 +
-                                    "</cab:package>";
+                                String config =
+                                    "<cab:purchOrderNum>${widget.orderNum}</cab:purchOrderNum>" +
+                                        "<cab:itemNo>$itemNo</cab:itemNo>" +
+                                        "<cab:itemBarCode>$itemNo</cab:itemBarCode>" +
+                                        "<cab:quantity>" +
+                                        count1 +
+                                        "</cab:quantity>" +
+                                        "<cab:userId>$login</cab:userId>" +
+                                        "<cab:terminalId>0</cab:terminalId>" +
+                                        "<cab:package>" +
+                                        count2 +
+                                        "</cab:package>";
                                 try {
                                   var ws =
                                       ReceptionWs(config, "purchace_Entry");
@@ -414,7 +440,8 @@ class AddReceptionState extends State<AddReception> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ListPurchase()))
+                                          builder: (context) =>
+                                              ListProdCommand(widget.orderNum)))
                                 };
                               },
                               child: Container(

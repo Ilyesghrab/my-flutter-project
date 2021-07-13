@@ -1,8 +1,11 @@
+import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Views/List/detailsPage.dart';
 import 'package:myapp/Views/List/listCount.dart';
 import 'package:myapp/Views/List/mylist.dart';
+import 'package:myapp/Views/pages/addInv.dart';
+import 'package:myapp/Views/pages/addInvMan.dart';
 import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/InventaireWs.dart';
 import 'package:myapp/Models/Inventaire/inventory_Entry.dart';
@@ -17,6 +20,7 @@ import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
 
 import 'package:myapp/Models/produit.dart';
 import 'package:myapp/Views/pages/myaccountpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ListProd extends StatefulWidget with NavigationStates {
   String noInv;
@@ -27,6 +31,8 @@ class ListProd extends StatefulWidget with NavigationStates {
 
 class ListProdState extends State<ListProd>
     with SingleTickerProviderStateMixin {
+  String codeScanner;
+  String itemNo = "itemNo";
   bool isOpened = false;
   AnimationController _animationController;
   Animation<Color> _buttonColor;
@@ -39,6 +45,12 @@ class ListProdState extends State<ListProd>
   String query = '';
   String login;
   bool pb = false;
+  Future<String> getItem() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _item = sp.getString("ItemNo");
+
+    return _item;
+  }
 
   Future<List<InventoryE>> getlistE() async {
     try {
@@ -85,7 +97,7 @@ class ListProdState extends State<ListProd>
     _animationController.value = _animationController.value;
     _animationIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-    _buttonColor = ColorTween(begin: Color(0xFF21BFBD), end: Colors.red)
+    _buttonColor = ColorTween(begin: Color(0xFF21BFBD), end: Color(0xFF21BFBD))
         .animate(CurvedAnimation(
             parent: _animationController,
             curve: Interval(0.00, 1.00, curve: Curves.linear)));
@@ -446,7 +458,12 @@ class ListProdState extends State<ListProd>
   Widget buttonAdd() {
     return Container(
         child: FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddInvMan(widget.noInv)),
+        );
+      },
       tooltip: "Add",
       child: Icon(Icons.add),
     ));
@@ -455,11 +472,31 @@ class ListProdState extends State<ListProd>
   Widget buttonScan() {
     return Container(
         child: FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ScanPage()),
-        );
+      onPressed: () async {
+        List<String> fh;
+        SharedPreferences sp = await SharedPreferences.getInstance();
+        String codeScanner = await BarcodeScanner.scan();
+        setState(() {
+          this.codeScanner = codeScanner == "-1" ? "itemNo" : codeScanner;
+          fh = codeScanner.split(" ");
+          itemNo = fh[0];
+          sp.setString("ItemNo", itemNo);
+          String config = "<cab:barCode>$itemNo</cab:barCode>" +
+              "<cab:invNo>${widget.noInv}</cab:invNo>" +
+              "<cab:shelf></cab:shelf>" +
+              "<cab:itemNo>$itemNo</cab:itemNo>" +
+              "<cab:designation></cab:designation>" +
+              "<cab:quantity>0</cab:quantity>";
+          var ws = InventaireWs(config, "inventory_Entry");
+          ws.getItemInventory();
+        });
+
+        return {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddInv(widget.noInv)),
+          )
+        };
       },
       tooltip: "Scan",
       child: Icon(Icons.qr_code),

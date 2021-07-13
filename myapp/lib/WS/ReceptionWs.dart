@@ -348,6 +348,60 @@ class ReceptionWs {
     return getCummul;
   }
 
-  //FindItem inventory*************************************************************************************
+  //FindItem Purchase*************************************************************************************
 
+  Future<PurchaseE> getItemPurchase() async {
+    PurchaseE article;
+    try {
+      SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      String ip = sharedPrefs.getString('Ip');
+      String port = sharedPrefs.getString('Port');
+      String webserv = sharedPrefs.getString('Webserv');
+      var envelope =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
+              "<soapenv:Body>";
+      envelope = envelope +
+          "<cab:FindItemPurchase>" +
+          config +
+          "</cab:FindItemPurchase>";
+      envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
+
+      NTLMClient client = NTLMClient(
+        domain: "",
+        workstation: "DESKTOP-44HHODU",
+        username: "ilyes",
+        password: "1234",
+      );
+      var url = Uri.parse("http://$ip:$port/BC140/WS/$webserv/Codeunit/CAB");
+      print(url);
+      print(envelope);
+      http.Response response = await client.post(url,
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction":
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:FindItemPurchase",
+          },
+          body: envelope);
+      print(response.statusCode);
+      print("response.statusCode ==> ${response.statusCode}");
+      print("response.reasonPhrase ==> ${response.reasonPhrase}");
+      print("response.statusCode ==> ${response.body}");
+      var storeDocument = xml.parse(response.body);
+      print(storeDocument);
+      String qte = storeDocument.findAllElements('quantity').first.text;
+      print("QTE ==> $qte");
+
+      String reference = storeDocument.findAllElements('itemNo').first.text;
+      print("REFERENCE ==> $reference");
+      String designation =
+          storeDocument.findAllElements('designation').first.text;
+      print("designation ==> $designation");
+
+      article = PurchaseE(reference, designation, "", qte);
+    } catch (Exception) {
+      print(Exception.toString());
+      return PurchaseE("", "", "", "-1");
+    }
+    return article;
+  }
 }

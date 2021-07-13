@@ -226,10 +226,7 @@ class ListPurchaseState extends State<ListPurchase>
                                                                     .start,
                                                             children: [
                                                               Text(
-                                                                  snapshot
-                                                                      .data[
-                                                                          index]
-                                                                      .fournisseur,
+                                                                  "Fournisseur ${snapshot.data[index].fournisseur}",
                                                                   style: TextStyle(
                                                                       fontFamily:
                                                                           'Montserrat',
@@ -239,10 +236,7 @@ class ListPurchaseState extends State<ListPurchase>
                                                                           FontWeight
                                                                               .bold)),
                                                               Text(
-                                                                  snapshot
-                                                                      .data[
-                                                                          index]
-                                                                      .grp,
+                                                                  "Groupe ${snapshot.data[index].grp}",
                                                                   style: TextStyle(
                                                                       fontFamily:
                                                                           'Montserrat',
@@ -288,7 +282,7 @@ class ListPurchaseState extends State<ListPurchase>
           )
         ],
       ),
-      floatingActionButton: Column(
+      /*floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           AnimatedBuilder(
@@ -307,7 +301,7 @@ class ListPurchaseState extends State<ListPurchase>
                   )),
           buttonToggle()
         ],
-      ),
+      ),*/
       bottomNavigationBar: CurvedNavigationBar(
         color: Color(0xFF21BFBD),
         backgroundColor: Colors.white,
@@ -394,19 +388,7 @@ class ListPurchaseState extends State<ListPurchase>
     });
   }
 
-  Widget buttonAdd() {
-    return Container(
-        child: FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AddReception()),
-        );
-      },
-      tooltip: "Add",
-      child: Icon(Icons.add),
-    ));
-  }
+  Widget buttonAdd() {}
 
   Widget buttonScan() {
     return Container(

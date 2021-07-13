@@ -1,3 +1,4 @@
+import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Views/List/detailsPage.dart';
@@ -6,6 +7,7 @@ import 'package:myapp/Views/List/listCount.dart';
 import 'package:myapp/Views/List/listPurchase.dart';
 import 'package:myapp/Views/List/mylist.dart';
 import 'package:myapp/Outils/Scanner/scan.dart';
+import 'package:myapp/Views/pages/addReception.dart';
 import 'package:myapp/Views/pages/parametre.dart';
 import 'package:myapp/WS/InventaireWs.dart';
 import 'package:myapp/WS/ReceptionWs.dart';
@@ -20,6 +22,7 @@ import 'package:myapp/Sidebar/bloc.navigation_bloc/navigation_bloc.dart';
 
 import 'package:myapp/Models/produit.dart';
 import 'package:myapp/Views/pages/myaccountpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ListProdCommand extends StatefulWidget with NavigationStates {
   String orderNum;
@@ -30,6 +33,8 @@ class ListProdCommand extends StatefulWidget with NavigationStates {
 
 class ListProdCommandState extends State<ListProdCommand>
     with SingleTickerProviderStateMixin {
+  String codeScanner;
+  String itemNo = "itemNo";
   bool isOpened = false;
   AnimationController _animationController;
   Animation<Color> _buttonColor;
@@ -42,6 +47,13 @@ class ListProdCommandState extends State<ListProdCommand>
   String query = '';
   String login;
   bool pb = false;
+
+  Future<String> getItem() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String _item = sp.getString("ItemNo");
+
+    return _item;
+  }
 
   Future<List<PurchaseE>> getlistE() async {
     try {
@@ -153,7 +165,7 @@ class ListProdCommandState extends State<ListProdCommand>
                         fontWeight: FontWeight.bold,
                         fontSize: 25.0)),
                 SizedBox(width: 10.0),
-                Text('LIST',
+                Text('LIST N°${widget.orderNum}',
                     style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -457,11 +469,31 @@ class ListProdCommandState extends State<ListProdCommand>
   Widget buttonScan() {
     return Container(
         child: FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ScanPage()),
-        );
+      onPressed: () async {
+        List<String> fh;
+        SharedPreferences sp = await SharedPreferences.getInstance();
+        String codeScanner = await BarcodeScanner.scan();
+        setState(() {
+          this.codeScanner = codeScanner == "-1" ? "itemNo" : codeScanner;
+          fh = codeScanner.split(" ");
+          itemNo = fh[0];
+          sp.setString("ItemNo", itemNo);
+          String config = "<cab:barCode>$itemNo</cab:barCode>" +
+              "<cab:purchaseOrderNo>${widget.orderNum}</cab:purchaseOrderNo>" +
+              "<cab:itemNo>$itemNo</cab:itemNo>" +
+              "<cab:designation></cab:designation>" +
+              "<cab:quantity>0</cab:quantity>";
+          var ws = ReceptionWs(config, "purchase_Entry");
+          ws.getItemPurchase();
+        });
+
+        return {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AddReception(widget.orderNum)),
+          )
+        };
       },
       tooltip: "Scan",
       child: Icon(Icons.qr_code),

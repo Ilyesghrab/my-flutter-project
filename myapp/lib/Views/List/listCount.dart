@@ -317,7 +317,7 @@ class ListCountState extends State<ListCount>
           )
         ],
       ),
-      floatingActionButton: Column(
+      /*floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           AnimatedBuilder(
@@ -336,7 +336,7 @@ class ListCountState extends State<ListCount>
                   )),
           buttonToggle()
         ],
-      ),
+      ),*/
       bottomNavigationBar: CurvedNavigationBar(
         color: Color(0xFF21BFBD),
         backgroundColor: Colors.white,

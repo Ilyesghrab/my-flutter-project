@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myapp/Models/Inventaire/inventory_Entry.dart';
-import 'package:myapp/Models/Inventaire/inventory_Header.dart';
 import 'package:myapp/Views/List/listProd.dart';
 import 'package:myapp/Views/List/mylist.dart';
 import 'package:myapp/Outils/FadeAnimation.dart';
 import 'package:myapp/WS/InventaireWs.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class AddInv extends StatefulWidget {
+class AddInvMan extends StatefulWidget {
   String noInv;
-  AddInv(this.noInv);
+  AddInvMan(this.noInv);
   @override
-  AddInvState createState() => AddInvState();
+  AddInvManState createState() => AddInvManState();
 }
 
-class AddInvState extends State<AddInv> {
+class AddInvManState extends State<AddInvMan> {
   int _counter = 0;
   int _counterQ = 0;
 
@@ -43,23 +40,6 @@ class AddInvState extends State<AddInv> {
     });
   }
 
-  String itemNo = "itemNo";
-  String login = "login";
-
-  Future<String> getlog() async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    String _address = sp.getString("Login");
-
-    return _address;
-  }
-
-  Future<String> getItem() async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    String _item = sp.getString("ItemNo");
-
-    return _item;
-  }
-
   final Barcodecontroller = TextEditingController();
   final Itemcontroller = TextEditingController();
   final Countcontroller = TextEditingController();
@@ -67,12 +47,12 @@ class AddInvState extends State<AddInv> {
   String ds;
   String cn;
 
-  Widget _buildBarcode({@required String hintText}) {
+  Widget _buildBarcode() {
     return TextFormField(
       controller: Barcodecontroller,
       decoration: InputDecoration(
           icon: Icon(Icons.qr_code, color: Colors.lightBlue[900]),
-          hintText: hintText,
+          hintText: "Bar code item",
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
       validator: (String value) {
@@ -88,12 +68,12 @@ class AddInvState extends State<AddInv> {
     );
   }
 
-  Widget _buildItem({@required String hintText}) {
+  Widget _buildItem() {
     return TextFormField(
       controller: Itemcontroller,
       decoration: InputDecoration(
           icon: Icon(Icons.tag, color: Colors.lightBlue[900]),
-          hintText: hintText,
+          hintText: "Item number",
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
       validator: (String value) {
@@ -109,12 +89,12 @@ class AddInvState extends State<AddInv> {
     );
   }
 
-  Widget _buildCount({@required String hintText}) {
+  Widget _buildCount() {
     return TextFormField(
       controller: Countcontroller,
       decoration: InputDecoration(
           icon: Icon(Icons.calculate, color: Colors.lightBlue[900]),
-          hintText: hintText,
+          hintText: "Counting",
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
       validator: (String value) {
@@ -128,31 +108,6 @@ class AddInvState extends State<AddInv> {
       },
       onSaved: (String value) {},
     );
-  }
-
-  Future<String> loadArticle() async {
-    //Article article;
-    String config = "<cab:barCode>$itemNo</cab:barCode>" +
-        "<cab:invNo>${widget.noInv}</cab:invNo>" +
-        "<cab:shelf></cab:shelf>" +
-        "<cab:itemNo>$itemNo</cab:itemNo>" +
-        "<cab:designation></cab:designation>" +
-        "<cab:quantity>0</cab:quantity>";
-    InventaireWs ws = new InventaireWs(config, "inventory_Entry");
-    InventoryE inventoryE = await ws.getItemInventory();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getItem().then(updateItemNo);
-    super.initState();
-  }
-
-  void updateItemNo(String _add) {
-    setState(() {
-      this.itemNo = _add;
-    });
   }
 
   @override
@@ -241,26 +196,21 @@ class AddInvState extends State<AddInv> {
                                           border: Border(
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
-                                      child: _buildBarcode(
-                                          hintText:
-                                              "Item Bar code :  $itemNo")),
+                                      child: _buildBarcode()),
                                   Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                           border: Border(
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
-                                      child: _buildItem(
-                                          hintText:
-                                              "Inventory:  ${widget.noInv}")),
+                                      child: _buildItem()),
                                   Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                           border: Border(
                                               bottom: BorderSide(
                                                   color: Colors.grey[200]))),
-                                      child: _buildCount(
-                                          hintText: "Comptage :  1")),
+                                      child: _buildCount()),
                                 ],
                               ),
                             )),
@@ -420,21 +370,30 @@ class AddInvState extends State<AddInv> {
                             InkWell(
                               onTap: () async {
                                 bool sucess;
+                                String bc = Barcodecontroller.value.text.trim();
+                                String cnt = Countcontroller.value.text.trim();
+                                String itno = Itemcontroller.value.text.trim();
                                 String count1 = _counterQ.toString();
                                 String count2 = _counter.toString();
                                 String config =
                                     "<cab:inventoryNum>${widget.noInv}</cab:inventoryNum>" +
-                                        "<cab:itemNo>$itemNo</cab:itemNo>" +
-                                        "<cab:itemBarCode></cab:itemBarCode>" +
+                                        "<cab:itemNo>" +
+                                        itno +
+                                        "</cab:itemNo>" +
+                                        "<cab:itemBarCode>" +
+                                        bc +
+                                        "</cab:itemBarCode>" +
                                         "<cab:quantity>" +
                                         count1 +
                                         "</cab:quantity>" +
-                                        "<cab:userId>$login</cab:userId>" +
+                                        "<cab:userId>C02</cab:userId>" +
                                         "<cab:terminalId></cab:terminalId>" +
                                         "<cab:vracQuantity>" +
                                         count2 +
                                         "</cab:vracQuantity>" +
-                                        "<cab:comptage>1</cab:comptage>" +
+                                        "<cab:comptage>" +
+                                        cnt +
+                                        "</cab:comptage>" +
                                         "<cab:binCode></cab:binCode>";
                                 try {
                                   var ws =

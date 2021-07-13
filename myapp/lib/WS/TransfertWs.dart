@@ -315,10 +315,10 @@ class TransfertWs {
     return article;
   }
 
-//FindItem Transfert*************************************************************************************
+//Insert line Transfert*************************************************************************************
   Future<String> insertArticleToTransfert() async {
     var storeDocument;
-    List<TransferL> articles = [];
+    List<TransferL> articles = List<TransferL>();
     try {
       SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
       String ip = sharedPrefs.getString('Ip');
@@ -328,9 +328,9 @@ class TransfertWs {
           "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cab=\"urn:microsoft-dynamics-schemas/codeunit/CAB\"><soapenv:Header/>" +
               "<soapenv:Body>";
       envelope = envelope +
-          "<cab:ExportLineTransfert>" +
+          "<cab:InsertLigneTransfert_DetailJson>" +
           config +
-          "</cab:ExportLineTransfert>";
+          "</cab:InsertLigneTransfert_DetailJson>";
       envelope = envelope + " </soapenv:Body> </soapenv:Envelope>";
 
       NTLMClient client = NTLMClient(
@@ -346,7 +346,7 @@ class TransfertWs {
           headers: {
             "Content-Type": "text/xml; charset=utf-8",
             "SOAPAction":
-                "urn:microsoft-dynamics-schemas/codeunit/CAB:ExportLineTransfert",
+                "urn:microsoft-dynamics-schemas/codeunit/CAB:InsertLigneTransfert_DetailJson",
           },
           body: envelope);
       print(response.statusCode);
@@ -405,25 +405,16 @@ class TransfertWs {
         dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
         print("EmpDest==> $EmpDest");
 
-        if (dataStr.indexOf("\",") == -1) // Last
-        {
-          EmpDest = dataStr.substring(
-              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\"}"));
-          dataStr = null;
-        } else {
-          EmpDest = dataStr.substring(
-              dataStr.indexOf(":\"") + 2, dataStr.indexOf("\","));
-          dataStr = dataStr.substring(dataStr.indexOf("\",") + 2);
-        }
-        print("EmpDest==> $EmpDest");
-
         TransferL a = TransferL(reference, designation, qt, qte_prepare);
         articles.add(a);
       }
     } catch (Exception) {
       print(Exception.toString());
-      String error = storeDocument.findAllElements('faultstring').first.text;
-      return error;
+      Fluttertoast.showToast(
+          msg: "Quantité(s) ajoutés avec succés",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3);
     }
     return "true";
   }
