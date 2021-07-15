@@ -4,7 +4,7 @@ class Scanners {
   static const scanners = <Scanner>[
     Scanner(
         imageUrl: 'assets/images/barcode.png',
-        scannerName: 'Command preparation',
+        scannerName: 'Préparation de commande',
         backgroundColor: 0xFF00897B,
         //icon: FontAwesomeIcons.barcode,
         description: 'Scan here for more information',

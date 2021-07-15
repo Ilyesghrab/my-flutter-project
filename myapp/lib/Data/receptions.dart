@@ -4,7 +4,7 @@ class Receptions {
   static const receptions = <Reception>[
     Reception(
         imageUrl: 'assets/images/information-desk.png',
-        receptionName: 'Reception',
+        receptionName: 'Réception',
         backgroundColor: 0xFFEEEEEE,
         //icon: FontAwesomeIcons.conciergeBell,
         description: 'Reception product list',

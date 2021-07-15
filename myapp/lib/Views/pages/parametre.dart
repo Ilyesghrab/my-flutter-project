@@ -304,7 +304,7 @@ class ParamState extends State<Param> {
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: fileMedia == null
-                              ? AssetImage("assets/images/mavision.png")
+                              ? AssetImage("assets/images/ilyes.jpg")
                               : FileImage(File(fileMedia.path)),
                         ),
                       ),

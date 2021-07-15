@@ -73,12 +73,12 @@ class AddInvManState extends State<AddInvMan> {
       controller: Itemcontroller,
       decoration: InputDecoration(
           icon: Icon(Icons.tag, color: Colors.lightBlue[900]),
-          hintText: "Item number",
+          hintText: "N° Inventaire",
           hintStyle: TextStyle(color: Colors.grey),
           border: InputBorder.none),
       validator: (String value) {
         if (value.isEmpty) {
-          return 'Item number is required';
+          return 'N° Inventaire is required';
         }
         String s;
         value = value.trim();

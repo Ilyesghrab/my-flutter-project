@@ -3,7 +3,7 @@ import 'package:myapp/Models/inventory.dart';
 class Inventories {
   static const inventoris = <Inventory>[
     Inventory(
-        inventoryName: 'Inventory',
+        inventoryName: 'Inventaire',
         description: 'Inventory',
         backgroundColor: 0xFFEEEEEE,
         //icon: FontAwesomeIcons.truckLoading,

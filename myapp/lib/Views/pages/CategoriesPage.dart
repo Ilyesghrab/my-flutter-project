@@ -233,7 +233,7 @@ class CategoriesPageState extends State<CategoriesPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'Categories',
+                    'Modules',
                     style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -282,6 +282,20 @@ class CategoriesPageState extends State<CategoriesPage> {
                         onTap: () {
                           Navigator.push(
                             context,
+                            MaterialPageRoute(builder: (context) => MyList()),
+                          );
+                        },
+                        child: OperationCat(
+                            operation: itemss[index].inventoryName,
+                            selectedIcon: itemss[index].selectedIcon,
+                            unselectedIcon: itemss[index].unselectedIcon,
+                            isSelected: current == index,
+                            context: this),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
                             MaterialPageRoute(
                                 builder: (context) => ListPrepCom()),
                           );
@@ -290,20 +304,6 @@ class CategoriesPageState extends State<CategoriesPage> {
                             operation: sitems[index].scannerName,
                             selectedIcon: sitems[index].selectedIcon,
                             unselectedIcon: sitems[index].unselectedIcon,
-                            isSelected: current == index,
-                            context: this),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => MyList()),
-                          );
-                        },
-                        child: OperationCat(
-                            operation: itemss[index].inventoryName,
-                            selectedIcon: itemss[index].selectedIcon,
-                            unselectedIcon: itemss[index].unselectedIcon,
                             isSelected: current == index,
                             context: this),
                       ),

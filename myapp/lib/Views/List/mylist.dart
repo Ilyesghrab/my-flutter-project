@@ -31,7 +31,11 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
   double _fabHeight = 56.0;
   Future<List<InventoryH>> getInv;
   List<Produit> items = List.of(Data.produits);
+  List<InventoryH> aaa = [];
   String query = '';
+  bool vi = false;
+  bool vs = false;
+  int ok = 0;
   //String login;
   bool pb = false;
 
@@ -429,5 +433,42 @@ class MyListState extends State<MyList> with SingleTickerProviderStateMixin {
     else
       _animationController.reverse();
     isOpened = !isOpened;
+  }
+
+  serchinlist(ch, ta) async {
+    bool auxvi = vi;
+    ch = ch.toLowerCase();
+    List<InventoryH> a = [];
+    List<InventoryH> con = aaa.length == 0 && ok == 0 ? await ta : aaa;
+    print("in serching list");
+
+    if (ch.isNotEmpty) {
+      setState(() {
+        vs = true;
+      });
+      if (con.length != 0) {
+        for (var i = 0; i < con.length; i++) {
+          if (con[i].locationCd.toLowerCase().contains(ch)) a.add(con[i]);
+        }
+        if (a.isNotEmpty) {
+          setState(() {
+            vi = false;
+            getInv = Future.sync(() => a);
+          });
+        } else
+          setState(() {
+            vi = true;
+            getInv = Future.sync(() => []);
+          });
+      }
+    } else {
+      List<InventoryH> con1 = aaa.length == 0 && ok == 0 ? await ta : aaa;
+
+      setState(() {
+        vs = false;
+        vi = con1.length == 0;
+        getInv = Future.sync(() => aaa.length == 0 && ok == 0 ? ta : aaa);
+      });
+    }
   }
 }

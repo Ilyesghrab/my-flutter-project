@@ -4,7 +4,7 @@ import 'package:myapp/Models/livraison.dart';
 class Livraisons {
   static const deliveries = <Livraison>[
     Livraison(
-        livraisonName: 'Delivery',
+        livraisonName: 'Livraison',
         description: 'Delivery',
         backgroundColor: 0xFFEEEEEE,
         //icon: FontAwesomeIcons.truckLoading,

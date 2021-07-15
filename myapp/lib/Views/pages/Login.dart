@@ -200,7 +200,7 @@ class _LoginState extends State<Login> {
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: fileMedia == null
-                              ? AssetImage("assets/images/Capture1.PNG")
+                              ? AssetImage("assets/images/ilyes.jpg")
                               : FileImage(File(fileMedia.path)),
                         ),
                       ),
@@ -215,9 +215,10 @@ class _LoginState extends State<Login> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                    image: DecorationImage(
+                    color: Colors.white,
+                    /*image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: AssetImage("assets/images/wallpaper.PNG")),
+                        image: AssetImage("assets/images/wallpaper.PNG")),*/
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(60),
                         topRight: Radius.circular(60))),
@@ -227,7 +228,7 @@ class _LoginState extends State<Login> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(
-                          height: 50,
+                          height: 80,
                         ),
                         FadeAnimation(
                             1.4,
@@ -251,7 +252,11 @@ class _LoginState extends State<Login> {
                                                   color: Colors.grey[200]))),
                                       child: textfield(
                                           hintText: 'Login:   $login')),
-                                  Container(
+                                  Divider(
+                                    height: 20,
+                                    color: Colors.grey[100],
+                                  ),
+                                  /*Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                           border: Border(
@@ -259,6 +264,10 @@ class _LoginState extends State<Login> {
                                                   color: Colors.grey[200]))),
                                       child: textfield(
                                           hintText: 'Statut:   $statut')),
+                                  Divider(
+                                    height: 20,
+                                    color: Colors.grey[100],
+                                  ),*/
                                   Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
@@ -270,7 +279,7 @@ class _LoginState extends State<Login> {
                               ),
                             )),
                         SizedBox(
-                          height: 50,
+                          height: 80,
                         ),
                         FadeAnimation(
                             1.6,

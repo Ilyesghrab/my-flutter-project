@@ -240,10 +240,7 @@ class ListPrepComState extends State<ListPrepCom>
                                                                     .start,
                                                             children: [
                                                               Text(
-                                                                  snapshot
-                                                                      .data[
-                                                                          index]
-                                                                      .numOder,
+                                                                  "N°Ordre ${snapshot.data[index].numOder}",
                                                                   style: TextStyle(
                                                                       fontFamily:
                                                                           'Montserrat',
@@ -253,10 +250,7 @@ class ListPrepComState extends State<ListPrepCom>
                                                                           FontWeight
                                                                               .bold)),
                                                               Text(
-                                                                  snapshot
-                                                                      .data[
-                                                                          index]
-                                                                      .client,
+                                                                  "Client ${snapshot.data[index].client}",
                                                                   style: TextStyle(
                                                                       fontFamily:
                                                                           'Montserrat',
